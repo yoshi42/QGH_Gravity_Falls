@@ -1,3 +1,17 @@
+/*///////////////////////////////////
+Description:
+Project for quest room - Telephone plus TV with 433mhz HC-12 communication.
+Device connected to phone keyboard and handset speaker. Also - it controls TV`s screen light and power button.
+Also there is a ir-led that simulates the remote control signals to media pleer vith usb-disc with video
+
+When power is supplied to the device, TV powers on but screen light still off, IR-diode simulates the remote control,
+opens video from usb and put it to pause.
+When user pick up a handset he hear "please, a number". If number is wrong - he hear "wrong - try again".  
+When correct - "all correct - check TV", screen light is on and video plays.
+Also device sends a command to the contol system HC-12, that quest is done.
+If something goes wrong with quest - admin can send an activating command from control panel through HC-12 interface.
+When video ends - quest is ready to call a number again.
+///////////////////////////////////*/
 #include <SoftwareSerial.h>
 #include <Keypad.h>
 #include <IRremote.h>
@@ -80,31 +94,25 @@ void loop()
     HC_12_loop();
   }//read commands from HC12 interface
 
-  if(digitalRead(activate_phone) == LOW) //handset has beed picked up
+  if(digitalRead(activate_phone) == LOW && dio == false) //handset has beed picked up
   {
-    if(dio == false)
-    {
-      delay(500);
-      is_phone_active = true;
-      mp3_play (1); //play audio "enter a number"
+    delay(500);
+    is_phone_active = true;
+    mp3_play (1); //play audio "enter a number"
 
-      Serial.println("handset has beed picked up");
-      dio = true;
-    }
+    Serial.println("handset has beed picked up");
+    dio = true;
   }
 
-  else //the handset was hung
+  else if(digitalRead(activate_phone) == HIGH && dio == true)
   {
-    if(dio == true)
-    {
-      delay(100);
-      is_phone_active = false;
-      flag_numbers = 0; //clear all pressed numbers in a phone
-      flag_true = 0;
+    delay(100);
+    is_phone_active = false;
+    flag_numbers = 0; //clear all pressed numbers in a phone
+    flag_true = 0;
 
-      Serial.println("handset was hung");
-      dio = false;
-    }
+    Serial.println("handset was hung");
+    dio = false;
   }
 
   if(is_phone_active == true) 
@@ -209,7 +217,6 @@ ok 807FA857
 up 807FE817
 ok 807FA857
 pause 807F08F7
-
 play 807F08F7
 */
     digitalWrite(screen_on, HIGH); //push turn on button
