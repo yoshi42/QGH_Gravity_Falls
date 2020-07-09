@@ -21,8 +21,8 @@ https://voltiq.ru/connecting-tcs230-to-arduino/
 #include "MD_TCS230.h" //libs for color sensor
 #include "FreqCount.h" ////libs for color sensor
 
-SoftwareSerial HC12(10, 9); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
-SoftwareSerial DF_player(2, 4); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
+SoftwareSerial HC12(9, 10); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
+SoftwareSerial DF_player(4, 2); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
 
 String temp_string = ""; //variable to store information recieved form serial and compare it
 char inChar;
@@ -58,8 +58,8 @@ int G = 0;
 int B = 0;
 
 //actuator definitions
-#define motor1 3 //fish tail
-#define motor2 5 //fish mouth
+#define tail 5 //fish tail
+#define mouth 3 //fish mouth
 #define EML_Table A0 //Table - magnetic lock
  
 MD_TCS230 CS(S2_OUT, S3_OUT, OE_OUT);
@@ -78,45 +78,52 @@ void setup()
 	CS.begin(); //initiating color sensor
 	CS.read(); //start to read
 
-	pinMode(motor1, OUTPUT);
-	pinMode(motor2, OUTPUT);
+	pinMode(tail, OUTPUT);
+	pinMode(mouth, OUTPUT);
 	pinMode(EML_Table, OUTPUT);
+  	digitalWrite(EML_Table, HIGH);
 
 	Serial.println("Started");
 	Serial.println("Ready to play");
 }
 
-void loop() 
-{
+void loop() {
 
-	if(state ==0)
-	{
-	  if (CS.available()) 
-	  {
-	   sensorData  sd;
-	   CS.getRaw(&sd); 
-	   CS.setDarkCal(&sd); 
-	   Serial.println("Black Calibration Set");
-	   state=1;
-	   delay(5000);
-	   CS.read();
-	  }
-	}
-	else if(state == 1)
-	{
-	 if (CS.available()) 
-	 {
-	   sensorData  sd;
-	   CS.getRaw(&sd); 
-	   CS.setWhiteCal(&sd); 
-	   Serial.println("White Calibration Set");
-	   state=2;
-	  }
-	}
-	else
-	{
-	  readSensor();
-	}
+if(state ==0)
+{
+  if (CS.available()) {
+   sensorData  sd;
+   CS.getRaw(&sd); 
+   CS.setDarkCal(&sd); 
+   Serial.println("Black Calibration Set");
+   state++;
+
+   delay(5000);
+   CS.read();
+  }
+}
+else if(state == 1)
+{
+ if (CS.available()) {
+   sensorData  sd;
+   CS.getRaw(&sd); 
+   CS.setWhiteCal(&sd); 
+   Serial.println("White Calibration Set");
+   
+   state++;
+  }
+
+}else
+{
+  readSensor();
+}
+ 
+
+}
+
+uint16_t convertRGB24toRGB565(uint8_t r, uint8_t g, uint8_t b)
+{
+  return ((r / 8) << 11) | ((g / 4) << 5) | (b / 8);
 }
 
 void readSensor()
@@ -146,6 +153,10 @@ void readSensor()
       R = rgb.value[TCS230_RGB_R];
       G = rgb.value[TCS230_RGB_G];
       B = rgb.value[TCS230_RGB_B];
+ 
+      int color = convertRGB24toRGB565(R,G,B); //Convertion to 16bit color for the display
+      
+      delay(100);
 
       waiting = false;
     }
