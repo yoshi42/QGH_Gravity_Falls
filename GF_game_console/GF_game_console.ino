@@ -1,63 +1,56 @@
 /*///////////////////////////////////
 Description:
-Project for quest room - funny talking fish with color sensor TCS230 and 433mhz HC-12 communication .
+Project for quest room - retro game console with buttons and joystick.
 
-Device reacts to color of light that comes from a flashlight with color crystals. When light is a right color - 
-the fish begins to speak wagging its tail and opening  mouth. Then - electromagnetic lock opens.
+When power is supplied to the device, IR-diode simulates the remote control, opens video from usb and put it to pause.
+Player should enter a correct combination with a buttons, then display shows a video. 
 
-
-When power is supplied to the device, TV powers on but screen light still off, IR-diode simulates the remote control,
-opens video from usb and put it to pause.
-When user pick up a handset he hear "please, a number". When correct - "all correct - check TV", screen light on and video plays.
 Also device sends a command to the contol system HC-12, that quest is done.
 If something goes wrong with quest - admin can send an activating command from control panel through HC-12 interface.
 
-tcs230 tutorial here:
-https://randomnerdtutorials.com/arduino-color-sensor-tcs230-tcs3200/
-
 d0-d1 - rxtx
-d2, 3, 4, d5 - 4 but
-A6, A7 - 2 but + 2 but analog 200R
+d2, 3, 4, d5 - 4 but + joystick in parellel connection
+A4, A5, A6, A7 - 4 buttons
 d6, 7, 8, 9, 10, 11, 12, 13 - 8led
 A0, A1, A2 - 3 video_control
-A3, A4 - dfplayer rxtx
+A3 - dfplayer tx (rx is empty)
 
 ///////////////////////////////////*/
 
 #include <SoftwareSerial.h>
 #include <DFPlayer_Mini_Mp3.h> //lib for dfplayer
+#include <IRremote.h>
 
 SoftwareSerial DF_player(A6, A3); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
 
 //button pins
-#define but_left 4     //L
-#define but_up 2       //U
-#define but_down 3     //D
-#define but_right 5    //R
+#define but_left 5     //L
+#define but_up A0       //U
+#define but_down 2    //D Swap with D3
+#define but_right 4    //R
 #define but_kick A7    //K - kick
 #define but_punch A5   //P - punch
 #define but_kick_2 A6  //k - kick2
 #define but_punch_2 A4 //p - punch2
 
 //led pins
-#define but_left_led 8
-#define but_up_led 6
-#define but_down_led 9
-#define but_right_led 7
+#define but_left_led 7
+#define but_up_led 9
+#define but_down_led 6
+#define but_right_led 8
 #define but_kick_led 10
 #define but_punch_led 11
 #define but_kick_2_led 12
 #define but_punch_2_led 13
 
+#define EML A1  //Electromechanical Lock
+
 byte LED_arr[] = {but_left_led, but_up_led, but_down_led, but_right_led, but_kick_led, but_punch_led, but_kick_2_led, but_punch_2_led};
 
-//gpio_video_control pins
-#define gpio_vid_1 A0
-#define gpio_vid_2 A1
-#define gpio_vid_3 A2
+String passcode = "LLPPRLDKkPPPK";
+String secret_passcode = "LLLRRRUUUDDDK";
+int passcode_length = 13;
 
-String passcode = "LRUDKPkp";
-int passcode_length = 8;
 String temp_passcode = "";
 char temp_char = '0';
 char last_char = '0';
@@ -76,22 +69,28 @@ String temp_string = ""; //variable to store information recieved form serial an
 String play_vid_1 = "play_vid_1#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 String play_vid_2 = "play_vid_2#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 String play_vid_3 = "play_vid_3#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
+String pleer_on = "pleer_on#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
+String pleer_off = "pleer_off#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 
 bool is_console_done = false;
+bool is_passcode_win = 0;
 
 unsigned long time = 0;
 unsigned long time1 = 0;
+
+/////////////////irled/////////////
+IRsend irsend;
+const int irled = 3; //ir led transmitting commands to TV
 
 void setup()
 {
 	Serial.begin(9600); //initiating serial
   DF_player.begin(9600); //initiating software serial
-
 	mp3_set_serial (DF_player);  //set Serial for DFPlayer-mini mp3 module 
 	mp3_set_volume (25);
 
   pinMode(but_left, INPUT_PULLUP);
-  pinMode(but_up, INPUT_PULLUP);
+  //pinMode(but_up, INPUT_PULLUP);  //dont need to declare as input. Physical 10k pullup
   pinMode(but_down, INPUT_PULLUP);
   pinMode(but_right, INPUT_PULLUP);
   //pinMode(but_kick, INPUT_PULLUP);  //dont need to declare as input. Physical 10k pullup
@@ -108,20 +107,17 @@ void setup()
   pinMode(but_kick_2_led, OUTPUT);
   pinMode(but_punch_2_led, OUTPUT);
 
+  pinMode(EML, OUTPUT);
+  digitalWrite(EML, LOW);
+
   for (int i = 6; i >= 13; i++)
   {
     digitalWrite(i, LOW);
   }
 
-  pinMode(gpio_vid_1, OUTPUT);
-  pinMode(gpio_vid_2, OUTPUT);
-  pinMode(gpio_vid_3, OUTPUT);
-
-  digitalWrite(gpio_vid_1, LOW);
-  digitalWrite(gpio_vid_2, LOW);
-  digitalWrite(gpio_vid_3, LOW);
-
 	Serial.println("Started");
+  irblink_startup();
+  Serial.println("Ready");
 }
 
 void loop()
@@ -130,21 +126,10 @@ void loop()
   read_buttons();
   check_passcode();
 
-  /*Serial.print("K = ");
-  Serial.print(analogRead(but_kick));
-  Serial.print("    P = ");
-  Serial.print(analogRead(but_punch));
-  Serial.print("          kick_2 = ");
-  Serial.print(analogRead(but_kick_2));
-  Serial.print("    punch_2 = ");
-  Serial.println(analogRead(but_punch_2));
-  delay(300);*/
-
-  if(is_console_done == 1)
+  if(is_passcode_win == 1)
   {
-    digitalWrite(gpio_vid_1, HIGH);
-    delay(20000);
-    digitalWrite(gpio_vid_1, LOW);
+    irsend.sendNEC(0x807F08F7, 32); //play
+    is_passcode_win = 0;
   }
 }
 
@@ -181,6 +166,7 @@ void read_buttons()
     temp_char = 'U';
     Serial.println("Up");
     is_pressed2 = 1;
+    mp3_play(1);
     delay(100);
   }
   else if(digitalRead(but_up) == HIGH && is_pressed2 == 1){
@@ -195,6 +181,7 @@ void read_buttons()
     temp_char = 'R';
     Serial.println("Right");
     is_pressed3 = 1;
+    mp3_play(1);
     delay(100);
   }
   else if(digitalRead(but_right) == HIGH && is_pressed3 == 1){
@@ -209,6 +196,7 @@ void read_buttons()
     temp_char = 'D';
     Serial.println("Down");
     is_pressed4 = 1;
+    mp3_play(1);
     delay(100);
   }
   else if(digitalRead(but_down) == HIGH && is_pressed4 == 1){
@@ -226,6 +214,7 @@ void read_buttons()
     //Serial.println(analogRead(but_kick));
     Serial.println("Kick");
     is_pressed5 = 1;
+    mp3_play(2);
     delay(100);
   }
   else if(analogRead(but_kick) > 100 && is_pressed5 == 1){
@@ -241,6 +230,7 @@ void read_buttons()
     //Serial.println(analogRead(but_punch));
     Serial.println("Punch");
     is_pressed6 = 1;
+    mp3_play(3);
     delay(100);
   }
   else if(analogRead(but_punch) > 100 && is_pressed6 == 1){
@@ -257,6 +247,7 @@ void read_buttons()
     //Serial.println(analogRead(but_kick_2));
     Serial.println("kick_2");
     is_pressed7 = 1;
+    mp3_play(2);
     delay(100);
   }
   else if(analogRead(but_kick_2) > 100 && is_pressed7 == 1){
@@ -272,6 +263,7 @@ void read_buttons()
     //Serial.println(analogRead(but_punch_2));
     Serial.println("punch_2");
     is_pressed8 = 1;
+    mp3_play(3);
     delay(100);
   }
   else if(analogRead(but_punch_2) > 100 && is_pressed8 == 1){
@@ -305,10 +297,22 @@ void check_passcode()
     {
       Serial.println("CORRECT");
       //is_console_done = 1;
+      mp3_play(4);
       blinkLed();
+      is_passcode_win = 1;
+    }
+    else if (temp_passcode == secret_passcode)
+    {
+      Serial.println("SECRET");
+      mp3_play(6);
+      delay(2000);
+      digitalWrite(EML, HIGH);
+      delay(500);
+      digitalWrite(EML, LOW);
     }
     else
     {
+      mp3_play(5);
       Serial.println("WRONG"); //wrong
       blinkLed_wrong();
     }
@@ -329,23 +333,31 @@ void HC_12_loop()
       Serial.println(" - copy that");
       if (temp_string == play_vid_1)  //compare string with a known commands
       {
-        digitalWrite(gpio_vid_1, HIGH);
-        delay(20000);
-        digitalWrite(gpio_vid_1, LOW);
+        is_passcode_win = 1;
       }
 
       if (temp_string == play_vid_2)  //compare string with a known commands
       {
-        digitalWrite(gpio_vid_2, HIGH);
-        delay(20000);
-        digitalWrite(gpio_vid_2, LOW);
+        irsend.sendNEC(0x807FF807, 32); //next
+        delay(1000);
       }
 
       if (temp_string == play_vid_3)  //compare string with a known commands
       {
-        digitalWrite(gpio_vid_3, HIGH);
-        delay(20000);
-        digitalWrite(gpio_vid_3, LOW);
+        irsend.sendNEC(0x807FF807, 32); //next
+        delay(1000);
+      }
+
+      if (temp_string == pleer_on)  //compare string with a known commands
+      {
+        irblink_startup();
+        delay(1000);
+      }
+
+      if (temp_string == pleer_off)  //compare string with a known commands
+      {
+        irsend.sendNEC(0x807F807F, 32); //off
+        delay(1000);
       }
     temp_string = "";     //then clear the string
     }
@@ -384,4 +396,34 @@ void ledLow(){
   {
     digitalWrite(LED_arr[i], LOW);
   }
+}
+
+void irblink_startup() //Media pleer on
+{
+  /*
+on 807F807F
+exit 807F6897
+menu 807FDA25
+ok 807FA857
+left 807F42BD
+down 807F58A7
+up 807FE817
+play 807F08F7
+next 807FF807
+*/
+    irsend.sendNEC(0x807F807F, 32); //on
+    delay(20000);
+    irsend.sendNEC(0x807FDA25, 32); // menu
+    delay(700);
+    irsend.sendNEC(0x807F42BD, 32); //left
+    delay(700);
+    irsend.sendNEC(0x807F58A7, 32); //down
+    delay(700);
+    irsend.sendNEC(0x807FA857, 32); //ok
+    delay(3000);
+    irsend.sendNEC(0x807FA857, 32); //ok
+    delay(3000);
+    irsend.sendNEC(0x807F08F7, 32); //play
+    delay(2000);
+    irsend.sendNEC(0x807F08F7, 32); //pause
 }
