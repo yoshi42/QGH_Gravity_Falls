@@ -220,7 +220,7 @@ void HC_12_loop()
 
 void check_coins()
 {
-  if(digitalRead(coin_reciever) == LOW)
+  if(analogRead(coin_reciever) <= 500)
   {
     delay(50);
     int j = random(1,10);
