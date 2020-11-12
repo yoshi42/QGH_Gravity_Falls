@@ -24,7 +24,7 @@ A6 - coin reciever
 #include <DFPlayer_Mini_Mp3.h> //lib for dfplayer
 #include <Keypad.h>
 
-SoftwareSerial DF_player(10, A7); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
+SoftwareSerial DF_player(A7, 10); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
 
 const byte ROWS = 4; //four rows
 const byte COLS = 2; //four columns
@@ -81,8 +81,9 @@ void setup()
 {
 	Serial.begin(9600); //initiating serial
   DF_player.begin(9600); //initiating software serial
-	mp3_set_serial (DF_player);  //set Serial for DFPlayer-mini mp3 module 
+	mp3_set_serial(DF_player);  //set Serial for DFPlayer-mini mp3 module 
 	mp3_set_volume (25);
+	mp3_play(1);
 
   pinMode(led_1, OUTPUT);
   pinMode(led_2, OUTPUT);
@@ -102,7 +103,7 @@ void setup()
   digitalWrite(led_8, LOW);
 
   pinMode(EML, OUTPUT);
-  digitalWrite(EML, HIGH);
+  digitalWrite(EML, LOW);
   pinMode(LED_PWM, OUTPUT);
   digitalWrite(LED_PWM, LOW);
   pinMode(coin_reciever, INPUT_PULLUP);
@@ -115,13 +116,7 @@ void loop()
   //HC_12_loop();  
   keypad_password();
   check_passcode();
-  //check_coins();
-
-  if(is_passcode_win == 1)
-  {
-    digitalWrite(EML, LOW);
-    is_passcode_win = 0;
-  }
+  check_coins();
 }
 
 void keypad_password(){
@@ -158,18 +153,33 @@ void check_passcode()
     if(temp_passcode == passcode)
     {
       Serial.println(snack_done); ////maybe wrong syntaxis
-      blinkLed();
       is_passcode_win = 1;
+      blinkLed();
+      mp3_play(1);
+	  digitalWrite(EML, HIGH);
+      delay(100);
+      digitalWrite(EML, LOW);
+      delay(100);
+      digitalWrite(EML, HIGH);
+      delay(100);
+      digitalWrite(EML, LOW);
+      delay(100);
+      digitalWrite(EML, HIGH);
+      delay(100);
+      digitalWrite(EML, LOW);
+      delay(3000);
+      is_passcode_win = 0;
     }
     else if (temp_passcode == secret_passcode)
     {
       Serial.println("SECRET");
-      mp3_play(5);
+      mp3_play(2);
       delay(2000);
     }
     else
     {
       Serial.println("WRONG"); //wrong
+      mp3_play(3);
       blinkLed_wrong();
     }
     temp_passcode = "";     //then clear the string
@@ -200,12 +210,16 @@ void HC_12_loop()
       if (temp_string == activate_snack)  //compare string with a known commands
       {
         digitalWrite(LED_PWM, HIGH);
-        digitalWrite(EML, HIGH);
+        digitalWrite(EML, LOW);
       }
 
       if (temp_string == open_snack)  //compare string with a known commands
       {
-        is_passcode_win = 1;
+        blinkLed();
+     	mp3_play(1);
+	  	digitalWrite(EML, LOW);
+     	delay(3000);
+      	is_passcode_win = 0;
       }
 
       if (temp_string == reset_snack)  //compare string with a known commands
@@ -220,10 +234,10 @@ void HC_12_loop()
 
 void check_coins()
 {
-  if(digitalRead(coin_reciever) == LOW)
+  if(analogRead(coin_reciever) >= 150)
   {
     delay(50);
-    int j = random(1,10);
+    int j = random(4,9);
     mp3_play(j);
 
     for(int i = 0; i < 5; i++){
