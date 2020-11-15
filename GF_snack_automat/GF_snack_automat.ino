@@ -24,7 +24,7 @@ A6 - coin reciever
 #include <DFPlayer_Mini_Mp3.h> //lib for dfplayer
 #include <Keypad.h>
 
-SoftwareSerial DF_player(A7, 10); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
+SoftwareSerial Serial_DF(A5, 10); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
 
 const byte ROWS = 4; //four rows
 const byte COLS = 2; //four columns
@@ -41,14 +41,14 @@ byte colPins[COLS] = {6, 7}; //connect to the column pinouts of the keypad
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
 
 //led pins
-#define led_1 11 
-#define led_2 12
-#define led_3 13
-#define led_4 A0
-#define led_5 A1
-#define led_6 A2
-#define led_7 A3
-#define led_8 A4
+#define led_8 11 
+#define led_7 12
+#define led_6 13
+#define led_5 A0
+#define led_4 A1
+#define led_3 A2
+#define led_2 A3
+#define led_1 A4
 
 #define EML 8  //Electromechanical Lock
 #define LED_PWM 9  //lights
@@ -80,8 +80,8 @@ unsigned long time1 = 0;
 void setup()
 {
 	Serial.begin(9600); //initiating serial
-  DF_player.begin(9600); //initiating software serial
-	mp3_set_serial(DF_player);  //set Serial for DFPlayer-mini mp3 module 
+  	Serial_DF.begin(9600); //initiating software serial
+	mp3_set_serial(Serial_DF);  //set Serial for DFPlayer-mini mp3 module 
 	mp3_set_volume (25);
 	mp3_play(1);
 
@@ -103,35 +103,34 @@ void setup()
   digitalWrite(led_8, LOW);
 
   pinMode(EML, OUTPUT);
-  digitalWrite(EML, LOW);
+  digitalWrite(EML, HIGH); //HIGH means - "ON" - MOSFET OPENED
   pinMode(LED_PWM, OUTPUT);
   digitalWrite(LED_PWM, LOW);
   pinMode(coin_reciever, INPUT_PULLUP);
 
-	Serial.println("Started");
+	//Serial.println("Started");
 }
 
 void loop()
 {
-  //HC_12_loop();  
+  HC_12_loop();  
   keypad_password();
   check_passcode();
   check_coins();
 }
 
 void keypad_password(){
-  char pressed=customKeypad.getKey();
 
- if(pressed=='1'){temp_char = '1';}
- if(pressed=='2'){temp_char = '2';}
- if(pressed=='3'){temp_char = '3';}
- if(pressed=='4'){temp_char = '4';}
- if(pressed=='5'){temp_char = '5';}
- if(pressed=='6'){temp_char = '6';}
- if(pressed=='7'){temp_char = '7';}
- if(pressed=='8'){temp_char = '8';}
+ char pressed=customKeypad.getKey();
 
-digitalWrite(LED_arr[pressed-1], HIGH); //turn on pressed button leds
+ if(pressed=='1'){temp_char = '1';digitalWrite(LED_arr[0], HIGH);}
+ if(pressed=='2'){temp_char = '2';digitalWrite(LED_arr[1], HIGH);}
+ if(pressed=='3'){temp_char = '3';digitalWrite(LED_arr[2], HIGH);}
+ if(pressed=='4'){temp_char = '4';digitalWrite(LED_arr[3], HIGH);}
+ if(pressed=='5'){temp_char = '5';digitalWrite(LED_arr[4], HIGH);}
+ if(pressed=='6'){temp_char = '6';digitalWrite(LED_arr[5], HIGH);}
+ if(pressed=='7'){temp_char = '7';digitalWrite(LED_arr[6], HIGH);}
+ if(pressed=='8'){temp_char = '8';digitalWrite(LED_arr[7], HIGH);}
 }
 
 void check_passcode() 
@@ -141,11 +140,11 @@ void check_passcode()
     if(temp_char != '0')
     {
       temp_passcode += temp_char;     //add to string
-      Serial.println(temp_passcode);
+      //Serial.println(temp_passcode);
     }
     last_char=temp_char;
   }
-  temp_char = '0';
+  //temp_char = '0'; //to make it possible to press the same buttons several times
 
   if(temp_passcode.length() == passcode_length)
   {
@@ -154,32 +153,28 @@ void check_passcode()
     {
       Serial.println(snack_done); ////maybe wrong syntaxis
       is_passcode_win = 1;
-      blinkLed();
-      mp3_play(1);
-	  digitalWrite(EML, HIGH);
-      delay(100);
+      blinkRight();
+      mp3_play(2);
       digitalWrite(EML, LOW);
-      delay(100);
+      digitalWrite(LED_PWM, HIGH);
+      delay(30000);
+      digitalWrite(LED_PWM, LOW);
       digitalWrite(EML, HIGH);
-      delay(100);
-      digitalWrite(EML, LOW);
-      delay(100);
-      digitalWrite(EML, HIGH);
-      delay(100);
-      digitalWrite(EML, LOW);
-      delay(3000);
       is_passcode_win = 0;
     }
     else if (temp_passcode == secret_passcode)
     {
-      Serial.println("SECRET");
-      mp3_play(2);
-      delay(2000);
+      //Serial.println("SECRET");
+      mp3_play(8);
+      blinkLed();
+      digitalWrite(LED_PWM, HIGH);
+      delay(5000);
+      digitalWrite(LED_PWM, LOW);
     }
     else
     {
-      Serial.println("WRONG"); //wrong
-      mp3_play(3);
+      //Serial.println("WRONG"); //wrong
+      mp3_play(6);
       blinkLed_wrong();
     }
     temp_passcode = "";     //then clear the string
@@ -201,16 +196,15 @@ void HC_12_loop()
   {
     char inChar = Serial.read(); //store each bite in var
     temp_string += inChar;     //add to string
-    Serial.print(inChar); //Send each recieved byte back
+    //Serial.print(inChar); //Send each recieved byte back
     if (inChar == '#')       //if stop byte recieved
     {
-      Serial.print(temp_string);
-      Serial.println(" - copy that");
+      //Serial.print(temp_string);
+      //Serial.println(" - copy that");
 
       if (temp_string == activate_snack)  //compare string with a known commands
       {
         digitalWrite(LED_PWM, HIGH);
-        digitalWrite(EML, LOW);
       }
 
       if (temp_string == open_snack)  //compare string with a known commands
@@ -219,6 +213,7 @@ void HC_12_loop()
      	mp3_play(1);
 	  	digitalWrite(EML, LOW);
      	delay(3000);
+     	digitalWrite(EML, HIGH);
       	is_passcode_win = 0;
       }
 
@@ -237,7 +232,7 @@ void check_coins()
   if(analogRead(coin_reciever) >= 150)
   {
     delay(50);
-    int j = random(4,9);
+    int j = random(4,5);
     mp3_play(j);
 
     for(int i = 0; i < 5; i++){
@@ -253,9 +248,23 @@ void blinkLed()
 {
   for(int i = 0; i < 3; i++){
     ledHigh();
-    delay(1000);
+    delay(500);
     ledLow();
-    delay(1000);
+    delay(500);
+  }
+}
+
+void blinkRight()
+{
+  for(int i = 0; i < 3; i++){
+    digitalWrite(LED_arr[0], HIGH);
+    digitalWrite(LED_arr[2], HIGH);
+    digitalWrite(LED_arr[1], HIGH);
+    digitalWrite(LED_arr[4], HIGH);
+    digitalWrite(LED_arr[5], HIGH);
+    delay(500);
+    ledLow();
+    delay(500);
   }
 }
 
