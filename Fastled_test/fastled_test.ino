@@ -18,7 +18,7 @@
 // need to define DATA_PIN.  For led chipsets that are SPI based (four wires - data, clock,
 // ground, and power), like the LPD8806 define both DATA_PIN and CLOCK_PIN
 // Clock pin only needed for SPI based chipsets when not using hardware SPI
-#define DATA_PIN 3
+#define DATA_PIN 35
 #define CLOCK_PIN 13
 
 // This is an array of leds.  One item for each led in your strip.
@@ -45,14 +45,14 @@ void setup() {
     // FastLED.addLeds<UCS2903, DATA_PIN, RGB>(leds, NUM_LEDS);
     //FastLED.addLeds<WS2812, DATA_PIN, RGB>(leds, NUM_LEDS);  // GRB ordering is typical
     // FastLED.addLeds<WS2852, DATA_PIN, RGB>(leds, NUM_LEDS);  // GRB ordering is typical
-    FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);  // GRB ordering is typical
+    //FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);  // GRB ordering is typical
     // FastLED.addLeds<GS1903, DATA_PIN, RGB>(leds, NUM_LEDS);
     // FastLED.addLeds<SK6812, DATA_PIN, RGB>(leds, NUM_LEDS);  // GRB ordering is typical
     // FastLED.addLeds<SK6822, DATA_PIN, RGB>(leds, NUM_LEDS);
     // FastLED.addLeds<APA106, DATA_PIN, RGB>(leds, NUM_LEDS);
     // FastLED.addLeds<PL9823, DATA_PIN, RGB>(leds, NUM_LEDS);
     // FastLED.addLeds<SK6822, DATA_PIN, RGB>(leds, NUM_LEDS);
-    ////FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
     // FastLED.addLeds<WS2813, DATA_PIN, RGB>(leds, NUM_LEDS);
     // FastLED.addLeds<APA104, DATA_PIN, RGB>(leds, NUM_LEDS);
     // FastLED.addLeds<WS2811_400, DATA_PIN, RGB>(leds, NUM_LEDS);
@@ -72,19 +72,19 @@ void setup() {
     // FastLED.addLeds<APA102, DATA_PIN, CLOCK_PIN, RGB>(leds, NUM_LEDS);  // BGR ordering is typical
     // FastLED.addLeds<SK9822, DATA_PIN, CLOCK_PIN, RGB>(leds, NUM_LEDS);  // BGR ordering is typical
 
-    FastLED.addLeds<WS2811, DATA_PIN, GRB>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
+    //FastLED.addLeds<WS2811, DATA_PIN, GRB>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
 }
 
 // This function runs over and over, and is where you do the magic to light
 // your leds.
 void loop()
 {
-  test_3();
+  test_1();
 }
 
 void test_1() //SIMPLE WHITE RUNNING DOT
 {
-    FastLED.setBrightness(10);
+    FastLED.setBrightness(255);
    // Move a single white led 
    for(int whiteLed = 0; whiteLed < NUM_LEDS; whiteLed = whiteLed + 1) {
       // Turn our current led on to white, then show the leds
@@ -94,7 +94,7 @@ void test_1() //SIMPLE WHITE RUNNING DOT
       FastLED.show();
 
       // Wait a little bit
-      delay(30);
+      delay(500);
 
       // Turn our current led back to black for the next loop around
       leds[whiteLed] = CRGB::Black;
@@ -120,7 +120,7 @@ void test_3() //CHSV COLOR RUNNING DOT
    // Move a single led 
    for(int led = 0; led < NUM_LEDS; led++) {
       // Turn our current led on to white, then show the leds
-      leds[led] = CHSV(0, 255, 100); // CHSV(hue, saturation, value)
+      leds[led] = CHSV(0, 255, 255); // CHSV(hue, saturation, value)
 
       /* HUE:
       Red (0..)

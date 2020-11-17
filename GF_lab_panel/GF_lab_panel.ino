@@ -38,7 +38,7 @@ const byte COLS2 = 3; //
 //define the cymbols on the buttons of the keypads
 char twenty_one_buts_Keys[ROWS][COLS] = { //ascii code for 'A' = 65
   {'A','B','C','D','E','F','G'},
-  {'H','I','J','K','L','M','M'},
+  {'H','I','J','K','L','M','N'},
   {'O','P','Q','R','S','T','U'}};
 
 char nine_buts_Keys[ROWS2][COLS2] = {
@@ -46,8 +46,9 @@ char nine_buts_Keys[ROWS2][COLS2] = {
   {'4','5','6'},
   {'7','8','9'}};
 
-byte rowPins[ROWS] = {2, 3, 4}; //connect to the row pinouts of the keypad
-byte colPins[COLS] = {5, 6, 7, 8, 9, 10, 11}; //connect to the column pinouts of the keypad
+
+byte colPins[COLS] = {2, 3, 4, 5, 6, 7, 8}; //connect to the column pinouts of the keypad
+byte rowPins[ROWS] = {9, 10, 11}; //connect to the row pinouts of the keypad
 
 byte rowPins2[ROWS2] = {12, 13, 14}; //connect to the row pinouts of the keypad
 byte colPins2[COLS2] = {15, 16, 17}; //connect to the column pinouts of the keypad
@@ -124,8 +125,8 @@ void setup()
 	mp3_set_serial (Serial_DF);  //set Serial for DFPlayer-mini mp3 module 
 	mp3_set_volume (25);
 
-	FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);  // GRB ordering is typical
-	////FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
+	//FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);  // GRB ordering is typical
+	FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);  // GRB ordering is typical
 
 	for(int i = 0; i <9; i++){pinMode(LED_arr[i], OUTPUT);}
 	for(int i = 0; i <9; i++){digitalWrite(LED_arr[i], LOW);}
@@ -153,8 +154,8 @@ void loop()
 {
 	//HC_12_loop();  
 	keypad_password_21_but();
-	//test_ws2812();
-	delay(500);
+	//test_ws2811();
+	//delay(500);
 }
 
 void keypad_password_21_but()
@@ -174,7 +175,7 @@ void keypad_password_21_but()
     }
     last_char_21=temp_char_21;
   }
-  //temp_char_21 = '0'; //to get available pressing 2 same numbers in a row
+  temp_char_21 = '0'; //to get available pressing 2 same numbers in a row
 
   if(temp_passcode_21.length() == passcode_21_length)
   {
@@ -236,7 +237,7 @@ void HC_12_loop()
   }
 }
 
-void test_ws2812() //RGB COLOR RUNNING DOT 
+void test_ws2811() //RGB COLOR RUNNING DOT 
 // https://github.com/FastLED/FastLED/wiki/Pixel-reference - color set
 {
     FastLED.setBrightness(255);
