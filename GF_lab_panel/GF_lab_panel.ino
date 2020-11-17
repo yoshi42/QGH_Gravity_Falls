@@ -86,9 +86,9 @@ byte LED_arr[] = {led_1, led_2, led_3, led_4, led_5, led_6, led_7, led_8, led_9}
 #define DATA_PIN 35 //D0 out to pin
 CRGB leds[NUM_LEDS]; // This is an array of leds.  One item for each led in your strip.
 
-String passcode_21 = "12345";
-String passcode9 = "123456789";
-int passcode_21_length = 5;
+String passcode_21 = "IDRM";
+String passcode_9 = "123456789";
+int passcode_21_length = 4;
 int passcode_9_length = 9;
 
 String temp_passcode_21 = "";
@@ -100,6 +100,13 @@ String temp_passcode_9 = "";
 char temp_char_9 = '0';
 char last_char_9 = '0';
 int ascii_code_9 = 0;
+
+//testing
+String passcode = "ABCDE";
+int passcode_length = 5;
+char temp_char = '0';
+String temp_passcode = "";
+char last_char = '0';
 
 //HC_12 strings
 String temp_string = ""; //variable to store information recieved form serial and compare it
@@ -155,13 +162,19 @@ void loop()
 	//HC_12_loop();  
 	keypad_password_21_but();
 	//test_ws2811();
-	//delay(500);
 }
 
 void keypad_password_21_but()
 {
-  temp_char_21=customKeypad_21_but.getKey(); //read the keys -> char type
-  ascii_code_21 = temp_char_21; //chat to int
+	//read and store
+	char pressed=customKeypad_21_but.getKey();
+	for (int i=0; i < ROWS; i++)	{
+		for(int j=0; j < COLS; j++)		{
+			if(pressed == twenty_one_buts_Keys[i][j]) {temp_char_21 = pressed;
+			}
+		}
+	}
+	ascii_code_21 = temp_char_21; //chat to int
 
   if (last_char_21 != temp_char_21)
   {
@@ -175,7 +188,7 @@ void keypad_password_21_but()
     }
     last_char_21=temp_char_21;
   }
-  temp_char_21 = '0'; //to get available pressing 2 same numbers in a row
+  //temp_char_21 = '0'; //to get available pressing 2 same numbers in a row
 
   if(temp_passcode_21.length() == passcode_21_length)
   {
@@ -184,6 +197,9 @@ void keypad_password_21_but()
     {
       Serial.println(but21_done);
       is_passcode_win = 1;
+      for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all leds
+      delay(500);
+      FastLED.show(); //refresh
     }
 
     else
@@ -197,6 +213,57 @@ void keypad_password_21_but()
     temp_passcode_21 = "";     //then clear the string
   }
 }
+
+void keypad_password_9_but()
+{
+	//read and store
+	char pressed=customKeypad_9_but.getKey();
+	for (int i=0; i < ROWS2; i++)	{
+		for(int j=0; j < COLS2; j++)		{
+			if(pressed == nine_buts_Keys[i][j]) {temp_char_9 = pressed;
+			}
+		}
+	}
+	ascii_code_9 = temp_char_9; //chat to int
+
+  if (last_char_9 != temp_char_9)
+  {
+    if(temp_char_9 != '0')
+    {
+      digitalWrite(leds[ascii_code_9-49], LOW);
+
+      temp_passcode_9 += temp_char_9;     //add to string
+      Serial.println(temp_passcode_9);
+    }
+    if(temp_char_9 != passcode_9[ascii_code_9-49])
+      {
+      	temp_passcode_9 = "";
+      	Serial.println("WRONG"); //wrong
+      }
+    last_char_9=temp_char_9;
+  }
+  //temp_char_9 = '0'; //to get available pressing 2 same numbers in a row
+
+  if(temp_passcode_9.length() == passcode_9_length)
+  {
+    //check if right
+    if(temp_passcode_9 == passcode_9)
+    {
+      Serial.println(but9_done);
+
+    }
+
+    else
+    {
+      Serial.println("WRONG"); //wrong
+
+    }
+    temp_passcode_9 = "";     //then clear the string
+  }
+}
+
+
+
 
 void HC_12_test()
 {
@@ -235,24 +302,4 @@ void HC_12_loop()
     temp_string = "";     //then clear the string
     }
   }
-}
-
-void test_ws2811() //RGB COLOR RUNNING DOT 
-// https://github.com/FastLED/FastLED/wiki/Pixel-reference - color set
-{
-    FastLED.setBrightness(255);
-   // Move a single white led 
-   for(int led = 0; led < NUM_LEDS; led++) {
-      // Turn our current led on to white, then show the leds
-      leds[led] = CRGB(255, 255, 255);
-
-      // Show the leds (only one of which is set to white, from above)
-      FastLED.show();
-
-      // Wait a little bit
-      delay(30);
-
-      // Turn our current led back to black for the next loop around
-      leds[led] = CRGB::Black;
-   }
 }
