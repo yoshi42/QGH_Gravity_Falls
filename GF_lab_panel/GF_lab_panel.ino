@@ -57,15 +57,15 @@ Keypad customKeypad_21_but = Keypad(makeKeymap(twenty_one_buts_Keys), rowPins, c
 Keypad customKeypad_9_but = Keypad(makeKeymap(nine_buts_Keys), rowPins2, colPins2, ROWS2, COLS2);
 
 //led pins
-#define led_1 18 
-#define led_2 19
-#define led_3 20
+#define led_1 24 
+#define led_2 25
+#define led_3 26
 #define led_4 21
 #define led_5 22
 #define led_6 23
-#define led_7 24
-#define led_8 25
-#define led_9 26
+#define led_7 18
+#define led_8 19
+#define led_9 20
 byte LED_arr[] = {led_1, led_2, led_3, led_4, led_5, led_6, led_7, led_8, led_9};
 
 //actuator pins
@@ -161,6 +161,8 @@ void loop()
 {
 	//HC_12_loop();  
 	keypad_password_21_but();
+	//keypad_password_9_but();
+	//kp_9_but_led_test();
 	//test_ws2811();
 }
 
@@ -262,7 +264,15 @@ void keypad_password_9_but()
   }
 }
 
-
+void kp_9_but_led_test()
+{
+	for (int i = 0; i < 9; i++)
+	{digitalWrite(LED_arr[i], HIGH); delay(1000);}
+delay(1000);
+	for (int i = 0; i < 9; i++)
+	{digitalWrite(LED_arr[i], LOW); delay(1000); }
+delay(1000);
+}
 
 
 void HC_12_test()
