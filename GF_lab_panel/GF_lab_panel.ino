@@ -50,8 +50,8 @@ char nine_buts_Keys[ROWS2][COLS2] = {
 byte colPins[COLS] = {2, 3, 4, 5, 6, 7, 8}; //connect to the column pinouts of the keypad
 byte rowPins[ROWS] = {9, 10, 11}; //connect to the row pinouts of the keypad
 
-byte rowPins2[ROWS2] = {12, 13, 14}; //connect to the row pinouts of the keypad
-byte colPins2[COLS2] = {15, 16, 17}; //connect to the column pinouts of the keypad
+byte rowPins2[ROWS2] = {12, 37, 14}; //connect to the row pinouts of the keypad
+byte colPins2[COLS2] = {15, 17, 16}; //connect to the column pinouts of the keypad
 
 Keypad customKeypad_21_but = Keypad(makeKeymap(twenty_one_buts_Keys), rowPins, colPins, ROWS, COLS);
 Keypad customKeypad_9_but = Keypad(makeKeymap(nine_buts_Keys), rowPins2, colPins2, ROWS2, COLS2);
@@ -87,9 +87,9 @@ byte LED_arr[] = {led_1, led_2, led_3, led_4, led_5, led_6, led_7, led_8, led_9}
 CRGB leds[NUM_LEDS]; // This is an array of leds.  One item for each led in your strip.
 
 String passcode_21 = "IDRM";
-String passcode_9 = "123456789";
-int passcode_21_length = 4;
-int passcode_9_length = 9;
+String passcode_9 = "321";
+int passcode_21_length = passcode_21.length();
+int passcode_9_length = passcode_9.length();
 
 String temp_passcode_21 = "";
 char temp_char_21 = '0';
@@ -160,10 +160,11 @@ void setup()
 void loop()
 {
 	//HC_12_loop();  
-	keypad_password_21_but();
-	//keypad_password_9_but();
+	//keypad_password_21_but();
+	keypad_password_9_but();
 	//kp_9_but_led_test();
 	//test_ws2811();
+	//kp_9_but_test();
 }
 
 void keypad_password_21_but()
@@ -232,15 +233,29 @@ void keypad_password_9_but()
   {
     if(temp_char_9 != '0')
     {
-      digitalWrite(leds[ascii_code_9-49], LOW);
-
+      digitalWrite(LED_arr[ascii_code_9-49], HIGH);
       temp_passcode_9 += temp_char_9;     //add to string
       Serial.println(temp_passcode_9);
     }
-    if(temp_char_9 != passcode_9[ascii_code_9-49])
+
+    Serial.print("temp_passcode_9 = ");
+    Serial.println(temp_passcode_9[ascii_code_9-49]);
+    Serial.print("passcode_9 = ");
+    Serial.println(passcode_9[ascii_code_9-49]);
+
+    if(temp_passcode_9[ascii_code_9-49] != passcode_9[ascii_code_9-49])
       {
       	temp_passcode_9 = "";
       	Serial.println("WRONG"); //wrong
+
+      	for (int i = 0; i < 3; i++){
+	      for (int i = 0; i < 9; i++){
+			digitalWrite(LED_arr[i], HIGH);}
+			delay(500);
+		  for (int i = 0; i < 9; i++){
+		 	digitalWrite(LED_arr[i], LOW);}
+			delay(500);
+		}
       }
     last_char_9=temp_char_9;
   }
@@ -253,14 +268,45 @@ void keypad_password_9_but()
     {
       Serial.println(but9_done);
 
+        for (int i = 0; i < 40; i++){
+	      for (int i = 0; i < 9; i++){
+			digitalWrite(LED_arr[i], HIGH);}
+			delay(50);
+		  for (int i = 0; i < 9; i++){
+		 	digitalWrite(LED_arr[i], LOW);}
+			delay(50);
+		}
     }
 
     else
     {
-      Serial.println("WRONG"); //wrong
-
+    	Serial.println("WRONG"); //wrong
+        for (int i = 0; i < 4; i++){
+	      for (int i = 0; i < 9; i++){
+			digitalWrite(LED_arr[i], HIGH);}
+			delay(500);
+		  for (int i = 0; i < 9; i++){
+		 	digitalWrite(LED_arr[i], LOW);}
+			delay(500);
+		}
     }
     temp_passcode_9 = "";     //then clear the string
+  }
+}
+
+void kp_9_but_test()
+{
+	char pressed=customKeypad_9_but.getKey();
+	
+	temp_char_9 = pressed;
+  if (last_char_9 != temp_char_9)
+  {
+    if(temp_char_9 != '0')
+    {
+      temp_passcode_9 += temp_char_9;     //add to string
+      Serial.println(temp_passcode_9);
+    }
+    last_char_9=temp_char_9;
   }
 }
 
