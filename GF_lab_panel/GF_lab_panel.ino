@@ -87,7 +87,7 @@ byte LED_arr[] = {led_1, led_2, led_3, led_4, led_5, led_6, led_7, led_8, led_9}
 CRGB leds[NUM_LEDS]; // This is an array of leds.  One item for each led in your strip.
 
 String passcode_21 = "IDRM";
-String passcode_9 = "321";
+String passcode_9 = "142368759";
 int passcode_21_length = passcode_21.length();
 int passcode_9_length = passcode_9.length();
 
@@ -123,6 +123,10 @@ String but21_done = "but21_done#"; //compared string should be "xx...x#" format.
 String but9_done = "but9_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
 bool is_passcode_win = 0;
+
+unsigned long t_but_9 = 0;
+unsigned long t_but_9_prev = 0;
+bool ledState = LOW;
 
 void setup()
 {
@@ -161,10 +165,12 @@ void loop()
 {
 	//HC_12_loop();  
 	//keypad_password_21_but();
-	keypad_password_9_but();
+	//keypad_password_9_but();
 	//kp_9_but_led_test();
+	//kp_1st_but_led_blink();
 	//test_ws2811();
 	//kp_9_but_test();
+	kp_91_but();
 }
 
 void keypad_password_21_but()
@@ -277,7 +283,6 @@ void keypad_password_9_but()
 			delay(50);
 		}
     }
-
     else
     {
     	Serial.println("WRONG"); //wrong
@@ -294,11 +299,95 @@ void keypad_password_9_but()
   }
 }
 
+void kp_91_but()
+{	
+	if(temp_passcode_9.length() == 0)
+	{
+		t_but_9 = millis();
+	 	if(t_but_9 - t_but_9_prev > 400) {
+			t_but_9_prev = t_but_9;
+		    if (ledState == LOW)
+		      ledState = HIGH;
+		    else
+		      ledState = LOW;
+	    	digitalWrite(LED_arr[passcode_9[0]-49], ledState);
+	    }
+	}
+
+	//read and store
+	char pressed=customKeypad_9_but.getKey();
+	for (int i=0; i < ROWS2; i++)	{
+		for(int j=0; j < COLS2; j++)		{
+			if(pressed == nine_buts_Keys[i][j]) {temp_char_9 = pressed;
+			}
+		}
+	}
+	ascii_code_9 = temp_char_9; //chat to int
+
+	if (last_char_9 != temp_char_9)
+	{
+		if(temp_char_9 != '0')
+		{
+		  temp_passcode_9 += temp_char_9;     //add to string
+		  digitalWrite(LED_arr[ascii_code_9-49], HIGH); //turn on pushed button # led (get a ascii-code of button and turn it into but number in array)
+		  Serial.println(temp_passcode_9);
+		  //Serial.println(temp_passcode_9.length()-1);
+
+		  if(temp_passcode_9[temp_passcode_9.length()-1] != passcode_9[temp_passcode_9.length()-1])
+		  {
+		  	temp_passcode_9 = "";
+		  	Serial.println("WRONG"); //wrong
+
+		  	for (int i = 0; i < 3; i++)
+		  	{
+		      for (int i = 0; i < 9; i++){
+				digitalWrite(LED_arr[i], HIGH);}
+				delay(500);
+			  for (int i = 0; i < 9; i++){
+			 	digitalWrite(LED_arr[i], LOW);}
+				delay(500);
+			}
+		  }
+		}
+		last_char_9=temp_char_9;
+	}
+	//temp_char_21 = '0'; //to get available pressing 2 same numbers in a row
+
+  if(temp_passcode_9.length() == passcode_9_length)
+  {
+    //check if right
+    if(temp_passcode_9 == passcode_9)
+    {
+      Serial.println(but9_done);
+    }
+    else
+    {
+      Serial.println("WRONG"); //wrong
+      for (int i = 0; i < 4; i++){ //blink all buttons
+	      for (int i = 0; i < 9; i++){
+			digitalWrite(LED_arr[i], HIGH);}
+			delay(500);
+		  for (int i = 0; i < 9; i++){
+		 	digitalWrite(LED_arr[i], LOW);}
+			delay(500);
+		}
+    }
+    temp_passcode_9 = "n";     //then clear the string
+  }
+}
+
 void kp_9_but_test()
 {
+	//read and store
 	char pressed=customKeypad_9_but.getKey();
-	
-	temp_char_9 = pressed;
+	for (int i=0; i < ROWS2; i++)	{
+		for(int j=0; j < COLS2; j++)		{
+			if(pressed == nine_buts_Keys[i][j]) {temp_char_9 = pressed;
+			}
+		}
+	}
+	ascii_code_9 = temp_char_9; //chat to int
+
   if (last_char_9 != temp_char_9)
   {
     if(temp_char_9 != '0')
@@ -307,6 +396,22 @@ void kp_9_but_test()
       Serial.println(temp_passcode_9);
     }
     last_char_9=temp_char_9;
+  }
+  //temp_char_21 = '0'; //to get available pressing 2 same numbers in a row
+
+  if(temp_passcode_9.length() == passcode_9_length)
+  {
+    //check if right
+    if(temp_passcode_9 == passcode_9)
+    {
+      Serial.println(but9_done);
+    }
+
+    else
+    {
+      Serial.println("WRONG"); //wrong
+    }
+    temp_passcode_9 = "";     //then clear the string
   }
 }
 
@@ -318,6 +423,20 @@ delay(1000);
 	for (int i = 0; i < 9; i++)
 	{digitalWrite(LED_arr[i], LOW); delay(1000); }
 delay(1000);
+}
+
+void kp_1st_but_led_blink()
+{
+	Serial.println(LED_arr[0]);
+	t_but_9 = millis();
+ 	if(t_but_9 - t_but_9_prev > 500) {
+		t_but_9_prev = t_but_9;
+	    if (ledState == LOW)
+	      ledState = HIGH;
+	    else
+	      ledState = LOW;
+    	digitalWrite(LED_arr[0], ledState);
+  	}
 }
 
 
