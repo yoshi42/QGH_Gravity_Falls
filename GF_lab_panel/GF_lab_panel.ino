@@ -69,8 +69,8 @@ Keypad customKeypad_9_but = Keypad(makeKeymap(nine_buts_Keys), rowPins2, colPins
 byte LED_arr[] = {led_1, led_2, led_3, led_4, led_5, led_6, led_7, led_8, led_9};
 
 //actuator pins
-#define EML_doors_diary_sheet 27  //Electromechanical Lock
-#define EML_doors_open_close 28  //Electromechanical Lock
+#define Just_in_case1 27  //Electromechanical Lock
+#define Just_in_case2 28  //Electromechanical Lock
 
 //button pins
 #define butt_OPEN 29
@@ -80,6 +80,9 @@ byte LED_arr[] = {led_1, led_2, led_3, led_4, led_5, led_6, led_7, led_8, led_9}
 #define butt_OPEN_LED 32
 #define butt_CLOSE_LED 33
 #define butt_LASTHOPE_LED 34
+
+#define EML_doors_diary_sheet 36
+#define EML_doors_open_close 39
 
 //ws2812b strip
 #define NUM_LEDS 21 //number of leds/led groups
@@ -101,32 +104,33 @@ char temp_char_9 = '0';
 char last_char_9 = '0';
 int ascii_code_9 = 0;
 
-//testing
-String passcode = "ABCDE";
-int passcode_length = 5;
-char temp_char = '0';
-String temp_passcode = "";
-char last_char = '0';
-
 //HC_12 strings
 String temp_string = ""; //variable to store information recieved form serial and compare it
+
+//Slave-Master strings
+String but21_done = "but21_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+String open_port = "open_port#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+String close_port = "close_port#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+String but9_done = "but9_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
 //Master-Slave strings
 String but21_open = "but21_op#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String but9_open = "but9_op#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String reset_lab_panel = "res_lab_pan#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
-//Slave-Master strings
-String open_port = "act_port#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
-String close_port = "act_port#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
-String but21_done = "but21_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
-String but9_done = "but9_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
-
 bool is_passcode_win = 0;
+
+int quest_pipeline = 0; ////quest logic pipeline 0->1->2->3...etc
 
 unsigned long t_but_9 = 0;
 unsigned long t_but_9_prev = 0;
 bool ledState = LOW;
+
+unsigned long t_but_21 = 0;
+unsigned long t_but_21_prev = 0;
+
+unsigned long t_but_LH = 0;
+unsigned long t_but_LH_prev = 0;
 
 void setup()
 {
@@ -148,8 +152,8 @@ void setup()
 	pinMode(butt_CLOSE_LED, OUTPUT);
 	pinMode(butt_LASTHOPE_LED, OUTPUT);
 
-	digitalWrite(EML_doors_diary_sheet, HIGH);
-	digitalWrite(EML_doors_open_close, HIGH);
+	digitalWrite(EML_doors_diary_sheet, LOW);
+	digitalWrite(EML_doors_open_close, LOW);
 	digitalWrite(butt_OPEN_LED, LOW);
 	digitalWrite(butt_CLOSE_LED, LOW);
 	digitalWrite(butt_LASTHOPE_LED, LOW);
@@ -162,15 +166,92 @@ void setup()
 }
 
 void loop()
-{
-	//HC_12_loop();  
-	//keypad_password_21_but();
-	//keypad_password_9_but();
-	//kp_9_but_led_test();
-	//kp_1st_but_led_blink();
-	//test_ws2811();
-	//kp_9_but_test();
-	kp_91_but();
+{	
+	HC_12_loop();  
+
+	if(quest_pipeline == 0)
+	{
+		keypad_password_21_but();
+	}
+
+	if(quest_pipeline == 1)
+	{
+		digitalWrite(EML_doors_open_close, HIGH); //open chest
+		delay(500);
+		digitalWrite(EML_doors_open_close, LOW);
+
+		digitalWrite(butt_OPEN_LED, HIGH);
+		digitalWrite(butt_CLOSE_LED, HIGH);
+		quest_pipeline = 11;
+	}
+
+	if(quest_pipeline == 11)
+	{
+		if(digitalRead(butt_CLOSE) == LOW)
+		{
+			delay(50);
+			digitalWrite(butt_OPEN_LED, LOW);
+			digitalWrite(butt_CLOSE_LED, LOW);
+			quest_pipeline = 0;
+			Serial.println(close_port);
+
+			for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
+			delay(500);
+			FastLED.show(); //refresh
+			delay(10000);
+		}
+
+		if(digitalRead(butt_OPEN) == LOW)
+		{	
+			delay(50);
+			digitalWrite(butt_OPEN_LED, LOW);
+			digitalWrite(butt_CLOSE_LED, LOW);
+			quest_pipeline = 2;
+			Serial.println(open_port);
+
+			for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
+			FastLED.show(); //refresh
+			delay(5000);
+		}
+	}
+
+	if(quest_pipeline == 2)
+	{
+		t_but_LH = millis();
+	 	if(t_but_LH - t_but_LH_prev > 500) {
+			t_but_LH_prev = t_but_LH;
+		    if (ledState == LOW)
+		      ledState = HIGH;
+		    else
+		      ledState = LOW;
+	    	digitalWrite(butt_LASTHOPE_LED, ledState);
+	  	}
+	  	
+	  	if(digitalRead(butt_LASTHOPE) == LOW)
+	  	{	
+	  		delay(50);
+	  		quest_pipeline = 3;
+	  		digitalWrite(butt_LASTHOPE_LED, LOW);
+	  	}
+	}
+
+	if(quest_pipeline == 3)
+	{
+		kp_91_but();
+	}
+
+	if(quest_pipeline == 4)
+	{
+		digitalWrite(EML_doors_diary_sheet, HIGH); //open chest
+		delay(500);
+		digitalWrite(EML_doors_diary_sheet, LOW);
+
+		delay(10000);
+		for (int i = 0; i < 9; i++){
+		 	digitalWrite(LED_arr[i], LOW);}
+
+		quest_pipeline = 0;
+	}
 }
 
 void keypad_password_21_but()
@@ -204,11 +285,12 @@ void keypad_password_21_but()
     //check if right
     if(temp_passcode_21 == passcode_21)
     {
-      Serial.println(but21_done);
-      is_passcode_win = 1;
-      for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all leds
-      delay(500);
-      FastLED.show(); //refresh
+		Serial.println(but21_done);
+		/*
+		for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all leds
+		delay(500);
+		FastLED.show(); //refresh*/
+  		quest_pipeline = 1; //next quest step
     }
 
     else
@@ -223,82 +305,6 @@ void keypad_password_21_but()
   }
 }
 
-void keypad_password_9_but()
-{
-	//read and store
-	char pressed=customKeypad_9_but.getKey();
-	for (int i=0; i < ROWS2; i++)	{
-		for(int j=0; j < COLS2; j++)		{
-			if(pressed == nine_buts_Keys[i][j]) {temp_char_9 = pressed;
-			}
-		}
-	}
-	ascii_code_9 = temp_char_9; //chat to int
-
-  if (last_char_9 != temp_char_9)
-  {
-    if(temp_char_9 != '0')
-    {
-      digitalWrite(LED_arr[ascii_code_9-49], HIGH);
-      temp_passcode_9 += temp_char_9;     //add to string
-      Serial.println(temp_passcode_9);
-    }
-
-    Serial.print("temp_passcode_9 = ");
-    Serial.println(temp_passcode_9[ascii_code_9-49]);
-    Serial.print("passcode_9 = ");
-    Serial.println(passcode_9[ascii_code_9-49]);
-
-    if(temp_passcode_9[ascii_code_9-49] != passcode_9[ascii_code_9-49])
-      {
-      	temp_passcode_9 = "";
-      	Serial.println("WRONG"); //wrong
-
-      	for (int i = 0; i < 3; i++){
-	      for (int i = 0; i < 9; i++){
-			digitalWrite(LED_arr[i], HIGH);}
-			delay(500);
-		  for (int i = 0; i < 9; i++){
-		 	digitalWrite(LED_arr[i], LOW);}
-			delay(500);
-		}
-      }
-    last_char_9=temp_char_9;
-  }
-  //temp_char_9 = '0'; //to get available pressing 2 same numbers in a row
-
-  if(temp_passcode_9.length() == passcode_9_length)
-  {
-    //check if right
-    if(temp_passcode_9 == passcode_9)
-    {
-      Serial.println(but9_done);
-
-        for (int i = 0; i < 40; i++){
-	      for (int i = 0; i < 9; i++){
-			digitalWrite(LED_arr[i], HIGH);}
-			delay(50);
-		  for (int i = 0; i < 9; i++){
-		 	digitalWrite(LED_arr[i], LOW);}
-			delay(50);
-		}
-    }
-    else
-    {
-    	Serial.println("WRONG"); //wrong
-        for (int i = 0; i < 4; i++){
-	      for (int i = 0; i < 9; i++){
-			digitalWrite(LED_arr[i], HIGH);}
-			delay(500);
-		  for (int i = 0; i < 9; i++){
-		 	digitalWrite(LED_arr[i], LOW);}
-			delay(500);
-		}
-    }
-    temp_passcode_9 = "";     //then clear the string
-  }
-}
-
 void kp_91_but()
 {	
 	if(temp_passcode_9.length() == 0)
@@ -310,7 +316,7 @@ void kp_91_but()
 		      ledState = HIGH;
 		    else
 		      ledState = LOW;
-	    	digitalWrite(LED_arr[passcode_9[0]-49], ledState);
+	    	digitalWrite(LED_arr[passcode_9[0]-49], ledState); //ascii code for 0 is 49
 	    }
 	}
 
@@ -359,6 +365,8 @@ void kp_91_but()
     if(temp_passcode_9 == passcode_9)
     {
       Serial.println(but9_done);
+
+      quest_pipeline = 4;
     }
     else
     {
@@ -373,6 +381,57 @@ void kp_91_but()
 		}
     }
     temp_passcode_9 = "n";     //then clear the string
+  }
+}
+
+void HC_12_loop() 
+{              //recieve something from hc-12 inerface
+  while (Serial_HC.available())
+  {
+    char inChar = Serial_HC.read(); //store each bite in var
+    temp_string += inChar;     //add to string
+    //Serial.print(inChar); //Send each recieved byte back
+    if (inChar == '#')       //if stop byte recieved
+    {
+      Serial.print(temp_string);
+      Serial.println(" - copy that");
+
+      if (temp_string == but21_open)  //compare string with a known commands
+      {
+      	quest_pipeline = 1;
+      }
+      if (temp_string = reset_lab_panel)  //compare string with a known commands
+      {
+      	quest_pipeline = 0;
+
+      	digitalWrite(butt_OPEN_LED, LOW);
+		digitalWrite(butt_CLOSE_LED, LOW);
+		digitalWrite(butt_LASTHOPE_LED, LOW);
+
+		for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
+		FastLED.show(); //refresh
+
+		for (int i = 0; i < 9; i++) {digitalWrite(LED_arr[i], LOW);}  //turn off all 9 leds
+
+      }
+
+      if (temp_string == but9_open)  //compare string with a known commands
+      {
+        quest_pipeline = 4;
+      }
+    temp_string = "";     //then clear the string
+    }
+  }
+}
+
+
+/*/////////////////// TESTing ALGS /////////////////////////
+void HC_12_test()
+{
+  if(Serial_HC.available())
+  {
+    char inChar = Serial_HC.read();
+    Serial.print(inChar); //Send each recieved byte back
   }
 }
 
@@ -439,42 +498,4 @@ void kp_1st_but_led_blink()
   	}
 }
 
-
-void HC_12_test()
-{
-  if(Serial_HC.available())
-  {
-    char inChar = Serial_HC.read();
-    Serial.print(inChar); //Send each recieved byte back
-  }
-}
-
-void HC_12_loop() 
-{              //recieve something from hc-12 inerface
-  while (Serial_HC.available())
-  {
-    char inChar = Serial_HC.read(); //store each bite in var
-    temp_string += inChar;     //add to string
-    //Serial.print(inChar); //Send each recieved byte back
-    if (inChar == '#')       //if stop byte recieved
-    {
-      Serial.print(temp_string);
-      Serial.println(" - copy that");
-
-      if (temp_string)  //compare string with a known commands
-      {
-
-      }
-      if (temp_string)  //compare string with a known commands
-      {
-        is_passcode_win = 1;
-      }
-
-      if (temp_string)  //compare string with a known commands
-      {
-        
-      }
-    temp_string = "";     //then clear the string
-    }
-  }
-}
+*/
