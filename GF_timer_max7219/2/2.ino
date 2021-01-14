@@ -11,7 +11,7 @@ Max72xxPanel matrix = Max72xxPanel(pinCS, numberOfHorizontalDisplays, numberOfVe
 SoftwareSerial Serial_HC(6, 7); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
 
 ////////////////Scroll setup/////////////////
-String tape = "Ready"; // текст, который будет плыть
+String tape = "Gravity falls"; // текст, который будет плыть
 int wait = 50; // время между крайними перемещениями букв
 int spacer = 1; // расстояние между буквами
 int width = 5 + spacer; // размер шрифта
@@ -56,9 +56,8 @@ void loop()
     HC_12_loop();
     if(!timer_start_flag && !timer_stop_flag)
     {
-        //ftape = "Gravity falls";
-        //scroll();
-        ready();
+        tape = "Gravity falls";
+        scroll();
         timer_reset_flag = false;
         timer_stop_flag = false;
     }
@@ -140,16 +139,7 @@ void text() {
         matrix.write();
         delay(wait);
     }
-}
-
-void ready()
-{
-    matrix.drawChar(1, 0, tape[0], HIGH, LOW, 1);
-    matrix.drawChar(7, 0, tape[1], HIGH, LOW, 1);
-    matrix.drawChar(13, 0, tape[2], HIGH, LOW, 1);
-    matrix.drawChar(19, 0, tape[3], HIGH, LOW, 1);
-    matrix.drawChar(25, 0, tape[4], HIGH, LOW, 1);
-    matrix.write();
+    delay(wait);
 }
 
 void scroll() {
