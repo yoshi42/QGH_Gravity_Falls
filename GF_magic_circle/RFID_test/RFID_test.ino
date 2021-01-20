@@ -31,13 +31,15 @@
  * SPI MOSI    MOSI         11 / ICSP-4   51        D11        ICSP-4           16
  * SPI MISO    MISO         12 / ICSP-1   50        D12        ICSP-1           14
  * SPI SCK     SCK          13 / ICSP-3   52        D13        ICSP-3           15
+
+ https://diyi0t.com/rfid-sensor-tutorial-for-arduino-and-esp8266/ - WIRING IS HERE
  */
 
 #include <SPI.h>
 #include <MFRC522.h>
 
 #define RST_PIN         10          // Configurable, see typical pin layout above
-#define SS_PIN          9         // Configurable, see typical pin layout above
+#define SS_PIN          A0         // Configurable, see typical pin layout above
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
 

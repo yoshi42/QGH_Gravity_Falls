@@ -16,9 +16,10 @@ Also device sends a command to the contol system HC-12, that quest is done.
 //SPI MISO    MISO    D12
 //SPI SCK     SCK     D13 
 #define RST_PIN          10
-#define SS_0_PIN         9
-#define done_pin         8
-#define card_present_pin 7
+#define SS_0_PIN         A0
+
+#define done_pin         A3
+#define card_present_pin A2  //not used for now
 
 const int NR_OF_READERS = 1;
 
@@ -42,6 +43,8 @@ unsigned long masCard [12] = {
 };
 byte nCard = 0;
 
+byte right_card_num = 3; //Nuumber of card which is right for this reader
+
 void setup()
 {
 
@@ -52,6 +55,8 @@ void setup()
   digitalWrite(done_pin, HIGH);
   pinMode(card_present_pin, OUTPUT);
   digitalWrite(card_present_pin, HIGH);
+
+  pinMode(LED_BUILTIN, OUTPUT);
 
   for (uint8_t reader = 0; reader < NR_OF_READERS; reader++) {
     mfrc522[reader].PCD_Init(ssPins[reader], RST_PIN); // Init each MFRC522 card
@@ -84,13 +89,19 @@ void loop() {
       mfrc522[reader].PICC_HaltA();
       // Stop encryption on PCD
       mfrc522[reader].PCD_StopCrypto1();
+
+      digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+      delay(500);                       // wait for a second
+      digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
     }
+
+    /*if (mfrc522[reader].PICC_ReadCardSerial())  //take a look for a presence of a card //didnt working
+    {
+      digitalWrite(card_present_pin, LOW);
+    }
+    else {digitalWrite(card_present_pin, HIGH);}*/
   }
-  if (mfrc522[0].PICC_IsNew
-    CardPresent()){
-    digitalWrite(card_present_pin, LOW);
-  }
-  else {digitalWrite(card_present_pin, HIGH);}
+
 }
 
 void dump_byte_array(byte *buffer, byte bufferSize)
@@ -105,16 +116,17 @@ void dump_byte_array(byte *buffer, byte bufferSize)
   }
   Serial.println(bufCard, HEX);
 
-  if (bufCard == masCard[1])
+  if (bufCard == masCard[right_card_num])
   {
-    Serial.println("card1");
+    Serial.print("ok card ");
+    Serial.println(right_card_num);
     digitalWrite(done_pin, LOW);
   }
   
-  else if(bufCard != masCard[1])
-  {
+  else if(bufCard != masCard[right_card_num])
+  {    
+    Serial.println("NOT ok card");
     digitalWrite(done_pin, HIGH);
-    Serial.println("card_another");
   }
   bufCard = 0;
 }

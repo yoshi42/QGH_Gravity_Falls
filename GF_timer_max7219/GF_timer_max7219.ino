@@ -12,6 +12,8 @@ SoftwareSerial Serial_HC(6, 7); // (Rx_pin, Tx_pin) //using a softwareSerial ins
 
 ////////////////Scroll setup/////////////////
 String tape = "Ready"; // текст, который будет плыть
+String tape2 = "Time is over"; // текст, который будет плыть
+
 int wait = 50; // время между крайними перемещениями букв
 int spacer = 1; // расстояние между буквами
 int width = 5 + spacer; // размер шрифта
@@ -56,8 +58,6 @@ void loop()
     HC_12_loop();
     if(!timer_start_flag && !timer_stop_flag)
     {
-        //ftape = "Gravity falls";
-        //scroll();
         ready();
         timer_reset_flag = false;
         timer_stop_flag = false;
@@ -129,16 +129,7 @@ void timer()
     if(secondsLeft <= 0)
     {
         tape = "Time is over";
-        scroll();
-    }
-}
-
-void text() {
-    for ( int i = 0 ; i < tape.length(); i++ ) {
-        matrix.fillScreen(LOW);
-        matrix.drawChar(0, 0, tape[i], HIGH, LOW, 1);
-        matrix.write();
-        delay(wait);
+        timeisover();
     }
 }
 
@@ -152,8 +143,42 @@ void ready()
     matrix.write();
 }
 
+void timeisover()
+{
+    byte minutes = 0;
+    byte seconds = 0;
+
+    millisPrew = millisNow;
+    minutes = secondsLeft/60;
+    seconds = secondsLeft%60;
+
+    Serial.print(minutes/10);
+    Serial.print(minutes%10);
+    Serial.print(seconds/10);
+    Serial.println(seconds%10);
+
+    matrix.fillScreen(LOW);
+    matrix.drawChar(1, 0, minutes/10+48, HIGH, LOW, 1); //ascii "0" char number is 48, 1=49, 2=50, etc.
+    matrix.drawChar(8, 0, minutes%10+48, HIGH, LOW, 1);
+
+    matrix.drawPixel(15, 1, HIGH);
+    matrix.drawPixel(15, 2, HIGH);
+    matrix.drawPixel(15, 4, HIGH);
+    matrix.drawPixel(15, 5, HIGH);
+
+    matrix.drawPixel(16, 1, HIGH);
+    matrix.drawPixel(16, 2, HIGH);
+    matrix.drawPixel(16, 4, HIGH);
+    matrix.drawPixel(16, 5, HIGH);
+
+    //matrix.drawChar(9, 0, 58, HIGH, LOW, 1); // ascii ":" char
+    matrix.drawChar(19, 0, seconds/10+48, HIGH, LOW, 1);
+    matrix.drawChar(26, 0, seconds%10+48, HIGH, LOW, 1);
+    matrix.write();
+}
+
 void scroll() {
-    for ( int i = 0 ; i < width * tape.length() + matrix.width() - 1 - spacer; i++ ) {
+    for ( int i = 0 ; i < width * tape2.length() + matrix.width() - 1 - spacer; i++ ) {
         matrix.fillScreen(LOW);
 
         int letter = i / width;
@@ -161,8 +186,8 @@ void scroll() {
         int y = (matrix.height() - 8) / 2; // center the text vertically
 
         while ( x + width - spacer >= 0 && letter >= 0 ) {
-            if ( letter < tape.length() ) {
-                matrix.drawChar(x, y, tape[letter], HIGH, LOW, 1);
+            if ( letter < tape2.length() ) {
+                matrix.drawChar(x, y, tape2[letter], HIGH, LOW, 1);
             }
             letter--;
             x -= width;

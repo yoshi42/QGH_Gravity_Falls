@@ -46,7 +46,7 @@ Typical pin layout used:
 #define SS_10_PIN       A2
 #define SS_11_PIN       A3
 
-const int NR_OF_READERS = 12;
+const int NR_OF_READERS = 1;
 
 byte ssPins[] = {SS_0_PIN, SS_1_PIN, SS_2_PIN, SS_3_PIN, SS_4_PIN, SS_5_PIN, SS_6_PIN, SS_7_PIN, SS_8_PIN, SS_9_PIN, SS_10_PIN, SS_11_PIN};
 
