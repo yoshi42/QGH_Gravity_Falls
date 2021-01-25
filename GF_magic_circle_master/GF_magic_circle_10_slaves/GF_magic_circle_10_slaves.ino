@@ -19,7 +19,7 @@ Also device sends a command to the contol system HC-12, that quest is done.
 #define SS_0_PIN         A0
 
 #define done_pin         A3
-#define card_present_pin A2  //not used for now
+#define reset_values_pin A2
 
 const int NR_OF_READERS = 1;
 
@@ -41,9 +41,24 @@ unsigned long masCard [12] = {
   0xC68D01AE, //10
   0xF676FAAD //11
 };
+
+unsigned long BigCard [10] = {
+  0xA2F0E30E, //0
+  0xD25EA40E, //1
+  0xD252A90E, //2
+  0x22B2530E, //3
+  0xB2E60C0D, //4
+  0x529A660E, //5
+  0xB292BA0E, //6
+  0x329F620E, //7
+  0xE2BFEA0D, //8
+  0x3273C50E, //9
+};
+
 byte nCard = 0;
 
-byte right_card_num = 3; //Nuumber of card which is right for this reader
+
+byte right_card_num = 9; //Nuumber of card which is right for this reader
 
 void setup()
 {
@@ -53,8 +68,8 @@ void setup()
 
   pinMode(done_pin, OUTPUT);
   digitalWrite(done_pin, HIGH);
-  pinMode(card_present_pin, OUTPUT);
-  digitalWrite(card_present_pin, HIGH);
+
+  pinMode(reset_values_pin, INPUT_PULLUP);
 
   pinMode(LED_BUILTIN, OUTPUT);
 
@@ -72,34 +87,38 @@ void setup()
 */
 void loop() {
 
-  for (uint8_t reader = 0; reader < NR_OF_READERS; reader++) {
-    // Look for new cards
+  if(digitalRead(reset_values_pin) == LOW) //if no pin reset pin activated
+  {
+    delay(50);
+    digitalWrite(done_pin, HIGH);
+    Serial.println("reset state");
+  }
 
-    if (mfrc522[reader].PICC_IsNewCardPresent() && mfrc522[reader].PICC_ReadCardSerial()) {
-      Serial.print(F("Reader "));
-      Serial.print(reader);
-      nCard = reader;
-      // Show some details of the PICC (that is: the tag/card)
-      Serial.print(F(": Card UID:"));
-      dump_byte_array(mfrc522[reader].uid.uidByte, mfrc522[reader].uid.size);
+  else
+  {
+    for (uint8_t reader = 0; reader < NR_OF_READERS; reader++) {
+      // Look for new cards
 
-      //Serial.print(" ");
-      //Serial.println();
-      // Halt PICC
-      mfrc522[reader].PICC_HaltA();
-      // Stop encryption on PCD
-      mfrc522[reader].PCD_StopCrypto1();
+      if (mfrc522[reader].PICC_IsNewCardPresent() && mfrc522[reader].PICC_ReadCardSerial()) {
+        Serial.print(F("Reader "));
+        Serial.print(reader);
+        nCard = reader;
+        // Show some details of the PICC (that is: the tag/card)
+        Serial.print(F(": Card UID:"));
+        dump_byte_array(mfrc522[reader].uid.uidByte, mfrc522[reader].uid.size);
 
-      digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
-      delay(500);                       // wait for a second
-      digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
+        //Serial.print(" ");
+        //Serial.println();
+        // Halt PICC
+        mfrc522[reader].PICC_HaltA();
+        // Stop encryption on PCD
+        mfrc522[reader].PCD_StopCrypto1();
+
+        digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+        delay(500);                       // wait for a second
+        digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
+      }
     }
-
-    /*if (mfrc522[reader].PICC_ReadCardSerial())  //take a look for a presence of a card //didnt working
-    {
-      digitalWrite(card_present_pin, LOW);
-    }
-    else {digitalWrite(card_present_pin, HIGH);}*/
   }
 
 }
@@ -116,14 +135,14 @@ void dump_byte_array(byte *buffer, byte bufferSize)
   }
   Serial.println(bufCard, HEX);
 
-  if (bufCard == masCard[right_card_num])
+  if (bufCard == masCard[right_card_num] || bufCard == BigCard[right_card_num])
   {
     Serial.print("ok card ");
     Serial.println(right_card_num);
     digitalWrite(done_pin, LOW);
   }
   
-  else if(bufCard != masCard[right_card_num])
+  else if(bufCard != masCard[right_card_num] || bufCard != BigCard[right_card_num])
   {    
     Serial.println("NOT ok card");
     digitalWrite(done_pin, HIGH);

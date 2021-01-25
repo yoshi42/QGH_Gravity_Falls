@@ -7,6 +7,9 @@ Also device sends a command to the contol system HC-12, that quest is done.
 ///////////////////////////////////*/
 
 #include <SoftwareSerial.h>
+#include <FastLED.h>
+
+SoftwareSerial Serial_HC(A4, A5); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
 
 #define SS_0_PIN        3
 #define SS_1_PIN        9
@@ -21,7 +24,15 @@ Also device sends a command to the contol system HC-12, that quest is done.
 #define SS_10_PIN       A3
 #define SS_11_PIN       4
 
-#define is_card_present 11
+#define readers_rst 11 //LOW for a sec is reset
+#define bipolarpnp 13
+
+
+//ws2812b strip
+#define NUM_LEDS 10 //number of leds/led groups
+#define DATA_PIN 10 //D0 out to pin
+CRGB leds[NUM_LEDS]; // This is an array of leds.  One item for each led in your strip.
+
 
 const int NR_OF_READERS = 12;
 
@@ -49,21 +60,51 @@ bool reader_ok_state = false;
 bool trigger_logic_state = false;
 bool trigger_logic_state2 = false;
 
-#define ledpin_ws2812 10;
+//HC_12 strings
+String temp_string = ""; //variable to store information recieved form serial and compare it
+
+//Slave-Master strings
+String mgc_crcl_done = "mgc_crcl_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
 void setup()
 {
   Serial.begin(9600);
+  Serial_HC.begin(9600); //initiating software serial
+
+  FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);  // GRB ordering is typical
 
   for (int reader = 0; reader < NR_OF_READERS; reader++) {
     pinMode(ssPins[reader], INPUT_PULLUP);
   }
+
+  pinMode(readers_rst, OUTPUT);
+  digitalWrite(readers_rst, HIGH);
+  delay(1000);
+  digitalWrite(readers_rst, LOW);
+
 }
 
 void loop ()
-{
-  if (digitalRead(ssPins[1]) == reader_ok_state &&
-      /*digitalRead(ssPins[1]) == reader_ok_state &&
+{ 
+  for (int reader = 0; reader < NR_OF_READERS; reader++) 
+  {
+    if (digitalRead(ssPins[reader]) == reader_ok_state)
+    {
+      delay(20);
+      leds[reader] = CRGB(0, 70, 0); //turn on led
+      FastLED.show(); //refresh
+    }
+
+    if (digitalRead(ssPins[reader]) != reader_ok_state)
+    {
+      delay(20);
+      leds[reader] = CRGB::Black; //turn off led
+      FastLED.show(); //refresh
+    }
+  }
+
+  if ((digitalRead(ssPins[0]) == reader_ok_state &&
+      digitalRead(ssPins[1]) == reader_ok_state &&
       digitalRead(ssPins[2]) == reader_ok_state &&
       digitalRead(ssPins[3]) == reader_ok_state &&
       digitalRead(ssPins[4]) == reader_ok_state &&
@@ -71,17 +112,31 @@ void loop ()
       digitalRead(ssPins[6]) == reader_ok_state &&
       digitalRead(ssPins[7]) == reader_ok_state &&
       digitalRead(ssPins[8]) == reader_ok_state &&
-      digitalRead(ssPins[9]) == reader_ok_state &&*/
+      digitalRead(ssPins[9]) == reader_ok_state) &&
       trigger_logic_state == false) 
   {
     delay(200);
     Serial.println("all readers are ok");
+    Serial_HC.println(mgc_crcl_done);
+
     trigger_logic_state = true;
     trigger_logic_state2 = true;
+
+    for (int reader = 0; reader < NR_OF_READERS; reader++) 
+    {
+      leds[reader] = CRGB(70, 0, 0); //turn on led
+      FastLED.show(); //refresh
+    }
+    delay(5000);
+
+    digitalWrite(readers_rst, HIGH);
+    delay(500);
+    digitalWrite(readers_rst, LOW);
+    Serial.println("resetting readers");
   }
 
-  if((digitalRead(ssPins[1]) == !reader_ok_state //||
-      /*digitalRead(ssPins[1]) == !reader_ok_state ||
+  if((digitalRead(ssPins[0]) == !reader_ok_state ||
+      digitalRead(ssPins[1]) == !reader_ok_state ||
       digitalRead(ssPins[2]) == !reader_ok_state ||
       digitalRead(ssPins[3]) == !reader_ok_state ||
       digitalRead(ssPins[4]) == !reader_ok_state ||
@@ -89,8 +144,8 @@ void loop ()
       digitalRead(ssPins[6]) == !reader_ok_state ||
       digitalRead(ssPins[7]) == !reader_ok_state ||
       digitalRead(ssPins[8]) == !reader_ok_state ||
-      digitalRead(ssPins[9]) == !reader_ok_state)*/ &&
-      trigger_logic_state2 == true))
+      digitalRead(ssPins[9]) == !reader_ok_state) &&
+      trigger_logic_state2 == true)
   {
     delay(200);
     Serial.println("NOT");
