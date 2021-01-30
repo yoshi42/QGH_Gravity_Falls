@@ -30,13 +30,15 @@ int interval = 1000;
 String temp_string = ""; //variable to store information recieved form serial and compare it
 
 //Slave-Master strings
-String time_ends = "time_ends#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+String time_is_over = "tm_ovr#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
 //Master-Slave strings
 String tmr_strt = "tmr_strt#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String tmr_pls_5m = "tmr_pls_5m#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String tmr_rst = "tmr_rst#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String tmr_stp = "tmr_stp#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+
+bool is_time_over = false; //flag to send 
 
 bool timer_start_flag = false;
 bool timer_reset_flag = false;
@@ -89,8 +91,8 @@ void timer()
     byte minutes = 0;
     byte seconds = 0;
     
-    if(secondsLeft>=0)
-    {
+    if(secondsLeft>0)
+    {	
         millisNow = millis();
         if(millisNow - millisPrew > interval) 
         {
@@ -123,12 +125,17 @@ void timer()
             matrix.write();
 
             secondsLeft--;
+            is_time_over = false;
         }
     }
 
     if(secondsLeft <= 0)
     {
-        tape = "Time is over";
+        if(is_time_over == false)
+        {
+        	Serial_HC.println(time_is_over);
+        	is_time_over = true;
+        }
         timeisover();
     }
 }

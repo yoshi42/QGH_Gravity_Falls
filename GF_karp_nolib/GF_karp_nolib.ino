@@ -84,7 +84,7 @@ void setup()
   digitalWrite(EML_Table, HIGH);
 
 	Serial.println("Started");
-  HC12.println("HC_12_initiated");
+  //HC12.println("HC_12_initiated");
 }
 
 void loop()
@@ -121,7 +121,7 @@ void loop()
 
   if (millis() - time > 10000) digitalWrite(EML_Table, HIGH); //time for EML still open
 
-  /*switch (what_color) 
+  switch (what_color) 
   {
     case 'W':
       Serial.println("WHITE");
@@ -138,7 +138,7 @@ void loop()
     case 'N':
       Serial.println("NOTHING");
       break;
-  }*/
+  }
 }
 
 void color_sensor() 

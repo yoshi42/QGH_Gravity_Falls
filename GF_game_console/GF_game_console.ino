@@ -401,6 +401,9 @@ void ledLow(){
 void irblink_startup() //Media pleer on
 {
   /*
+TV:
+on 807C50AF
+Romsat: 
 on 807F807F
 exit 807F6897
 menu 807FDA25
@@ -410,8 +413,10 @@ down 807F58A7
 up 807FE817
 play 807F08F7
 next 807FF807
-*/
-    irsend.sendNEC(0x807F807F, 32); //on
+*/  
+    irsend.sendNEC(0x5FAFA05, 32); //on TV
+    delay(1000);
+    irsend.sendNEC(0x807F807F, 32); //on Romsat
     delay(20000);
     irsend.sendNEC(0x807FDA25, 32); // menu
     delay(700);
@@ -422,6 +427,8 @@ next 807FF807
     irsend.sendNEC(0x807FA857, 32); //ok
     delay(3000);
     irsend.sendNEC(0x807FA857, 32); //ok
+    delay(3000);
+    irsend.sendNEC(0x807FE817, 32); //up
     delay(3000);
     irsend.sendNEC(0x807F08F7, 32); //play
     delay(2000);
