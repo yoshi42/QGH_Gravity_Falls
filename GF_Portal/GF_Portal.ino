@@ -23,25 +23,7 @@ char inChar;
 #define mov5 11 //to check phone handset state - picked up/down
 #define mov6 12 //to check phone handset state - picked up/down
 
-int delay_mov1 = 100000; //milisec
-int delay_mov2 = 100000; //milisec
-int delay_mov3 = 100000; //milisec
-int delay_mov4 = 100000; //milisec
-int delay_mov5 = 100000; //milisec
-int delay_mov6 = 100000; //milisec
-
-unsigned long t_mov1 = 0;
-unsigned long t_mov1_prev = 0;
-unsigned long t_mov2 = 0;
-unsigned long t_mov2_prev = 0;
-unsigned long t_mov3 = 0;
-unsigned long t_mov3_prev = 0;
-unsigned long t_mov4 = 0;
-unsigned long t_mov4_prev = 0;
-unsigned long t_mov5 = 0;
-unsigned long t_mov5_prev = 0;
-unsigned long t_mov6 = 0;
-unsigned long t_mov6_prev = 0;
+int last_played_mov = 0;
 
 //Command strings
 String Tele_mov1 = "Tele_mov1#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
@@ -51,8 +33,6 @@ String Tele_mov4 = "Tele_mov4#"; //compare string should be "xx...x#" format. La
 String Tele_mov5 = "Tele_mov5#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 String Tele_mov6 = "Tele_mov6#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 String Tele_on = "Tele_on#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-
-bool dio = false; // do it once - flag to do something just one time
 
 /////////////////irled+TV/////////////
 IRsend irsend;
@@ -64,19 +44,18 @@ void setup()
   HC12.begin(9600); //initiating software serial
   
   pinMode(mov1, OUTPUT);
-  digitalWrite(mov1, HIGH);
+  digitalWrite(mov1, LOW);
   pinMode(mov2, OUTPUT);
-  digitalWrite(mov2, HIGH);
+  digitalWrite(mov2, LOW);
   pinMode(mov3, OUTPUT);
-  digitalWrite(mov3, HIGH);
+  digitalWrite(mov3, LOW);
   pinMode(mov4, OUTPUT);
-  digitalWrite(mov4, HIGH);
+  digitalWrite(mov4, LOW);
   pinMode(mov5, OUTPUT);
-  digitalWrite(mov5, HIGH);
+  digitalWrite(mov5, LOW);
   pinMode(mov6, OUTPUT);
-  digitalWrite(mov6, HIGH);
+  digitalWrite(mov6, LOW);
 
-  delay(2000); //wait for TV became to react an ir-comands
   irblink_startup();
 }
 
@@ -98,76 +77,104 @@ void HC_12_loop()
 
       if(temp_string == Tele_mov1)
       { 
-        digitalWrite(mov1, LOW);
-        t_mov1 = millis();
-        if(t_mov1 - t_mov1_prev > delay_mov1) 
+        if(last_played_mov == 1)
         {
-          t_mov1_prev = t_mov1;
-          digitalWrite(mov1, HIGH);
+          digitalWrite(mov1, LOW);
         }
+        digitalWrite(mov2, LOW);
+        digitalWrite(mov3, LOW);
+        digitalWrite(mov4, LOW);
+        digitalWrite(mov5, LOW);
+        digitalWrite(mov6, LOW);
+        delay(50);
+        digitalWrite(mov1, HIGH);
+        last_played_mov = 1;
       }
 
       if(temp_string == Tele_mov2)
       { 
-        digitalWrite(mov2, LOW);
-        t_mov2 = millis();
-        if(t_mov2 - t_mov2_prev > delay_mov2) 
+        if(last_played_mov == 2)
         {
-          t_mov2_prev = t_mov2;
-          digitalWrite(mov2, HIGH);
+          digitalWrite(mov2, LOW);
         }
+        digitalWrite(mov1, LOW);
+        digitalWrite(mov3, LOW);
+        digitalWrite(mov4, LOW);
+        digitalWrite(mov5, LOW);
+        digitalWrite(mov6, LOW);
+        delay(50);
+        digitalWrite(mov2, HIGH);
+        last_played_mov = 2;
       }
 
       if(temp_string == Tele_mov3)
       {
-        digitalWrite(mov3, LOW);
-        t_mov3 = millis();
-        if(t_mov3 - t_mov3_prev > delay_mov3) 
+        if(last_played_mov == 3)
         {
-          t_mov3_prev = t_mov3;
-          digitalWrite(mov3, HIGH);
+          digitalWrite(mov3, LOW);
         }
+        digitalWrite(mov1, LOW);
+        digitalWrite(mov2, LOW);
+        digitalWrite(mov4, LOW);
+        digitalWrite(mov5, LOW);
+        digitalWrite(mov6, LOW);
+        delay(50);
+        digitalWrite(mov3, HIGH);
+        last_played_mov = 3;
       }
 
       if(temp_string == Tele_mov4)
       {
-        digitalWrite(mov4, LOW);
-        t_mov4 = millis();
-        if(t_mov4 - t_mov4_prev > delay_mov4) 
+        if(last_played_mov == 4)
         {
-          t_mov4_prev = t_mov4;
-          digitalWrite(mov4, HIGH);
+          digitalWrite(mov4, LOW);
         }
+        digitalWrite(mov1, LOW);
+        digitalWrite(mov2, LOW);
+        digitalWrite(mov3, LOW);
+        digitalWrite(mov5, LOW);
+        digitalWrite(mov6, LOW);
+        delay(50);
+        digitalWrite(mov4, HIGH);
+        last_played_mov = 4;
       }
 
       if(temp_string == Tele_mov5)
       { 
-        digitalWrite(mov5, LOW);
-        t_mov5 = millis();
-        if(t_mov5 - t_mov5_prev > delay_mov5) 
+        if(last_played_mov == 5)
         {
-          t_mov5_prev = t_mov5;
-          digitalWrite(mov5, HIGH);
+          digitalWrite(mov5, LOW);
         }
+        digitalWrite(mov1, LOW);
+        digitalWrite(mov2, LOW);
+        digitalWrite(mov3, LOW);
+        digitalWrite(mov4, LOW);
+        digitalWrite(mov6, LOW);
+        delay(50);
+        digitalWrite(mov5, HIGH);
+        last_played_mov = 5;
       }
 
       if(temp_string == Tele_mov6)
       {
-        digitalWrite(mov6, LOW);
-        t_mov6 = millis();
-        if(t_mov6 - t_mov6_prev > delay_mov6) 
+        if(last_played_mov == 6)
         {
-          t_mov6_prev = t_mov6;
-          digitalWrite(mov6, HIGH);
+          digitalWrite(mov6, LOW);
         }
+        digitalWrite(mov1, LOW);
+        digitalWrite(mov2, LOW);
+        digitalWrite(mov3, LOW);
+        digitalWrite(mov4, LOW);
+        digitalWrite(mov5, LOW);
+        delay(50);
+        digitalWrite(mov6, HIGH);
+        last_played_mov = 6;
       }
 
       if (temp_string == Tele_on)  //compare string with a known commands
       {
         irblink_startup();
       }
-
-
  	    temp_string = "";			//then clear the string
     }
   }
@@ -175,23 +182,6 @@ void HC_12_loop()
 
 void irblink_startup() //TV and media pleer on
 {
-  /*TV ELENBERG
-on 807F807F
-delay 5-10 sec
-exit 807F6897
-menu 807FDA25
-left 807F42BD
-down 807F58A7
-ok 807FA857
-ok 807FA857
-left 807F42BD
-left 807F42BD
-ok 807FA857
-ok 807FA857
-up 807FE817
-ok 807FA857
-pause 807F08F7
-play 807F08F7
-*/
-    irsend.sendNEC(0x807F807F, 32); //on
+    irsend.sendNEC(0x5FAFA05, 32); //on TV
+    delay(1000);
 }

@@ -402,7 +402,7 @@ void irblink_startup() //Media pleer on
 {
   /*
 TV:
-on 807C50AF
+on 0x5FAFA05
 Romsat: 
 on 807F807F
 exit 807F6897
