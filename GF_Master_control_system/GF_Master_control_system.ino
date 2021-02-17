@@ -1,7 +1,7 @@
 #include <DFPlayer_Mini_Mp3.h>
 #include <SoftwareSerial.h>
 
-SoftwareSerial HC12(40, 42); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
+SoftwareSerial HC12(2, 3); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
 SoftwareSerial esp_wifi(44, 46); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
 
 //=======================MCS_IN-OUTS==============================
@@ -21,7 +21,7 @@ const int MCS_D31 = 31;
 
 //=======================MCS-down_MOSFETS
 const int Mos13 = 13;
-const int Mos13 = 12;
+const int Mos12 = 12;
 const int Mos11 = 11;
 const int Mos10 = 10;
 const int Mos9 = 9;
@@ -30,19 +30,19 @@ const int Mos7 = 7;
 const int Mos6 = 6;
 const int Mos5 = 5;
 const int Mos4 = 4;
-const int Mos3 = 3;
-const int Mos2 = 2;
+//const int Mos3 = 3;
+//const int Mos2 = 2;
 const int Mos32 = 32;
 const int Mos34 = 34;
 const int Mos36 = 36;
 const int Mos38 = 38;
 
 //=======================MCS-left-down_dig_outs
-const int MCS_D22 22;
-const int MCS_D24 24;
-const int MCS_D25 26;
-const int MCS_D28 28;
-const int MCS_D30 30;
+const int MCS_D22 = 22;
+const int MCS_D24 = 24;
+const int MCS_D25 = 26;
+const int MCS_D28 = 28;
+const int MCS_D30 = 30;
 
 //=======================MCS-up_an_INs
 #define MCS_A0 A0
@@ -63,13 +63,12 @@ const int MCS_D30 30;
 #define MCS_A15 A15
 
 //=======================MCS-up_an_INs
-const int MCS_D40 40;
-const int MCS_D42 42;
-const int MCS_D44 44;
-const int MCS_D46 46;
-const int MCS_D48 48;
-const int MCS_D50 50;
-const int MCS_D52 52;
+
+const int MCS_D44 = 44;
+const int MCS_D46 = 46;
+const int MCS_D48 = 48;
+const int MCS_D50 = 50;
+const int MCS_D52 = 52;
 
 String string;
 String string_reply;
@@ -101,6 +100,7 @@ String reset_lab_panel = "reset_lab_panel#"; //compared string should be "xx...x
 String mgc_crcl_done = "mgc_crcl_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
 //GF_remote_XY
+const int num_cmnds = 4;
 String commands_array[num_cmnds] = {"tmr_strt#", "tmr_pls_5m#", "tmr_rst#", "tmr_stp#"};
 
 //GF_snack_automat
@@ -112,7 +112,7 @@ String snack_done = "sn_done#"; //compare string should be "xx...x#" format. Las
 
 //GF_Telephone_display
 String MCS_TV_play = "MCS_TV_play#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-String cnfrm = "#SL_TV_done#"; //send command string should be "#xx...x#" format - for sure to correctly recieve a command. 1st "#" byte clears all junk before comparing, may work without it
+String cnfrm_TV = "#SL_TV_done#"; //send command string should be "#xx...x#" format - for sure to correctly recieve a command. 1st "#" byte clears all junk before comparing, may work without it
 
 //GF_Teleport strings
 String Tele_mov1 = "Tele_mov1#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
@@ -137,7 +137,8 @@ void setup() {
     Serial.begin(9600);						  //UART
     Serial1.begin(9600); //pl1
     Serial2.begin(9600); //pl2
-    Serial3.begin(9600); //pl3
+    Serial3.begin(9600); //ESP8266?
+    HC12.begin(9600); //HC12
 
     mp3_set_serial(Serial1);
     delay(10);
@@ -148,8 +149,8 @@ void setup() {
 
   Serial.println("OSU_loaded");
 
-  Serial.println("\n[memCheck]");
-  Serial.println(freeRam()); // вызываем ф-ю ниже
+  //Serial.println("\n[memCheck]");
+  //Serial.println(freeRam()); // вызываем ф-ю ниже
 }
 
 int freeRam () { //функция, показываюзая количество свободной ОЗУ
@@ -162,32 +163,26 @@ int freeRam () { //функция, показываюзая количество
 
 void loop() 
 {
-
+  HC12_loop();
 }
 
-
-void HC_12_loop() 
+void HC12_loop()
 {              //recieve something from hc-12 inerface
-  while (HC12.available())
+  while (Serial3.available())
   {
-    char inChar = HC12.read(); //store each bite in var
+    char inChar = Serial3.read(); //store each bite in var
     temp_string += inChar;     //add to string
-    if (inChar == '#')       //if stop byte recieved
+    //Serial.print(inChar); //Send each recieved byte back
+    
+  if (inChar == '#')       //if stop byte recieved
     {
       Serial.print(temp_string);
       Serial.println(" - copy that");
 
-      if(temp_string == Tele_mov1)
-      { 
-        digitalWrite(mov1, LOW);
-        t_mov1 = millis();
-        if(t_mov1 - t_mov1_prev > delay_mov1) 
-        {
-          t_mov1_prev = t_mov1;
-          digitalWrite(mov1, HIGH);
-        }
+      if (temp_string == tmr_strt)  //compare string with a known commands
+      {
+        Serial3.println("message");
       }
-
 
       temp_string = "";     //then clear the string
     }

@@ -80,11 +80,11 @@ uint8_t RemoteXY_CONF[] =
   
 // структура определяет все переменные и события вашего интерфейса управления 
 struct btn_names{
-    // input variables
   uint8_t start_btn; // =1 если кнопка нажата, иначе =0 
   uint8_t reset_btn; // =1 если кнопка нажата, иначе =0 
   uint8_t pls_5m_btn; // =1 если кнопка нажата, иначе =0 
   uint8_t stp_btn; // =1 если кнопка нажата, иначе =0 
+
   uint8_t console_btn; // =1 если кнопка нажата, иначе =0 
   uint8_t pictures_btn; // =1 если кнопка нажата, иначе =0 
   uint8_t pukhlya_btn; // =1 если кнопка нажата, иначе =0 
@@ -104,8 +104,23 @@ struct btn_names{
 //           END RemoteXY include          //
 /////////////////////////////////////////////
 
-const int num_cmnds = 4;
-String commands_array[num_cmnds] = {"tmr_strt#", "tmr_pls_5m#", "tmr_rst#", "tmr_stp#"};
+const int num_cmnds = 14;
+String commands_array[num_cmnds] = 
+{ "tmr_strt#", 
+  "tmr_stp#", 
+  "tmr_rst#", 
+  "tmr_pls_5m#",
+  "console_btn#",
+  "pictures_btn#",
+  "pukhlya_btn#",
+  "Kapr_btn#",
+  "telephone_btn#",
+  "snack_btn#",
+  "code_panel_btn#",
+  "twone_btn#",
+  "nine_btn#",
+  "magic_circle_btn#",
+};
 
 byte btn_divider = 0;
 
@@ -119,12 +134,6 @@ void setup()
   Serial.begin(9600);
   Serial_HC.begin(9600);
   RemoteXY_Init ();
-}
-
-void loop2() 
-{ 
-  Serial.println("1");
-  delay(500);
 }
 
 void loop() 
@@ -144,19 +153,6 @@ void loop()
     }
   }
 
-  if(RemoteXY.reset_btn==1)
-  {
-    delay(300); //for pressing button once at a time
-    btn_divider++;
-
-    if(btn_divider == 2) //command comes twice by a protocol
-    {
-      Serial.println("reset_btn");
-      Serial_HC.print("tmr_rst#");
-      btn_divider = 0;
-    }
-  }
-
   if(RemoteXY.stp_btn==1)
   {
     delay(300); //for pressing button once at a time
@@ -164,8 +160,21 @@ void loop()
 
     if(btn_divider == 2) //command comes twice by a protocol
     {
-      Serial.println("stp_btn");
-      Serial_HC.print("tmr_stp#");
+      Serial.println(commands_array[1]);
+      Serial_HC.print(commands_array[1]);
+      btn_divider = 0;
+    }
+  }
+
+  if(RemoteXY.reset_btn==1)
+  {
+    delay(300); //for pressing button once at a time
+    btn_divider++;
+
+    if(btn_divider == 2) //command comes twice by a protocol
+    {
+      Serial.println(commands_array[2]);
+      Serial_HC.print(commands_array[2]);
       btn_divider = 0;
     }
   }
@@ -177,11 +186,141 @@ void loop()
 
     if(btn_divider == 2) //command comes twice by a protocol
     {
-      Serial.println("pls_5m_btn");
-      Serial_HC.print("tmr_pls_5m#");
+      Serial.println(commands_array[3]);
+      Serial_HC.print(commands_array[3]);
       btn_divider = 0;
     }
   }
 
+  //////////////////////
 
+  if(RemoteXY.console_btn==1)
+  {
+    delay(300); //for pressing button once at a time
+    btn_divider++;
+
+    if(btn_divider == 2) //command comes twice by a protocol
+    {
+      Serial.println(commands_array[4]);
+      Serial_HC.print(commands_array[4]);
+      btn_divider = 0;
+    }
+  }
+
+  if(RemoteXY.pictures_btn==1)
+  {
+    delay(300); //for pressing button once at a time
+    btn_divider++;
+
+    if(btn_divider == 2) //command comes twice by a protocol
+    {
+      Serial.println(commands_array[5]);
+      Serial_HC.print(commands_array[5]);
+      btn_divider = 0;
+    }
+  }
+
+  if(RemoteXY.pukhlya_btn==1)
+  {
+    delay(300); //for pressing button once at a time
+    btn_divider++;
+
+    if(btn_divider == 2) //command comes twice by a protocol
+    {
+      Serial.println(commands_array[6]);
+      Serial_HC.print(commands_array[6]);
+      btn_divider = 0;
+    }
+  }
+
+  if(RemoteXY.Kapr_btn==1)
+  {
+    delay(300); //for pressing button once at a time
+    btn_divider++;
+
+    if(btn_divider == 2) //command comes twice by a protocol
+    {
+      Serial.println(commands_array[7]);
+      Serial_HC.print(commands_array[7]);
+      btn_divider = 0;
+    }
+  }
+
+  if(RemoteXY.telephone_btn==1)
+  {
+    delay(300); //for pressing button once at a time
+    btn_divider++;
+
+    if(btn_divider == 2) //command comes twice by a protocol
+    {
+      Serial.println(commands_array[8]);
+      Serial_HC.print(commands_array[8]);
+      btn_divider = 0;
+    }
+  }
+
+  if(RemoteXY.snack_btn==1)
+  {
+    delay(300); //for pressing button once at a time
+    btn_divider++;
+
+    if(btn_divider == 2) //command comes twice by a protocol
+    {
+      Serial.println(commands_array[9]);
+      Serial_HC.print(commands_array[9]);
+      btn_divider = 0;
+    }
+  }
+
+  if(RemoteXY.code_panel_btn==1)
+  {
+    delay(300); //for pressing button once at a time
+    btn_divider++;
+
+    if(btn_divider == 2) //command comes twice by a protocol
+    {
+      Serial.println(commands_array[10]);
+      Serial_HC.print(commands_array[10]);
+      btn_divider = 0;
+    }
+  }
+
+  if(RemoteXY.twone_btn==1)
+  {
+    delay(300); //for pressing button once at a time
+    btn_divider++;
+
+    if(btn_divider == 2) //command comes twice by a protocol
+    {
+      Serial.println(commands_array[11]);
+      Serial_HC.print(commands_array[11]);
+      btn_divider = 0;
+    }
+  }
+
+  if(RemoteXY.nine_btn==1)
+  {
+    delay(300); //for pressing button once at a time
+    btn_divider++;
+
+    if(btn_divider == 2) //command comes twice by a protocol
+    {
+      Serial.println(commands_array[12]);
+      Serial_HC.print(commands_array[12]);
+      btn_divider = 0;
+    }
+  }
+
+  if(RemoteXY.magic_circle_btn==1)
+  {
+    delay(300); //for pressing button once at a time
+    btn_divider++;
+
+    if(btn_divider == 2) //command comes twice by a protocol
+    {
+      Serial.println(commands_array[13]);
+      Serial_HC.print(commands_array[13]);
+      btn_divider = 0;
+    }
+  }
 }
