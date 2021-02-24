@@ -28,8 +28,8 @@
 SoftwareSerial Serial_HC(D1, D2); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
 
 // настройки соединения 
-#define REMOTEXY_WIFI_SSID "ac"
-#define REMOTEXY_WIFI_PASSWORD "docentt2"
+#define REMOTEXY_WIFI_SSID "gravityfalls"
+#define REMOTEXY_WIFI_PASSWORD "gravityfalls"
 #define REMOTEXY_SERVER_PORT 6377
 
 

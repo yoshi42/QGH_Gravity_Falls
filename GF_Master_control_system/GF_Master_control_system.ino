@@ -6,36 +6,36 @@ SoftwareSerial esp_wifi(44, 46); // (Rx_pin, Tx_pin) //using a softwareSerial in
 
 //=======================MCS_IN-OUTS==============================
 //========================MCS-left_OUTs
-const int MCS_D53 = 53;
-const int MCS_D51 = 51;
-const int MCS_D49 = 49;
-const int MCS_D47 = 47;
-const int MCS_D45 = 45;
-const int MCS_D43 = 43;
-const int MCS_D41 = 41;
-const int MCS_D39 = 39;
-const int MCS_D37 = 37;
-const int MCS_D35 = 35;
-const int MCS_D33 = 33;
-const int MCS_D31 = 31;
+const int MOSF1_puchlya_door_D53 = 53; //MOSFET 1
+const int MOSF2_exit_door_D51 = 51; //MOSFET 2
+const int MCS_D49 = 49; //MOSFET 3
+const int MCS_D47 = 47; //MOSFET 4
+const int MCS_D45 = 45; //MOSFET 5
+const int MCS_D43 = 43; //MOSFET 6
+const int MCS_D41 = 41; //MOSFET 7
+const int MCS_D39 = 39; //MOSFET 8
+const int MCS_D37 = 37; //
+const int MCS_D35 = 35; //
+const int MCS_D33 = 33; //
+const int MCS_D31 = 31; //
 
 //=======================MCS-down_MOSFETS
-const int Mos13 = 13;
-const int Mos12 = 12;
-const int Mos11 = 11;
-const int Mos10 = 10;
-const int Mos9 = 9;
-const int Mos8 = 8;
-const int Mos7 = 7;
-const int Mos6 = 6;
-const int Mos5 = 5;
-const int Mos4 = 4;
-//const int Mos3 = 3;
-//const int Mos2 = 2;
-const int Mos32 = 32;
-const int Mos34 = 34;
-const int Mos36 = 36;
-const int Mos38 = 38;
+const int MCS_D13 = 13;
+const int MCS_D12 = 12;
+const int MCS_D11 = 11;
+const int MCS_D10 = 10;
+const int MCS_D9 = 9;
+const int MCS_D8 = 8;
+const int MCS_D7 = 7;
+const int MCS_D6 = 6;
+const int MCS_D5 = 5;
+const int MCS_D4 = 4;
+//const int MCS_D3 = 3;
+//const int MCS_D2 = 2;
+const int MCS_D32 = 32;
+const int MCS_D34 = 34;
+const int MCS_D36 = 36;
+const int MCS_D38 = 38;
 
 //=======================MCS-left-down_dig_outs
 const int MCS_D22 = 22;
@@ -132,6 +132,23 @@ String tmr_pls_5m = "tmr_pls_5m#"; //compared string should be "xx...x#" format.
 String tmr_rst = "tmr_rst#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String tmr_stp = "tmr_stp#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
+const int num_cmnds = 14;
+String remotexy[num_cmnds] = 
+{ "tmr_strt#", 
+  "tmr_stp#", 
+  "tmr_rst#", 
+  "tmr_pls_5m#",
+  "console_btn#",
+  "pictures_btn#",
+  "pukhlya_btn#",
+  "Kapr_btn#",
+  "telephone_btn#",
+  "snack_btn#",
+  "code_panel_btn#",
+  "twone_btn#",
+  "nine_btn#",
+  "magic_circle_btn#",
+};
 
 void setup() {
     Serial.begin(9600);						  //UART

@@ -116,6 +116,7 @@ void setup()
   }
 
 	Serial.println("Started");
+  delay(5000);
   irblink_startup();
   Serial.println("Ready");
 }
@@ -366,11 +367,11 @@ void HC_12_loop()
 
 void blinkLed()
 {
-  for(int i = 0; i < 3; i++){
+  for(int i = 0; i < 2; i++){
     ledHigh();
-    delay(1000);
+    delay(600);
     ledLow();
-    delay(1000);
+    delay(600);
   }
 }
 
@@ -416,21 +417,25 @@ next 807FF807
 */  
     irsend.sendNEC(0x5FAFA05, 32); //on TV
     delay(1000);
-    irsend.sendNEC(0x807F807F, 32); //on Romsat
+    //irsend.sendNEC(0x807F807F, 32); //on Romsat
     delay(20000);
     irsend.sendNEC(0x807FDA25, 32); // menu
-    delay(700);
+    delay(1000);
     irsend.sendNEC(0x807F42BD, 32); //left
-    delay(700);
+    delay(1000);
     irsend.sendNEC(0x807F58A7, 32); //down
-    delay(700);
+    delay(1000);
     irsend.sendNEC(0x807FA857, 32); //ok
-    delay(3000);
+    delay(5000);
+    irsend.sendNEC(0x807F42BD, 32); //left
+    delay(1000);
+    irsend.sendNEC(0x807F42BD, 32); //left
+    delay(1000);
     irsend.sendNEC(0x807FA857, 32); //ok
-    delay(3000);
+    delay(5000);
     irsend.sendNEC(0x807FE817, 32); //up
-    delay(3000);
+    delay(5000);
     irsend.sendNEC(0x807F08F7, 32); //play
-    delay(2000);
+    delay(3000);
     irsend.sendNEC(0x807F08F7, 32); //pause
 }
