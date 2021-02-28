@@ -45,10 +45,10 @@ const int MCS_D28 = 28;
 const int MCS_D30 = 30;
 
 //=======================MCS-up_an_INs
-#define MCS_A0 A0
-#define MCS_A1 A1
-#define MCS_A2 A2
-#define MCS_A3 A3
+#define MCS_pict1_A0 A0
+#define MCS_pict2_A1 A1
+#define MCS_pict3_A2 A2
+#define MCS_pict4_A3 A3
 #define MCS_A4 A4
 #define MCS_A5 A5
 #define MCS_A6 A6
@@ -99,10 +99,6 @@ String reset_lab_panel = "reset_lab_panel#"; //compared string should be "xx...x
 //Slave-Master strings
 String mgc_crcl_done = "mgc_crcl_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
-//GF_remote_XY
-const int num_cmnds = 4;
-String commands_array[num_cmnds] = {"tmr_strt#", "tmr_pls_5m#", "tmr_rst#", "tmr_stp#"};
-
 //GF_snack_automat
 String temp_string = ""; //variable to store information recieved form serial and compare it
 String activate_snack = "act_sn#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
@@ -132,8 +128,12 @@ String tmr_pls_5m = "tmr_pls_5m#"; //compared string should be "xx...x#" format.
 String tmr_rst = "tmr_rst#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String tmr_stp = "tmr_stp#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
-const int num_cmnds = 14;
-String remotexy[num_cmnds] = 
+//GF_remote_XY
+const int num_cmnds = 4;
+String commands_array[num_cmnds] = {"tmr_strt#", "tmr_pls_5m#", "tmr_rst#", "tmr_stp#"};
+
+const int num_cmnds2 = 14;
+String remotexy[num_cmnds2] = 
 { "tmr_strt#", 
   "tmr_stp#", 
   "tmr_rst#", 
@@ -164,6 +164,11 @@ void setup() {
     delay(10);
     mp3_set_volume (20);
 
+    pinMode(MCS_pict1_A0, INPUT_PULLUP);
+    pinMode(MCS_pict2_A1, INPUT_PULLUP);
+    pinMode(MCS_pict3_A2, INPUT_PULLUP);
+    pinMode(MCS_pict4_A3, INPUT_PULLUP);
+
   Serial.println("OSU_loaded");
 
   //Serial.println("\n[memCheck]");
@@ -181,6 +186,7 @@ int freeRam () { //функция, показываюзая количество
 void loop() 
 {
   HC12_loop();
+  test_pic();
 }
 
 void HC12_loop()
@@ -204,4 +210,19 @@ void HC12_loop()
       temp_string = "";     //then clear the string
     }
   }
+}
+
+void test_pic()
+{
+  int p1 = digitalRead(MCS_pict1_A0);
+  int p2 = digitalRead(MCS_pict2_A1);
+  int p3 = digitalRead(MCS_pict3_A2);
+  int p4 = digitalRead(MCS_pict4_A3);
+  Serial.print(p1);
+  Serial.print(" ");
+  Serial.print(p2);
+  Serial.print(" ");
+  Serial.print(p3);
+  Serial.print(" ");
+  Serial.println(p4);
 }
