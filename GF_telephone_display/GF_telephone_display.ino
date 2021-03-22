@@ -98,6 +98,7 @@ void loop()
   {
     delay(500);
     is_phone_active = true;
+    delay(1000);
     mp3_play (1); //play audio "enter a number"
 
     Serial.println("handset has beed picked up");
@@ -140,7 +141,7 @@ void HC_12_loop()
         irsend.sendNEC(0x807F08F7, 32); //play video
         is_TV_playing = true;
         //*/delay for video length, screen light off pause again, and change is_TV_playing to false
-        delay(10000); //delay 5 minutes
+        delay(622000); //delay 5 minutes
         digitalWrite(screen_LED, LOW); //Screen light off
         irsend.sendNEC(0x807F08F7, 32); //pause video
         is_TV_playing = false;//*/
@@ -154,10 +155,11 @@ void keypad_password(){
   char pressed=customKeypad.getKey();
   
  if(flag_true==0){if(pressed==char1){flag_true=1;}}  //1st symbol of password 
- if(flag_true==1){if(pressed==char2){flag_true=2;}}  //2nd symbol of password
- if(flag_true==2){if(pressed==char3){flag_true=3;}}  //3rd symbol of password
+ if(flag_true==1){if(pressed==char3){flag_true=2;}}  //2nd symbol of password
+ if(flag_true==2){if(pressed==char4){flag_true=3;}}  //3rd symbol of password
  if(flag_true==3){if(pressed==char4){flag_true=4;}}  //4
- if(flag_true==4){if(pressed==char5){flag_true=10;}}  //5
+ if(flag_true==4){if(pressed==char8){flag_true=10;}}  //5
+
  if(flag_true==5){if(pressed==char6){flag_true=6;}}  //6
  if(flag_true==6){if(pressed==char7){flag_true=7;}}  //7
  if(flag_true==7){if(pressed==char8){flag_true=8;}}  //8
@@ -167,14 +169,17 @@ void keypad_password(){
   if(pressed!='\0')  {
     flag_numbers++;   //to be able set a call by pressing some quantity of numbers instead of pressing # 
     Serial.println(pressed);
+    mp3_play(4);
   }
 
- if(pressed==char_confirm){
+ /*if(pressed==char_confirm){ */ if(flag_numbers == 5){
+  mp3_play(5);
   if(flag_true==10){
     if(is_TV_playing != true) //do nothing if video is already playing
     {
       Serial.println("CORRECT PASSWORD");
       HC12.println(cnfrm);
+      delay(500);
       mp3_play (3); //play audio "all correct"
       digitalWrite(screen_LED, HIGH);//Screen light on
       irsend.sendNEC(0x807F08F7, 32); //play video
@@ -182,7 +187,7 @@ void keypad_password(){
       flag_true = 0;
       is_TV_playing = true;
       //*/delay for video length, screen light off pause again, and change is_TV_playing to false
-      delay(10000); //delay 5 minutes
+      delay(622000); //delay 5 minutes
       irsend.sendNEC(0x807F08F7, 32); //pause video
       digitalWrite(screen_LED, LOW); //Screen light off
       is_TV_playing = false;//*/
@@ -191,7 +196,9 @@ void keypad_password(){
   }
   else if(flag_true!=10){
     Serial.println("WRONG PASSWORD");
+    delay(500);
     mp3_play (2); //play audio "WRONG"
+    delay(3500);
     flag_numbers = 0;
     flag_true = 0;
   }
