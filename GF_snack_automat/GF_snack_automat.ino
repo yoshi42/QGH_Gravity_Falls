@@ -31,24 +31,24 @@ const byte COLS = 2; //four columns
 
 //define the cymbols on the buttons of the keypads
 char hexaKeys[ROWS][COLS] = {
-  {'1','2'},
-  {'3','4'},
-  {'5','6'},
-  {'7','8'}};
+  {'8','7'},
+  {'6','5'},
+  {'4','3'},
+  {'2','1'}};
 
 byte rowPins[ROWS] = {2, 3, 4, 5}; //connect to the row pinouts of the keypad
 byte colPins[COLS] = {6, 7}; //connect to the column pinouts of the keypad
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
 
 //led pins
-#define led_8 11 
-#define led_7 12
-#define led_6 13
-#define led_5 A0
-#define led_4 A1
-#define led_3 A2
-#define led_2 A3
-#define led_1 A4
+#define led_8 A4 //11
+#define led_7 A3 //12
+#define led_6 A2 //13
+#define led_5 A1 //A0
+#define led_4 A0 //A1
+#define led_3 13 //A2
+#define led_2 12 //A3
+#define led_1 11 //A4
 
 #define EML 8  //Electromechanical Lock
 #define LED_PWM 9  //lights
@@ -79,11 +79,11 @@ unsigned long time1 = 0;
 
 void setup()
 {
-	Serial.begin(9600); //initiating serial
-  	Serial_DF.begin(9600); //initiating software serial
-	mp3_set_serial(Serial_DF);  //set Serial for DFPlayer-mini mp3 module 
-	mp3_set_volume (25);
-	mp3_play(1);
+  Serial.begin(9600); //initiating serial
+    Serial_DF.begin(9600); //initiating software serial
+  mp3_set_serial(Serial_DF);  //set Serial for DFPlayer-mini mp3 module 
+  mp3_set_volume (25);
+  mp3_play(1);
 
   pinMode(led_1, OUTPUT);
   pinMode(led_2, OUTPUT);
@@ -108,7 +108,7 @@ void setup()
   digitalWrite(LED_PWM, LOW);
   pinMode(coin_reciever, INPUT_PULLUP);
 
-	//Serial.println("Started");
+  //Serial.println("Started");
 }
 
 void loop()
@@ -151,16 +151,16 @@ void check_passcode()
     //check
     if(temp_passcode == passcode)
     {
-      Serial.println(snack_done); ////maybe wrong syntaxis
+      Serial.println(snack_done);
       is_passcode_win = 1;
-      blinkRight();
       mp3_play(2);
+      blinkRight();
       digitalWrite(EML, LOW);
       digitalWrite(LED_PWM, HIGH);
       delay(30000);
       digitalWrite(LED_PWM, LOW);
-      digitalWrite(EML, HIGH);
-      is_passcode_win = 0;
+      //digitalWrite(EML, HIGH);
+      //is_passcode_win = 0;
     }
     else if (temp_passcode == secret_passcode)
     {
@@ -209,18 +209,23 @@ void HC_12_loop()
 
       if (temp_string == open_snack)  //compare string with a known commands
       {
-        blinkLed();
-     	mp3_play(1);
-	  	digitalWrite(EML, LOW);
-     	delay(3000);
-     	digitalWrite(EML, HIGH);
-      	is_passcode_win = 0;
+        Serial.println(snack_done);
+        is_passcode_win = 1;
+        mp3_play(2);
+        blinkRight();
+        digitalWrite(EML, LOW);
+        digitalWrite(LED_PWM, HIGH);
+        delay(30000);
+        digitalWrite(LED_PWM, LOW);
+        //digitalWrite(EML, HIGH);
+        //is_passcode_win = 0;
       }
 
       if (temp_string == reset_snack)  //compare string with a known commands
       {
         digitalWrite(LED_PWM, LOW);
         digitalWrite(EML, HIGH);
+        is_passcode_win = 0;
       }
     temp_string = "";     //then clear the string
     }
@@ -258,11 +263,13 @@ void blinkRight()
 {
   for(int i = 0; i < 3; i++){
     digitalWrite(LED_arr[0], HIGH);
-    digitalWrite(LED_arr[2], HIGH);
     digitalWrite(LED_arr[1], HIGH);
+    digitalWrite(LED_arr[2], HIGH);
     digitalWrite(LED_arr[4], HIGH);
     digitalWrite(LED_arr[5], HIGH);
+    digitalWrite(LED_PWM, HIGH);
     delay(500);
+    digitalWrite(LED_PWM, LOW);
     ledLow();
     delay(500);
   }
