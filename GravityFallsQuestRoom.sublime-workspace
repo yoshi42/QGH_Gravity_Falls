@@ -1,0 +1,624 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"pas",
+				"passive_mode"
+			],
+			[
+				"is",
+				"is_button_pressed"
+			],
+			[
+				"time",
+				"time_pas_del"
+			],
+			[
+				"MCS_q",
+				"MCS_quest_pls_5m_but_A4"
+			],
+			[
+				"tmr_",
+				"tmr_pls_5m"
+			],
+			[
+				"tmr",
+				"tmr_rst"
+			],
+			[
+				"MCS_que",
+				"MCS_quest_start_but_A5"
+			],
+			[
+				"de",
+				"delay"
+			],
+			[
+				"flag",
+				"flag_numbers"
+			],
+			[
+				"HC",
+				"HC12"
+			],
+			[
+				"dela",
+				"delay_mov4"
+			],
+			[
+				"fla",
+				"flag_mov1"
+			],
+			[
+				"delay",
+				"delay_mov1"
+			],
+			[
+				"t",
+				"t_mov1_prev"
+			],
+			[
+				"mov1",
+				"delay_mov1"
+			],
+			[
+				"Tele",
+				"Tele_mov1"
+			],
+			[
+				"ti",
+				"time_is_over"
+			],
+			[
+				"SE",
+				"Serial_HC"
+			],
+			[
+				"H",
+				"Serial_HC"
+			],
+			[
+				"digi",
+				"digitalRead"
+			],
+			[
+				"readers",
+				"readers_rst"
+			],
+			[
+				"re",
+				"readers_rst"
+			],
+			[
+				"trigger",
+				"trigger_logic_state2"
+			],
+			[
+				"prin",
+				"print"
+			],
+			[
+				"var",
+				"var_last"
+			],
+			[
+				"tmr_st",
+				"tmr_stp"
+			],
+			[
+				"num",
+				"num_of_commands"
+			],
+			[
+				"stri",
+				"String"
+			],
+			[
+				"btn",
+				"btn_divider"
+			],
+			[
+				"pls_5m_bn",
+				"pls_5m_btn_flag"
+			],
+			[
+				"pls",
+				"pls_5m_btn"
+			],
+			[
+				"sec",
+				"secondsLeft"
+			],
+			[
+				"timer",
+				"timer_stop_flag"
+			],
+			[
+				"adm",
+				"admin_ppl"
+			],
+			[
+				"Sera",
+				"Serial"
+			],
+			[
+				"qest",
+				"quest_pipeline"
+			],
+			[
+				"EML",
+				"EML_doors_diary_sheet"
+			],
+			[
+				"ques",
+				"quest_pipeline"
+			],
+			[
+				"bu",
+				"butt_LASTHOPE_LED"
+			],
+			[
+				"BUT",
+				"butt_OPEN"
+			],
+			[
+				"que",
+				"quest_pipeline"
+			],
+			[
+				"pip",
+				"quest_pipeline"
+			],
+			[
+				"temp",
+				"temp_passcode"
+			],
+			[
+				"pass",
+				"passcode_9"
+			],
+			[
+				"kp",
+				"kp_1st_but_led_blink"
+			],
+			[
+				"t_but",
+				"t_but_9_prev"
+			],
+			[
+				"temp_passcode_",
+				"temp_passcode_9"
+			],
+			[
+				"temp_char_",
+				"temp_char_9"
+			],
+			[
+				"le",
+				"length"
+			],
+			[
+				"bli",
+				"blinkRight"
+			],
+			[
+				"coi",
+				"coin_reciever"
+			],
+			[
+				"COI",
+				"coin_reciever"
+			],
+			[
+				"plee",
+				"pleer_on"
+			],
+			[
+				"Di",
+				"digitalWrite"
+			],
+			[
+				"pin",
+				"pinMode"
+			],
+			[
+				"print",
+				"println"
+			],
+			[
+				"ir",
+				"irblink_startup"
+			],
+			[
+				"mp3",
+				"mp3_play"
+			],
+			[
+				"kick2",
+				"kick_2"
+			],
+			[
+				"but_pu",
+				"but_punch_led"
+			],
+			[
+				"but_kick",
+				"but_kick_led"
+			],
+			[
+				"ki",
+				"but_kick"
+			],
+			[
+				"digital",
+				"digitalWrite"
+			],
+			[
+				"is_pushed_but_kick",
+				"is_pushed_but_kick2"
+			],
+			[
+				"is_pushed_but_pu",
+				"is_pushed_but_punch"
+			],
+			[
+				"but_r",
+				"but_right"
+			],
+			[
+				"pri",
+				"println"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "GF_karp_nolib/GF_karp_nolib.ino",
+			"settings":
+			{
+				"buffer_size": 7507,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "GF_Master_control_system/GF_Master_control_system.ino",
+			"settings":
+			{
+				"buffer_size": 9691,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_karp_nolib",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_Master_control_system"
+	],
+	"file_history":
+	[
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_Master_control_system/GF_Master_control_system.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_karp_nolib/GF_karp_nolib.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Interactive_skulpt/Shukai_heart/Shukai_heart.ino",
+		"/C/Users/bodya/Downloads/Telegram Desktop/fortuna.ino",
+		"/C/Users/bodya/Downloads/Telegram Desktop/bomb.ino",
+		"/C/Users/bodya/Downloads/Telegram Desktop/_123.ino",
+		"/C/Users/bodya/Downloads/FliqloScr/ReadMe.txt",
+		"/C/Users/bodya/AppData/Local/Temp/Temp1_FliqloScr.zip/ReadMe.txt",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_snack_automat/GF_snack_automat.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/content/.gitignore",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/.git/info/gitattributes",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/.git/config",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_telephone_display/GF_telephone_display.ino",
+		"/C/Users/bodya/Desktop/1",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Universal_IR_RFID_433Mhz_reader/Universal_IR_RFID_433Mhz_reader.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Universal_IR_RFID_433Mhz_reader/433_mhz_reader/433_mhz_reader.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_game_console/GF_game_console.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_remote_XY/GF_remote_XY.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/qgh_pirate_arduino/pirate_master_otladka_remote/pirate_master_otladka_remote.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/qgh_pirate_arduino/pirate_master_otladka.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/HC12_test/HC12_test.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Labirynt/OSU_Labirynt/OSU_Labirynt.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/HC_12_mesh/HC_12_mesh_test/HC_12_mesh_test.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_Portal/GF_Portal.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_Teleport/GF_Teleport.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Universal_IR_RFID_433Mhz_reader/rfid_reader/rfid_reader.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Rfid_fall/Rfid_fall.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_magic_circle_master/GF_magic_circle_10_slaves/GF_magic_circle_10_slaves.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/irblink/irblink.ino",
+		"/C/Users/bodya/Desktop/Мс/А.War.txt",
+		"/C/Users/bodya/Desktop/Мс/O/Новый текстовый документ.txt",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_magic_circle_master/GF_magic_circle_master.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_timer_max7219/GF_timer_max7219.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_magic_circle/GF_magic_circle_master/GF_magic_circle_master.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_magic_circle/GF_magic_circle_11_slaves_of_master/GF_magic_circle_11_slaves_of_master.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_lab_panel/GF_lab_panel.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_magic_circle/GF_magic_circle.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_magic_circle/RFID_test/RFID_test.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_timer_max7219/2/2.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/HG_timer/HG_timer.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH New Spy/QuestroomBomb/Questroom/Questroom.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_timer_max7219/2/2.ino.txt",
+		"/C/Users/bodya/Desktop/1/1.ino",
+		"/C/Program Files (x86)/Arduino/libraries/MD_MAX72XX-master/src/MD_MAX72xx.h",
+		"/C/Users/bodya/AppData/Local/Temp/Temp1_clock_32x8.zip/clock_8x32.ino",
+		"/C/Users/bodya/Desktop/taymer-4xled-max7219flp.flp",
+		"/C/Program Files (x86)/Arduino/libraries/MD_MAX72XX-master/src/MD_MAX72xx.cpp",
+		"/C/Users/bodya/Desktop/clock_8x32/clock_8x32.ino",
+		"/C/Users/bodya/Desktop/clock_32x8/clock_8x32.ino",
+		"/C/Users/bodya/Desktop/kmsauto_lite_v1.3.1/Пароль.txt",
+		"/C/Users/bodya/Documents/OneDrive/ID/МАН/МАН Visa карта/Код/nano_spi_v5/nano_spi_v5.ino",
+		"/C/Users/bodya/AppData/Local/Temp/Temp1_7B86vM6.zip/7B86vM6/7B86vMx.txt",
+		"/C/Users/bodya/Documents/OneDrive/ID/МАН/МАН Visa карта/Код/nano_spi_v5_ (2).ino",
+		"/C/Users/bodya/AppData/Local/Temp/Temp1_Park_koruptsii_arduino-20200903T121011Z-001.zip/Park_koruptsii_arduino/Ramki_voprosy_31_05_18_3/Ramki_voprosy_31_05_18_3.ino",
+		"/C/Users/bodya/AppData/Local/Temp/Temp1_Park_koruptsii_arduino-20200903T121011Z-001.zip/Park_koruptsii_arduino/Seven_Books/Seven_Books.ino",
+		"/C/Users/bodya/AppData/Local/Temp/Temp1_Park_koruptsii_arduino-20200903T121011Z-001.zip/Park_koruptsii_arduino/Krutilka_audio/krutilka_audio.ino",
+		"/C/Users/bodya/AppData/Local/Temp/Temp1_Park_koruptsii_arduino-20200903T121011Z-001.zip/Park_koruptsii_arduino/Nine_Lamps/Nine_Lamps.ino",
+		"/F/ID/eye/Arduino/encoder/encoder.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/df_player_test/df_player_test.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_magic_circle/reader_2/reader_2.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/ID_reception/_9_btn/_9_btn.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_RPi_GPIO_video_control/GPIO_video_control.py",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/RPI video control/GPIO_video_control.py",
+		"/C/Users/bodya/Documents/projects/GIT/Marketing-Games/case/case.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Labirynt/rfid_fall/rfid_fall.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Labirynt/Lab_timer/Lab_timer.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Labirynt/tst/tst.ino",
+		"/E/ID/RPi_GPIO_video/GPIO_video.py",
+		"/E/ID/RPi_GPIO_video/1.sh",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_magic_circle/RFID_multi/RFID_multi.ino",
+		"/C/Users/bodya/Desktop/ssh",
+		"/E/wpa_supplicant.conf",
+		"/E/ssh",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/IDisinfector/Idisinfector_main/Idisinfector_main.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/IDisinfector/Idisinfector_1st_black/Idisinfector_1st_black.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/IDisinfector/Idisinfector_1st_black/Idisinfector_1st_black.ino.txt",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_magic_circle/reader_3/reader_3.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_magic_circle/reader/reader.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_karp_sample/GF_karp_sample.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Strazhi_gallaktiki/labirint/rfid/reader_3/reader_3.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Strazhi_gallaktiki/labirint/rfid/sketch_jun23_.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Strazhi_gallaktiki/labirint/main/main/main.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Strazhi_gallaktiki/puzzle/puzzle/puzzle.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/ID_fire_RGB/ID_fire_RGB.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/ID_fire_RGB.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/HC_12_mesh/HC_12_mesh.ino",
+		"/C/Users/bodya/Documents/QGH/Сайт/sadmin.txt",
+		"/C/Users/bodya/Desktop/workflowy-export.txt",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_karp_lib/GF_karp_lib.ino",
+		"/C/Users/bodya/Desktop/Мс/Н/Я так давно мрію.txt",
+		"/C/Users/bodya/Desktop/Мс/TH/СК.txt",
+		"/C/Users/bodya/Desktop/Мс/TH/Р.txt",
+		"/C/Users/bodya/Desktop/Мс/TH/Новый текстовый документ.txt",
+		"/C/Users/bodya/Desktop/Мс/TH/Мысль.txt",
+		"/C/Users/bodya/Desktop/Мс/TH/Кн.txt",
+		"/C/Users/bodya/Desktop/Мс/TH/Зустр.txt",
+		"/C/Users/bodya/Desktop/Мс/TH/3пр.txt",
+		"/C/Users/bodya/Desktop/Мс/OF/Мысль.txt",
+		"/C/Users/bodya/Desktop/Мс/OF/Сережа, с Д.Н..txt",
+		"/C/Users/bodya/Desktop/Мс/OF/МУка.txt",
+		"/C/Users/bodya/Desktop/Мс/OF/Мій світ.txt",
+		"/C/Users/bodya/Desktop/Мс/NFP/all days and nights.txt",
+		"/C/Users/bodya/Desktop/libusb_1.2.4.0/libusb-win32-bin-README.txt",
+		"/C/Users/bodya/AppData/Local/Temp/7zO89FBC704/Readme.txt",
+		"/C/Users/bodya/Downloads/progisp/readme.txt",
+		"/C/Users/bodya/Downloads/usbisp/Instructions.txt",
+		"/C/Users/bodya/AppData/Local/Temp/Temp1_New_hard_all_in_one.zip/New_hard_all_in_one.ino",
+		"/C/Users/bodya/Documents/projects/GIT/QGH_Gravity_Falls/GF_karp_nolib/GF_karp_nolib.ino"
+	],
+	"find":
+	{
+		"height": 39.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "GF_karp_nolib/GF_karp_nolib.ino",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7507,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								980,
+								980
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "GF_Master_control_system/GF_Master_control_system.ino",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9691,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								564,
+								564
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 22.0
+	},
+	"input":
+	{
+		"height": 34.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "GravityFallsQuestRoom.sublime-project",
+	"replace":
+	{
+		"height": 40.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 249.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

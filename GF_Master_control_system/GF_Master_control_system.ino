@@ -12,8 +12,8 @@ const int MCS_D49 = 49; //MOSFET 3
 const int MCS_D47 = 47; //MOSFET 4
 const int MCS_D45 = 45; //MOSFET 5
 const int MCS_D43 = 43; //MOSFET 6
-const int MCS_D41 = 41; //MOSFET 7
-const int MCS_D39 = 39; //MOSFET 8
+const int MOSF7_table_D41 = 41; //MOSFET 7
+const int MOSF8_window_D39 = 39; //MOSFET 8
 const int MCS_D37 = 37; //
 const int MCS_D35 = 35; //
 const int MCS_D33 = 33; //
@@ -49,9 +49,9 @@ const int MCS_D30 = 30;
 #define MCS_pict2_A1 A1
 #define MCS_pict3_A2 A2
 #define MCS_pict4_A3 A3
-#define MCS_A4 A4
-#define MCS_A5 A5
-#define MCS_A6 A6
+#define MCS_quest_pls_5m_but_A4 A4
+#define MCS_quest_start_but_A5 A5
+#define MCS_quest_res_but_A6 A6
 #define MCS_A7 A7
 #define MCS_A8 A8
 #define MCS_A9 A9
@@ -82,7 +82,7 @@ String pleer_off = "pleer_off#"; //compare string should be "xx...x#" format. La
 
 //GF_karp_nolib
 String MCS_karp_play = "MCS_karp_play#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-String cnfrm = "#SL_karp_done#"; //send command string should be "#xx...x#" format - for sure to correctly recieve a command. 1st "#" byte clears all junk before comparing, may work without it
+String MCS_karp_cnfrm = "#SL_karp_done#"; //send command string should be "#xx...x#" format - for sure to correctly recieve a command. 1st "#" byte clears all junk before comparing, may work without it
 
 //GF_lab_panel
 //Slave-Master strings
@@ -100,7 +100,6 @@ String reset_lab_panel = "reset_lab_panel#"; //compared string should be "xx...x
 String mgc_crcl_done = "mgc_crcl_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
 //GF_snack_automat
-String temp_string = ""; //variable to store information recieved form serial and compare it
 String activate_snack = "act_sn#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 String open_snack = "open_sn#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 String reset_snack = "res_sn#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
@@ -128,6 +127,8 @@ String tmr_pls_5m = "tmr_pls_5m#"; //compared string should be "xx...x#" format.
 String tmr_rst = "tmr_rst#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String tmr_stp = "tmr_stp#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
+String temp_string = ""; //variable to store information recieved form serial and compare it
+
 //GF_remote_XY
 const int num_cmnds = 4;
 String commands_array[num_cmnds] = {"tmr_strt#", "tmr_pls_5m#", "tmr_rst#", "tmr_stp#"};
@@ -150,12 +151,16 @@ String remotexy[num_cmnds2] =
   "magic_circle_btn#",
 };
 
+bool dio = false;
+
+unsigned long time_quest_start_but = 0;
+
 void setup() {
-    Serial.begin(9600);						  //UART
+    Serial.begin(9600);             //UART
     Serial1.begin(9600); //pl1
     Serial2.begin(9600); //pl2
-    Serial3.begin(9600); //ESP8266?
-    HC12.begin(9600); //HC12
+    Serial3.begin(9600); //HC12
+    HC12.begin(9600); //
 
     mp3_set_serial(Serial1);
     delay(10);
@@ -168,6 +173,15 @@ void setup() {
     pinMode(MCS_pict2_A1, INPUT_PULLUP);
     pinMode(MCS_pict3_A2, INPUT_PULLUP);
     pinMode(MCS_pict4_A3, INPUT_PULLUP);
+    pinMode(MCS_quest_pls_5m_but_A4, INPUT_PULLUP);
+    pinMode(MCS_quest_start_but_A5, INPUT_PULLUP);
+    pinMode(MCS_quest_res_but_A6, INPUT_PULLUP);
+
+    pinMode(MOSF1_puchlya_door_D53, OUTPUT);
+    pinMode(MOSF2_exit_door_D51, OUTPUT);
+    pinMode(MOSF7_table_D41, OUTPUT);
+    pinMode(MOSF8_window_D39, OUTPUT);
+
 
   Serial.println("OSU_loaded");
 
@@ -186,7 +200,14 @@ int freeRam () { //функция, показываюзая количество
 void loop() 
 {
   HC12_loop();
-  test_pic();
+  //test_pic();
+  test_quest_start();
+
+}
+
+void posledovatelnost()
+{
+  //Ві
 }
 
 void HC12_loop()
@@ -218,11 +239,24 @@ void test_pic()
   int p2 = digitalRead(MCS_pict2_A1);
   int p3 = digitalRead(MCS_pict3_A2);
   int p4 = digitalRead(MCS_pict4_A3);
-  Serial.print(p1);
-  Serial.print(" ");
-  Serial.print(p2);
-  Serial.print(" ");
-  Serial.print(p3);
-  Serial.print(" ");
-  Serial.println(p4);
+  Serial3.print(p1);
+  Serial3.print(" ");
+  Serial3.print(p2);
+  Serial3.print(" ");
+  Serial3.print(p3);
+  Serial3.print(" ");
+  Serial3.println(p4);
+  delay(500);
+}
+
+void test_quest_start()
+{
+  if(digitalRead(MCS_quest_start_but_A5) == LOW && dio == false){delay(50);Serial3.print(tmr_strt);mp3_set_serial(Serial1);mp3_play(1);dio = true;}
+  else if(digitalRead(MCS_quest_start_but_A5) == HIGH && dio == true){delay(50);dio = false;}
+
+  if(digitalRead(MCS_quest_res_but_A6) == LOW && dio == false){delay(50);Serial3.print(tmr_rst);mp3_set_serial(Serial1);mp3_stop();dio = true;}
+  else if(digitalRead(MCS_quest_res_but_A6) == HIGH && dio == true){delay(50);dio = false;}
+
+  if(digitalRead(MCS_quest_pls_5m_but_A4) == LOW && dio == false){delay(50);Serial3.print(tmr_pls_5m);dio = true;}
+  else if(digitalRead(MCS_quest_pls_5m_but_A4) == HIGH && dio == true){delay(50);dio = false;}
 }

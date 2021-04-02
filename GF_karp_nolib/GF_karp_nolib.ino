@@ -56,41 +56,45 @@ unsigned  long time = 0;
 
 void setup()
 {
-	Serial.begin(9600); //initiating serial
+  Serial.begin(9600); //initiating serial
   DF_player.begin(9600); //initiating software serial
-	HC12.begin(9600); //initiating software serial
+  HC12.begin(9600); //initiating software serial
 
-	mp3_set_serial (DF_player);  //set Serial for DFPlayer-mini mp3 module 
-	mp3_set_volume (25);
+  mp3_set_serial (DF_player);  //set Serial for DFPlayer-mini mp3 module 
+  mp3_set_volume (25);
 
-	// Setting sensor outputs
-	pinMode(S0, OUTPUT);
-	pinMode(S1, OUTPUT);
-	pinMode(S2, OUTPUT);
-	pinMode(S3, OUTPUT);
+  // Setting sensor outputs
+  pinMode(S0, OUTPUT);
+  pinMode(S1, OUTPUT);
+  pinMode(S2, OUTPUT);
+  pinMode(S3, OUTPUT);
   pinMode(OE, OUTPUT);
-	// Setting the OUT as an input
-	pinMode(OUT, INPUT);
- 	
- 	// Setting frequency scaling to 20% (for atmega controllers)
-	digitalWrite(S0, HIGH);
-	digitalWrite(S1, LOW);
+  // Setting the OUT as an input
+  pinMode(OUT, INPUT);
+  
+  // Setting frequency scaling to 20% (for atmega controllers)
+  digitalWrite(S0, HIGH);
+  digitalWrite(S1, LOW);
   digitalWrite(OE, HIGH);
  
- 	//pinmode for actuators
-	pinMode(tail, OUTPUT);
-	pinMode(mouth, OUTPUT);
-	pinMode(EML_Table, OUTPUT);
+  //pinmode for actuators
+  pinMode(tail, OUTPUT);
+  pinMode(mouth, OUTPUT);
+  pinMode(EML_Table, OUTPUT);
   digitalWrite(EML_Table, HIGH);
 
-	Serial.println("Started");
+  Serial.println("Started");
   //HC12.println("HC_12_initiated");
 }
-
 void loop()
+{
+  color_sensor();
+}
+
+void loop2()
 {  
   HC_12_loop();
-	color_sensor();
+  color_sensor();
   if(what_color == 'B' && is_fish_done == false)
   {
     is_fish_done = true;
@@ -120,7 +124,54 @@ void loop()
   }
 
   if (millis() - time > 10000) digitalWrite(EML_Table, HIGH); //time for EML still open
+}
 
+void color_sensor() 
+{
+  // Setting RED (R) filtered photodiodes to be read
+  digitalWrite(S2,LOW);
+  digitalWrite(S3,LOW);
+  // Reading the output frequency
+  redFrequency = pulseIn(OUT, LOW);
+  Serial.print("R="); Serial.print(redFrequency);
+
+  
+  // Setting GREEN (G) filtered photodiodes to be read
+  digitalWrite(S2,HIGH);
+  digitalWrite(S3,HIGH);
+  // Reading the output frequency
+  greenFrequency = pulseIn(OUT, LOW);
+  Serial.print(" G="); Serial.print(greenFrequency);
+ 
+  // Setting BLUE (B) filtered photodiodes to be read
+  digitalWrite(S2,LOW);
+  digitalWrite(S3,HIGH);
+  // Reading the output frequency
+  blueFrequency = pulseIn(OUT, LOW);
+  Serial.print(" B="); Serial.print(blueFrequency);
+
+  // Setting WHITE (W) no filtered photodiodes to be read
+  digitalWrite(S2,HIGH);
+  digitalWrite(S3,LOW);
+  // Reading the output frequency
+  whiteFrequency = pulseIn(OUT, LOW);
+  Serial.print(" W="); Serial.println(whiteFrequency);
+
+  if((redFrequency <= 300 && greenFrequency <= 300 && blueFrequency <= 300 && whiteFrequency <= 300 && redFrequency > 0 && greenFrequency > 0 && blueFrequency > 0 && whiteFrequency > 0))
+  {
+    what_color = 'W';
+  }
+  else if((redFrequency < 300 || blueFrequency < 300) && greenFrequency > 300 && whiteFrequency > 300 && redFrequency > 0 && greenFrequency > 0 && blueFrequency > 0 && whiteFrequency > 0)
+  {
+    what_color = 'B'; // means R or B
+  }
+  else if(redFrequency > 300 && greenFrequency < 300 && blueFrequency > 300 && whiteFrequency > 300 && redFrequency > 0 && greenFrequency > 0 && blueFrequency > 0 && whiteFrequency > 0)
+  {
+    what_color = 'G';
+  }
+  else what_color = 'N';
+
+  
   switch (what_color) 
   {
     case 'W':
@@ -136,55 +187,9 @@ void loop()
       Serial.println("BLUE");
       break;    
     case 'N':
-      Serial.println("NOTHING");
+      Serial.println("NOTHINGGGG");
       break;
   }
-}
-
-void color_sensor() 
-{
-  // Setting RED (R) filtered photodiodes to be read
-  digitalWrite(S2,LOW);
-  digitalWrite(S3,LOW);
-  // Reading the output frequency
-  redFrequency = pulseIn(OUT, LOW);
-  //Serial.print("R="); Serial.print(redFrequency);
-
-  
-  // Setting GREEN (G) filtered photodiodes to be read
-  digitalWrite(S2,HIGH);
-  digitalWrite(S3,HIGH);
-  // Reading the output frequency
-  greenFrequency = pulseIn(OUT, LOW);
-  //Serial.print(" G="); Serial.print(greenFrequency);
- 
-  // Setting BLUE (B) filtered photodiodes to be read
-  digitalWrite(S2,LOW);
-  digitalWrite(S3,HIGH);
-  // Reading the output frequency
-  blueFrequency = pulseIn(OUT, LOW);
-  //Serial.print(" B="); Serial.print(blueFrequency);
-
-  // Setting WHITE (W) no filtered photodiodes to be read
-  digitalWrite(S2,HIGH);
-  digitalWrite(S3,LOW);
-  // Reading the output frequency
-  whiteFrequency = pulseIn(OUT, LOW);
-  //Serial.print(" W="); Serial.println(whiteFrequency);
-
-  if((redFrequency <= 300 && greenFrequency <= 300 && blueFrequency <= 300 && whiteFrequency <= 300 && redFrequency > 0 && greenFrequency > 0 && blueFrequency > 0 && whiteFrequency > 0))
-  {
-    what_color = 'W';
-  }
-  else if((redFrequency < 300 || blueFrequency < 300) && greenFrequency > 300 && whiteFrequency > 300 && redFrequency > 0 && greenFrequency > 0 && blueFrequency > 0 && whiteFrequency > 0)
-  {
-    what_color = 'B'; // means R or B
-  }
-  else if(redFrequency > 300 && greenFrequency < 300 && blueFrequency > 300 && whiteFrequency > 300 && redFrequency > 0 && greenFrequency > 0 && blueFrequency > 0 && whiteFrequency > 0)
-  {
-    what_color = 'G';
-  }
-  else what_color = 'N';
 }
 
 void fish_animatronic()
