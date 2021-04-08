@@ -86,12 +86,8 @@ void setup()
   Serial.println("Started");
   //HC12.println("HC_12_initiated");
 }
-void loop()
-{
-  color_sensor();
-}
 
-void loop2()
+void loop()
 {  
   HC_12_loop();
   color_sensor();
@@ -171,7 +167,7 @@ void color_sensor()
   }
   else what_color = 'N';
 
-  
+
   switch (what_color) 
   {
     case 'W':
