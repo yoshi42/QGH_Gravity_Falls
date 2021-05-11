@@ -156,10 +156,11 @@ void color_sensor() {
   // Wait 1 second before next reading
   delay(500);
 
-  if(ambient_light/red_light < 2 && ambient_light/green_light < 2 && ambient_light/blue_light < 2) {what_color = 'W';}
-  else if(ambient_light/red_light < 2 && ambient_light/green_light >= 2 && ambient_light/blue_light >= 2) {what_color = 'R';}
-  else if(ambient_light/red_light >= 2 && ambient_light/green_light < 2 && ambient_light/blue_light >= 2) {what_color = 'G';}
-  else if(ambient_light/red_light >= 2 && ambient_light/green_light >= 2 && ambient_light/blue_light < 2) {what_color = 'B';}
+  if(ambient_light >= 200 && ambient_light/red_light < 2 && ambient_light/green_light < 2 && ambient_light/blue_light < 2) {what_color = 'W';}
+  else if(ambient_light >= 200 && ambient_light/red_light < 2 && ambient_light/green_light >= 2 && ambient_light/blue_light >= 2) {what_color = 'R';}
+  else if(ambient_light >= 200 && ambient_light/red_light >= 2 && ambient_light/green_light < 2 && ambient_light/blue_light >= 2) {what_color = 'G';}
+  else if(ambient_light >= 200 && ambient_light/red_light >= 2 && ambient_light/green_light >= 2 && ambient_light/blue_light < 2) {what_color = 'B';}
+  else if(ambient_light >= 200) {what_color = 'W';}
   else what_color = 'N';
 
   switch (what_color) 

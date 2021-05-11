@@ -57,6 +57,8 @@ void setup()
   digitalWrite(mov6, LOW);
 
   irblink_startup();
+  
+  digitalWrite(mov1, HIGH); //play video 1 at start
 }
 
 void loop()

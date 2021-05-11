@@ -15,6 +15,8 @@
    version 2.1 of the License, or (at your option) any later version.    
 */
 
+//NODE_MCU 1.0 ESP 8266 12E
+
 //////////////////////////////////////////////
 //        RemoteXY include library          //
 //////////////////////////////////////////////
@@ -122,6 +124,14 @@ String commands_array[num_cmnds] =
   "magic_circle_btn#",
 };
 
+String Portal_array[5] = 
+{ "Tele_mov1#", 
+  "Tele_mov2#", 
+  "Tele_mov3#",
+  "Tele_mov4#",
+  "Tele_mov5#"
+};
+
 byte btn_divider = 0;
 
 String tmr_strt = "tmr_strt#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
@@ -202,7 +212,7 @@ void loop()
     if(btn_divider == 2) //command comes twice by a protocol
     {
       Serial.println(commands_array[4]);
-      Serial_HC.print(commands_array[4]);
+      Serial_HC.print(Portal_array[1]); //changed to test!!!!!
       btn_divider = 0;
     }
   }
@@ -215,7 +225,7 @@ void loop()
     if(btn_divider == 2) //command comes twice by a protocol
     {
       Serial.println(commands_array[5]);
-      Serial_HC.print(commands_array[5]);
+      Serial_HC.print(Portal_array[2]); //changed to test!!!!!
       btn_divider = 0;
     }
   }
@@ -228,7 +238,7 @@ void loop()
     if(btn_divider == 2) //command comes twice by a protocol
     {
       Serial.println(commands_array[6]);
-      Serial_HC.print(commands_array[6]);
+      Serial_HC.print(Portal_array[3]); //changed to test!!!!!
       btn_divider = 0;
     }
   }
@@ -241,7 +251,7 @@ void loop()
     if(btn_divider == 2) //command comes twice by a protocol
     {
       Serial.println(commands_array[7]);
-      Serial_HC.print(commands_array[7]);
+      Serial_HC.print(Portal_array[4]); //changed to test!!!!!
       btn_divider = 0;
     }
   }
@@ -254,7 +264,7 @@ void loop()
     if(btn_divider == 2) //command comes twice by a protocol
     {
       Serial.println(commands_array[8]);
-      Serial_HC.print(commands_array[8]);
+      Serial_HC.print(Portal_array[5]); //changed to test!!!!!
       btn_divider = 0;
     }
   }

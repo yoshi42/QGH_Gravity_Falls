@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"am",
+				"ambient_light"
+			],
+			[
 				"pas",
 				"passive_mode"
 			],
@@ -276,18 +280,19 @@
 	"buffers":
 	[
 		{
-			"file": "GF_karp_nolib/GF_karp_nolib.ino",
+			"file": "/C/Users/bodya/Desktop/farmer json/1DONETSK_OBLAST.json",
 			"settings":
 			{
-				"buffer_size": 7507,
+				"buffer_size": 1264,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "GF_Master_control_system/GF_Master_control_system.ino",
+			"file": "/C/Users/bodya/Desktop/farmer json/Вітання",
 			"settings":
 			{
-				"buffer_size": 9691,
+				"buffer_size": 410,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -327,13 +332,50 @@
 	[
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_karp_nolib",
-		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_Master_control_system"
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_karp_nolib/GF_karp_apds-9960",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_Portal"
 	],
 	"file_history":
 	[
+		"/C/Users/bodya/Desktop/farmer json/25CHERNIVTSI_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/24KIROVOHRAD_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/23VOLYN_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/22CHERNIHIV_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/21KHERSON_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/20TERNOPIL_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/19SUMY_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/18MYKOLAIV_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/17RIVNE_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/16CHERKASY_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/15ZHYTOMYR_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/14ZAKARPATTIA_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/13KHMELNYTSKYI_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/12IVANO_FRANKIVSK_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/11POLTAVA_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/10VINNYTSIA_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/9KYIV_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/8ZAPORIZHIA_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/7CRIMEA_AUTONOMOUS_REPUBLIC.json",
+		"/C/Users/bodya/Desktop/farmer json/6LUHANSK_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/5ODESSA_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/4LVIV_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/3KHARKIV_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/2DNIPROPETROVSK_OBLAST.json",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_Master_control_system/GF_Master_control_system.ino",
+		"/C/Users/bodya/Desktop/farmer json/farmer_regions.txt",
+		"/C/Users/bodya/Desktop/farmer json/farmer_DNIPROPETROVSK_OBLAST.json",
+		"/C/Users/bodya/Desktop/Books/Сомерсет Моем - Луна и Грош.txt",
+		"/C/Users/bodya/Desktop/ixus310_elph500hs-101c-1.5.1-5835-full/readme.txt",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_Portal/GF_Portal.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_remote_XY/GF_remote_XY.ino",
+		"/C/Users/bodya/Downloads/Telegram Desktop/FTP-Chatbot (2).txt",
+		"/C/Users/bodya/Downloads/Telegram Desktop/FTP-Chatbot.txt",
+		"/C/Users/bodya/Downloads/Telegram Desktop/SSH.txt",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_karp_nolib/GF_karp_apds-9960/GF_karp_apds-9960.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_karp_nolib/GF_karp_nolib.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Interactive_skulpt/Shukai_heart/Shukai_heart.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_Master_control_system/GF_Master_control_system.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_karp_nolib/GF_karp_nolib.ino",
-		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Interactive_skulpt/Shukai_heart/Shukai_heart.ino",
 		"/C/Users/bodya/Downloads/Telegram Desktop/fortuna.ino",
 		"/C/Users/bodya/Downloads/Telegram Desktop/bomb.ino",
 		"/C/Users/bodya/Downloads/Telegram Desktop/_123.ino",
@@ -357,6 +399,8 @@
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_Portal/GF_Portal.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_Teleport/GF_Teleport.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Universal_IR_RFID_433Mhz_reader/rfid_reader/rfid_reader.ino",
+		"/C/Users/bodya/Desktop/farmer json/1DONETSK_OBLAST.json",
+		"/C/Users/bodya/Desktop/farmer json/Вітання",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Rfid_fall/Rfid_fall.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_magic_circle_master/GF_magic_circle_10_slaves/GF_magic_circle_10_slaves.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/irblink/irblink.ino",
@@ -420,35 +464,38 @@
 		"/C/Users/bodya/Documents/QGH/Сайт/sadmin.txt",
 		"/C/Users/bodya/Desktop/workflowy-export.txt",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_karp_lib/GF_karp_lib.ino",
-		"/C/Users/bodya/Desktop/Мс/Н/Я так давно мрію.txt",
-		"/C/Users/bodya/Desktop/Мс/TH/СК.txt",
-		"/C/Users/bodya/Desktop/Мс/TH/Р.txt",
-		"/C/Users/bodya/Desktop/Мс/TH/Новый текстовый документ.txt",
-		"/C/Users/bodya/Desktop/Мс/TH/Мысль.txt",
-		"/C/Users/bodya/Desktop/Мс/TH/Кн.txt",
-		"/C/Users/bodya/Desktop/Мс/TH/Зустр.txt",
-		"/C/Users/bodya/Desktop/Мс/TH/3пр.txt",
-		"/C/Users/bodya/Desktop/Мс/OF/Мысль.txt",
-		"/C/Users/bodya/Desktop/Мс/OF/Сережа, с Д.Н..txt",
-		"/C/Users/bodya/Desktop/Мс/OF/МУка.txt",
-		"/C/Users/bodya/Desktop/Мс/OF/Мій світ.txt",
-		"/C/Users/bodya/Desktop/Мс/NFP/all days and nights.txt",
-		"/C/Users/bodya/Desktop/libusb_1.2.4.0/libusb-win32-bin-README.txt",
-		"/C/Users/bodya/AppData/Local/Temp/7zO89FBC704/Readme.txt",
-		"/C/Users/bodya/Downloads/progisp/readme.txt",
-		"/C/Users/bodya/Downloads/usbisp/Instructions.txt",
-		"/C/Users/bodya/AppData/Local/Temp/Temp1_New_hard_all_in_one.zip/New_hard_all_in_one.ino",
-		"/C/Users/bodya/Documents/projects/GIT/QGH_Gravity_Falls/GF_karp_nolib/GF_karp_nolib.ino"
+		"/C/Users/bodya/Desktop/Мс/Н/Я так давно мрію.txt"
 	],
 	"find":
 	{
-		"height": 39.0
+		"height": 22.0
 	},
 	"find_in_files":
 	{
 		"height": 101.0,
 		"where_history":
 		[
+			"<current file>\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t\t\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t\t",
+			"<current file>\t\t\t\t\t",
+			"<current file>\t\t\t\t",
+			"<current file>\t\t\t",
+			"<current file>\t\t",
+			"<current file>\t",
+			"<current file>",
+			""
 		]
 	},
 	"find_state":
@@ -456,6 +503,37 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			",24]",
+			",23]",
+			",22]",
+			",21]",
+			",20]",
+			",19]",
+			",18]",
+			",17]",
+			",16]",
+			",15]",
+			",14]",
+			",13]",
+			",12]",
+			",11]",
+			",10]",
+			",9]",
+			",8]",
+			",7]",
+			",6]",
+			",5]",
+			",4]",
+			",3]",
+			",2]",
+			",1]",
+			"Tele_mov1",
+			"commands_array",
+			"console_btn",
+			"color_sensor",
+			"A4",
+			"vibro2",
+			"vibro1"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -463,6 +541,30 @@
 		"regex": false,
 		"replace_history":
 		[
+			",25]",
+			",24]",
+			",23]",
+			",22]",
+			",21]",
+			",20]",
+			",19]",
+			",18]",
+			",17]",
+			",16]",
+			",15]",
+			",14]",
+			",13]",
+			",12]",
+			",11]",
+			",10]",
+			",9]",
+			",8]",
+			",7]",
+			",6]",
+			",5]",
+			",4]",
+			",3]",
+			",2]"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -473,60 +575,30 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "GF_karp_nolib/GF_karp_nolib.ino",
+					"file": "/C/Users/bodya/Desktop/farmer json/1DONETSK_OBLAST.json",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7507,
+						"buffer_size": 1264,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								980,
-								980
+								1246,
+								1246
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "GF_Master_control_system/GF_Master_control_system.ino",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 9691,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								564,
-								564
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 2,
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
@@ -534,6 +606,34 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Users/bodya/Desktop/farmer json/Вітання",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 410,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
