@@ -280,19 +280,10 @@
 	"buffers":
 	[
 		{
-			"file": "/C/Users/bodya/Desktop/farmer json/1DONETSK_OBLAST.json",
+			"file": "/C/Users/bodya/Documents/OneDrive/projects/GIT/Interactive_skulpt/Shukai_heart_no_music/Shukai_heart_no_music.ino",
 			"settings":
 			{
-				"buffer_size": 1264,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/bodya/Desktop/farmer json/Вітання",
-			"settings":
-			{
-				"buffer_size": 410,
+				"buffer_size": 4447,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -337,6 +328,9 @@
 	],
 	"file_history":
 	[
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Interactive_skulpt/Shukai_heart/Shukai_heart.ino",
+		"/C/Users/bodya/Desktop/farmer json/Вітання",
+		"/C/Users/bodya/Desktop/farmer json/1DONETSK_OBLAST.json",
 		"/C/Users/bodya/Desktop/farmer json/25CHERNIVTSI_OBLAST.json",
 		"/C/Users/bodya/Desktop/farmer json/24KIROVOHRAD_OBLAST.json",
 		"/C/Users/bodya/Desktop/farmer json/23VOLYN_OBLAST.json",
@@ -373,7 +367,6 @@
 		"/C/Users/bodya/Downloads/Telegram Desktop/SSH.txt",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_karp_nolib/GF_karp_apds-9960/GF_karp_apds-9960.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_karp_nolib/GF_karp_nolib.ino",
-		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Interactive_skulpt/Shukai_heart/Shukai_heart.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_Master_control_system/GF_Master_control_system.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_karp_nolib/GF_karp_nolib.ino",
 		"/C/Users/bodya/Downloads/Telegram Desktop/fortuna.ino",
@@ -399,8 +392,6 @@
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_Portal/GF_Portal.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_Teleport/GF_Teleport.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Universal_IR_RFID_433Mhz_reader/rfid_reader/rfid_reader.ino",
-		"/C/Users/bodya/Desktop/farmer json/1DONETSK_OBLAST.json",
-		"/C/Users/bodya/Desktop/farmer json/Вітання",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Rfid_fall/Rfid_fall.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_magic_circle_master/GF_magic_circle_10_slaves/GF_magic_circle_10_slaves.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/irblink/irblink.ino",
@@ -580,60 +571,31 @@
 			[
 				{
 					"buffer": 0,
-					"file": "/C/Users/bodya/Desktop/farmer json/1DONETSK_OBLAST.json",
+					"file": "/C/Users/bodya/Documents/OneDrive/projects/GIT/Interactive_skulpt/Shukai_heart_no_music/Shukai_heart_no_music.ino",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1264,
+						"buffer_size": 4447,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1246,
-								1246
+								2108,
+								2108
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/C/Users/bodya/Desktop/farmer json/Вітання",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 410,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
 					"type": "text"
 				}
 			]

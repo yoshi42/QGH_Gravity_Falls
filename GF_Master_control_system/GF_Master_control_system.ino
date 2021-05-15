@@ -8,8 +8,8 @@ SoftwareSerial esp_wifi(44, 46); // (Rx_pin, Tx_pin) //using a softwareSerial in
 //========================MCS-left_OUTs
 const int MOSF1_puchlya_door_D53 = 53; //MOSFET 1
 const int MOSF2_exit_door_D51 = 51; //MOSFET 2
-const int MCS_D49 = 49; //MOSFET 3
-const int MCS_D47 = 47; //MOSFET 4
+const int MOSF3_potolok_korobka_D49 = 49; //MOSFET 3
+const int MOSF4_rubilnik_EML_D47 = 47; //MOSFET 4
 const int MCS_D45 = 45; //MOSFET 5
 const int MCS_D43 = 43; //MOSFET 6
 const int MOSF7_table_D41 = 41; //MOSFET 7
@@ -52,8 +52,8 @@ const int MCS_D30 = 30;
 #define MCS_quest_pls_5m_but_A4 A4
 #define MCS_quest_start_but_A5 A5
 #define MCS_quest_res_but_A6 A6
-#define MCS_A7 A7
-#define MCS_A8 A8
+#define MCS_code_panel_NO_A7 A7 //ор. біл
+#define MCS_rubilnik_A8 A8 //зел
 #define MCS_A9 A9
 #define MCS_A10 A10
 #define MCS_A11 A11
@@ -64,10 +64,14 @@ const int MCS_D30 = 30;
 
 //=======================MCS-up_an_INs
 
-const int MCS_D44 = 44;
+const int MCS_pukhlya_NO_40 = 40;
+const int MCS_pukhlya_open_door_42 = 42;
+
+const int REL_UV_D44 = 44;
 const int MCS_D46 = 46;
 const int MCS_D48 = 48;
 const int MCS_D50 = 50;
+
 const int MCS_D52 = 52;
 
 String string;
@@ -176,12 +180,29 @@ void setup() {
     pinMode(MCS_quest_pls_5m_but_A4, INPUT_PULLUP);
     pinMode(MCS_quest_start_but_A5, INPUT_PULLUP);
     pinMode(MCS_quest_res_but_A6, INPUT_PULLUP);
+    pinMode(MCS_code_panel_NO_A7, INPUT_PULLUP); //ор.біл
+    pinMode(MCS_rubilnik_A8, INPUT_PULLUP); //зел
 
+    pinMode(MCS_pukhlya_NO_40, INPUT_PULLUP); //син+син.б.
+    pinMode(MCS_pukhlya_open_door_42, INPUT_PULLUP); //зел+зел.б.
+    
     pinMode(MOSF1_puchlya_door_D53, OUTPUT);
     pinMode(MOSF2_exit_door_D51, OUTPUT);
+    pinMode(MOSF3_potolok_korobka_D49, OUTPUT);
+    pinMode(MOSF4_rubilnik_EML_D47, OUTPUT);
+
     pinMode(MOSF7_table_D41, OUTPUT);
     pinMode(MOSF8_window_D39, OUTPUT);
 
+    digitalWrite(MOSF1_puchlya_door_D53, LOW);
+    digitalWrite(MOSF2_exit_door_D51, HIGH);
+    digitalWrite(MOSF3_potolok_korobka_D49, HIGH);
+    digitalWrite(MOSF4_rubilnik_EML_D47, HIGH);
+
+    pinMode(REL_UV_D44, OUTPUT);
+    digitalWrite(REL_UV_D44, HIGH); //LOW = ON - UV light on
+
+    
 
   Serial.println("OSU_loaded");
 
@@ -202,7 +223,8 @@ void loop()
   HC12_loop();
   //test_pic();
   test_quest_start();
-
+  test_quest_base();
+  Serial3.println(digitalRead(MCS_pukhlya_NO_40));
 }
 
 void posledovatelnost()
@@ -249,6 +271,17 @@ void test_pic()
   delay(500);
 }
 
+void test_rubilnik()
+{
+  int m1 = digitalRead(MCS_code_panel_NO_A7);
+  int m2 = digitalRead(MCS_rubilnik_A8);
+  Serial.print(m1);
+  Serial.print(" ");
+  Serial.println(m2);
+  delay(500);
+
+}
+
 void test_quest_start()
 {
   if(digitalRead(MCS_quest_start_but_A5) == LOW && dio == false){delay(50);Serial3.print(tmr_strt);mp3_set_serial(Serial1);mp3_play(1);dio = true;}
@@ -259,4 +292,16 @@ void test_quest_start()
 
   if(digitalRead(MCS_quest_pls_5m_but_A4) == LOW && dio == false){delay(50);Serial3.print(tmr_pls_5m);dio = true;}
   else if(digitalRead(MCS_quest_pls_5m_but_A4) == HIGH && dio == true){delay(50);dio = false;}
+}
+
+void test_quest_base()
+{
+  if(digitalRead(MCS_code_panel_NO_A7) == LOW){delay(50); digitalWrite(MOSF4_rubilnik_EML_D47, LOW);}
+  else if(digitalRead(MCS_code_panel_NO_A7) == HIGH){delay(50); digitalWrite(MOSF4_rubilnik_EML_D47, HIGH);}
+
+  if(digitalRead(MCS_rubilnik_A8) == LOW){delay(50); digitalWrite(REL_UV_D44, LOW);}
+  else if(digitalRead(MCS_rubilnik_A8) == HIGH){delay(50); digitalWrite(REL_UV_D44, HIGH);}
+
+  if(digitalRead(MCS_pukhlya_NO_40) == LOW){delay(50); digitalWrite(MOSF1_puchlya_door_D53, LOW); delay(500); Serial3.println("pu_op");}
+  else if(digitalRead(MCS_pukhlya_NO_40) == HIGH){delay(50); digitalWrite(MOSF1_puchlya_door_D53, HIGH);}
 }
