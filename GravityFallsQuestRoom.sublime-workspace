@@ -4,6 +4,30 @@
 		"selected_items":
 		[
 			[
+				"Pu",
+				"MCS_pukhlya_NO_40"
+			],
+			[
+				"digi",
+				"digitalRead"
+			],
+			[
+				"Ser",
+				"Serial3"
+			],
+			[
+				"MCS_puk",
+				"MCS_pukhlya_open_door_42"
+			],
+			[
+				"MOS",
+				"MOSF1_puchlya_door_D53"
+			],
+			[
+				"MOSF",
+				"MOSF4_rubilnik_EML_D47"
+			],
+			[
 				"am",
 				"ambient_light"
 			],
@@ -82,10 +106,6 @@
 			[
 				"H",
 				"Serial_HC"
-			],
-			[
-				"digi",
-				"digitalRead"
 			],
 			[
 				"readers",
@@ -279,15 +299,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "/C/Users/bodya/Documents/OneDrive/projects/GIT/Interactive_skulpt/Shukai_heart_no_music/Shukai_heart_no_music.ino",
-			"settings":
-			{
-				"buffer_size": 4447,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -322,13 +333,16 @@
 	"expanded_folders":
 	[
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1",
-		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_karp_nolib",
-		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_karp_nolib/GF_karp_apds-9960",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_Master_control_system",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_Portal"
 	],
 	"file_history":
 	[
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Interactive_skulpt/Shukai_heart/Shukai_heart.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_lab_panel/GF_lab_panel.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_Master_control_system/GF_Master_control_system.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_Portal/GF_Portal.ino",
+		"/C/Users/bodya/Documents/OneDrive/projects/GIT/Interactive_skulpt/Shukai_heart_no_music/Shukai_heart_no_music.ino",
 		"/C/Users/bodya/Desktop/farmer json/Вітання",
 		"/C/Users/bodya/Desktop/farmer json/1DONETSK_OBLAST.json",
 		"/C/Users/bodya/Desktop/farmer json/25CHERNIVTSI_OBLAST.json",
@@ -355,12 +369,10 @@
 		"/C/Users/bodya/Desktop/farmer json/4LVIV_OBLAST.json",
 		"/C/Users/bodya/Desktop/farmer json/3KHARKIV_OBLAST.json",
 		"/C/Users/bodya/Desktop/farmer json/2DNIPROPETROVSK_OBLAST.json",
-		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_Master_control_system/GF_Master_control_system.ino",
 		"/C/Users/bodya/Desktop/farmer json/farmer_regions.txt",
 		"/C/Users/bodya/Desktop/farmer json/farmer_DNIPROPETROVSK_OBLAST.json",
 		"/C/Users/bodya/Desktop/Books/Сомерсет Моем - Луна и Грош.txt",
 		"/C/Users/bodya/Desktop/ixus310_elph500hs-101c-1.5.1-5835-full/readme.txt",
-		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_Portal/GF_Portal.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_falls1/GF_remote_XY/GF_remote_XY.ino",
 		"/C/Users/bodya/Downloads/Telegram Desktop/FTP-Chatbot (2).txt",
 		"/C/Users/bodya/Downloads/Telegram Desktop/FTP-Chatbot.txt",
@@ -453,13 +465,11 @@
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/ID_fire_RGB.ino",
 		"/C/Users/bodya/Documents/OneDrive/projects/GIT/HC_12_mesh/HC_12_mesh.ino",
 		"/C/Users/bodya/Documents/QGH/Сайт/sadmin.txt",
-		"/C/Users/bodya/Desktop/workflowy-export.txt",
-		"/C/Users/bodya/Documents/OneDrive/projects/GIT/QGH_Gravity_Falls/GF_karp_lib/GF_karp_lib.ino",
-		"/C/Users/bodya/Desktop/Мс/Н/Я так давно мрію.txt"
+		"/C/Users/bodya/Desktop/workflowy-export.txt"
 	],
 	"find":
 	{
-		"height": 22.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -494,6 +504,25 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"test_quest_start",
+			"irblink_startup",
+			"NUM_LEDS",
+			"keypad_password_21_but",
+			"mp3",
+			"is_button_pressed",
+			"MCS_pukhlya_open_door_42",
+			"tmr_strt",
+			"MCS_pukhlya_open_door_42",
+			"serial3",
+			"pukhl",
+			"42",
+			"40",
+			"MCS_rubilnik_EML_D47",
+			"MCS_rubilnik_A8",
+			"rubilnik",
+			"MOSF3_potolok_korobka_D49",
+			"digitalWri",
+			"MCS_D49",
 			",24]",
 			",23]",
 			",22]",
@@ -566,38 +595,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "/C/Users/bodya/Documents/OneDrive/projects/GIT/Interactive_skulpt/Shukai_heart_no_music/Shukai_heart_no_music.ino",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4447,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2108,
-								2108
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],

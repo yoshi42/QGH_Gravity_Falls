@@ -224,7 +224,7 @@ void loop()
   //test_pic();
   test_quest_start();
   test_quest_base();
-  Serial3.println(digitalRead(MCS_pukhlya_NO_40));
+  //Serial3.println(digitalRead(MCS_pukhlya_NO_40));
 }
 
 void posledovatelnost()

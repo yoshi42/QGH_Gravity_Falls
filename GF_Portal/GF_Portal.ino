@@ -184,6 +184,6 @@ void HC_12_loop()
 
 void irblink_startup() //TV and media pleer on
 {
-    irsend.sendNEC(0x5FAFA05, 32); //on TV
+    irsend.sendNEC(0x4FB4AB5, 32); //on TV
     delay(1000);
 }

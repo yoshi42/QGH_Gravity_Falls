@@ -167,6 +167,7 @@ void setup()
 	Serial.println("Started");
 }
 
+
 void loop()
 {	
 	HC_12_loop();
@@ -421,6 +422,17 @@ void HC_12_loop()
     temp_string = "";     //then clear the string
     }
   }
+}
+
+void test_ws2811()
+{	
+	for(int led = 0; led < NUM_LEDS; led++) 
+	{
+		leds[led] = CRGB(255, 255, 255);
+		delay(500);
+		FastLED.show();
+	}
+	for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;FastLED.show();}
 }
 
 /*/////////////////// TESTing ALGS /////////////////////////
