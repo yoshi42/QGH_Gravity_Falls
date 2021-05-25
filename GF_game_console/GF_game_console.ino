@@ -129,7 +129,9 @@ void loop()
 
   if(is_passcode_win == 1)
   {
-    irsend.sendNEC(0x807F08F7, 32); //play
+    irsend.sendNEC(0x807F08F7, 32); //play pleer
+    delay(60000);
+    irsend.sendNEC(0x807F08F7, 32); //pause pleer
     is_passcode_win = 0;
   }
 }
@@ -438,4 +440,23 @@ next 807FF807
     irsend.sendNEC(0x807F08F7, 32); //play
     delay(3000);
     irsend.sendNEC(0x807F08F7, 32); //pause
+}
+
+void irblink_TV_only() //перша команда
+{
+    irsend.sendNEC(0x807C50AF, 32); //on
+    delay(8000);
+    irsend.sendNEC(0x807C1AE5, 32); // ->
+    delay(1000);
+    irsend.sendNEC(0x807C1AE5, 32); // ->
+    delay(1000);
+    irsend.sendNEC(0x807C5AA5, 32); // ok
+    delay(1000);
+    irsend.sendNEC(0x807C5AA5, 32); // ok
+    delay(1000);
+    irsend.sendNEC(0x807C1AE5, 32); // ->
+    delay(1000);
+    irsend.sendNEC(0x807C1AE5, 32); // ->
+    delay(1000);
+    irsend.sendNEC(0x807C5AA5, 32); // ok
 }
