@@ -75,6 +75,8 @@ String pleer_off = "pleer_off#"; //compare string should be "xx...x#" format. La
 bool is_console_done = false;
 bool is_passcode_win = 0;
 
+int counter = 0;
+
 unsigned long time = 0;
 unsigned long time1 = 0;
 
@@ -117,7 +119,7 @@ void setup()
 
 	Serial.println("Started");
   delay(5000);
-  irblink_startup();
+  irblink_TV_only();
   Serial.println("Ready");
 }
 
@@ -127,11 +129,20 @@ void loop()
   read_buttons();
   check_passcode();
 
-  if(is_passcode_win == 1)
+  if(is_passcode_win == 1 && counter == 0)
   {
-    irsend.sendNEC(0x807F08F7, 32); //play pleer
-    delay(60000);
-    irsend.sendNEC(0x807F08F7, 32); //pause pleer
+    irsend.sendNEC(0x5FAB24D, 32); // play
+    delay(62000);
+    irsend.sendNEC(0x5FAB24D, 32); // pause
+    is_passcode_win = 0;
+    counter = 1;
+  }
+
+  if(is_passcode_win == 1 && counter >= 1)
+  {
+    irsend.sendNEC(0x5FAB24D, 32); // play
+    delay(65000);
+    irsend.sendNEC(0x5FAB24D, 32); // pause
     is_passcode_win = 0;
   }
 }
@@ -283,7 +294,7 @@ void read_buttons()
 }
 
 void check_passcode() 
-{              //recieve something from hc-12 inerface
+{
   if (last_char != temp_char)
   {
     if(temp_char != '0')
@@ -444,19 +455,34 @@ next 807FF807
 
 void irblink_TV_only() //перша команда
 {
-    irsend.sendNEC(0x807C50AF, 32); //on
-    delay(8000);
-    irsend.sendNEC(0x807C1AE5, 32); // ->
-    delay(1000);
-    irsend.sendNEC(0x807C1AE5, 32); // ->
-    delay(1000);
-    irsend.sendNEC(0x807C5AA5, 32); // ok
-    delay(1000);
-    irsend.sendNEC(0x807C5AA5, 32); // ok
-    delay(1000);
-    irsend.sendNEC(0x807C1AE5, 32); // ->
-    delay(1000);
-    irsend.sendNEC(0x807C1AE5, 32); // ->
-    delay(1000);
-    irsend.sendNEC(0x807C5AA5, 32); // ok
+
+/*
+TV:
+on 0x5FAFA05
+right 0x5FA28D7
+right 0x5FA28D7
+ok 0x5FAAA55
+ok 0x5FAAA55
+right 0x5FA28D7
+right 0x5FA28D7
+play 0x5FAB24D
+pause 0x5FAB24D
+*/
+    irsend.sendNEC(0x5FAFA05, 32); //on
+    delay(15000);
+    irsend.sendNEC(0x5FA28D7, 32); // ->
+    delay(1500);
+    irsend.sendNEC(0x5FA28D7, 32); // ->
+    delay(1500);
+    irsend.sendNEC(0x5FAAA55, 32); // ok
+    delay(1500);
+    irsend.sendNEC(0x5FAAA55, 32); // ok
+    delay(1500);
+    irsend.sendNEC(0x5FA28D7, 32); // ->
+    delay(1500);
+    irsend.sendNEC(0x5FA28D7, 32); // ->
+    delay(1500);
+    irsend.sendNEC(0x5FAB24D, 32); // play
+    delay(3500);
+    irsend.sendNEC(0x5FAB24D, 32); // pause
 }
