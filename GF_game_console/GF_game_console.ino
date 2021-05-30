@@ -49,7 +49,9 @@ byte LED_arr[] = {but_left_led, but_up_led, but_down_led, but_right_led, but_kic
 
 String passcode = "LLPPRLDKkPPPK";
 String secret_passcode = "LLLRRRUUUDDDK";
-int passcode_length = 13;
+int passcode_length = passcode.length();
+
+;
 
 String temp_passcode = "";
 char temp_char = '0';

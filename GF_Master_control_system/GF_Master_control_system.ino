@@ -1,3 +1,27 @@
+/* 
+Система управління квест-кімнатою, яка відповідає за зв'язок між всіма девайсами та загальну логіку роботи квесту.
+
+Алгоритм:
+  1. Адмін натискає старт - Стартує квест: таймер, запускається музика 0001_фонова_старт.mp3
+  2. Пройти ігровий автомат, подивитися відео.
+  3. Виставити картини - відкриваєтсья ящик в потолку (підказка про пухлю)
+  4. Посвітити в карпа - відкривається стол, отримуємо пухлю
+  5. Прикласти пухлю - відкриваються двері (змінюється фонова музика 0002_кімната_Діпера.mp3 -якщо ми до цього не відкрили уже лабораторію), отримуємо щоденник
+  6. Подзвонити по телефону - вмикається відео з камер. Отримуємо код від снекового автомата
+  7. Ввести пароль в снек - запускається movie1.mp4 "Ефект порталу", відкриваються двері в лабораторію (змінюється фонова музика 0003_лабораторія.mp3),
+  8. Ввести пароль в кодову панель - відкривається доступ до рубильника
+  9. Потягнути за рубильник - перемикається УФ, доступ до коду в щоденнику
+  10. Ввести код в лаб. пульт - запускається movie2.mp4 "Я - Білл сайфер", відкривається ніша з кнопками. Якщо кнопку не натиснули - грає movie3.mp4 "Скільки можна чекати"
+  11. Натиснути кнопку "Відкрити" - Запускається  movie5.mp4 "Білла випустили", (перемикається музика 0004_Апокаліпсис.mp3), в автоматі теж грає відео, активується загадка "мемо".
+  12. Розгадати "мемо" - відкривається ніша з підказкою і останньою частиною круга магічного
+  13. Виставити магічний круг - таймер зупиняється, включається movie6.mp4 "Фінальне", грає фінальна музика 0005_Фінальна.mp3, двері відкриваються
+
+  Якщо на пункті 11 - натиснути кнопку "Закрити портал" - грає відео movie4.mp4 "Ні - не робіть цього", кнопку "Відкрити" можна натиснути ще раз.
+  Якщо натиснути "Закрити портал ще раз"- наступні пункти пропускаються, і зразу грає фінальна музика.
+
+*/
+
+
 #include <DFPlayer_Mini_Mp3.h>
 #include <SoftwareSerial.h>
 
@@ -156,6 +180,10 @@ String remotexy[num_cmnds2] =
 };
 
 bool dio = false;
+bool karp_done = false;
+bool telephone_done = false;
+bool snack_automate_done = false; 
+
 
 unsigned long time_quest_start_but = 0;
 
@@ -193,13 +221,14 @@ void setup() {
 
     pinMode(MOSF7_table_D41, OUTPUT);
     pinMode(MOSF8_window_D39, OUTPUT);
+    pinMode(REL_UV_D44, OUTPUT);
 
     digitalWrite(MOSF1_puchlya_door_D53, LOW);
     digitalWrite(MOSF2_exit_door_D51, HIGH);
     digitalWrite(MOSF3_potolok_korobka_D49, HIGH);
     digitalWrite(MOSF4_rubilnik_EML_D47, HIGH);
+    digitalWrite(MOSF7_table_D41, HIGH);
 
-    pinMode(REL_UV_D44, OUTPUT);
     digitalWrite(REL_UV_D44, HIGH); //LOW = ON - UV light on
 
     
@@ -221,16 +250,149 @@ int freeRam () { //функция, показываюзая количество
 void loop() 
 {
   HC12_loop();
-  //test_pic();
-  test_quest_start();
-  test_quest_base();
-  //Serial3.println(digitalRead(MCS_pukhlya_NO_40));
 }
 
 void posledovatelnost()
 {
-  //Ві
+  //1. Адмін натискає старт - Стартує квест: таймер, запускається музика 0001_фонова_старт.mp3
+  quest_start();
+  //2. Пройти ігровий автомат, подивитися відео.
+  //3. Виставити картини - відкриваєтсья ящик в потолку (підказка про пухлю)
+  pic();
+  //4. Посвітити в карпа - відкривається стол, отримуємо пухлю
+  karp();
+  //5. Прикласти пухлю - відкриваються двері (змінюється фонова музика 0002_кімната_Діпера.mp3 -якщо ми до цього не відкрили уже лабораторію), отримуємо щоденник
+  pukhlya();
+  //6. Подзвонити по телефону - вмикається відео з камер. Отримуємо код від снекового автомата
+  telephone();
+  //7. Ввести пароль в снек - запускається movie1.mp4 "Ефект порталу", відкриваються двері в лабораторію (змінюється фонова музика 0003_лабораторія.mp3),
+  snack();  
+  //8. Ввести пароль в кодову панель - відкривається доступ до рубильника
+  code_panel();
+  //9. Потягнути за рубильник - перемикається УФ, доступ до коду в щоденнику
+  rubilnik();
+  //10. Ввести код в лаб. пульт - запускається movie2.mp4 "Я - Білл сайфер", відкривається ніша з кнопками. Якщо кнопку не натиснули - грає movie3.mp4 "Скільки можна чекати"
+  
+  //11. Натиснути кнопку "Відкрити" - Запускається  movie5.mp4 "Білла випустили", (перемикається музика 0004_Апокаліпсис.mp3), в автоматі теж грає відео, активується загадка "мемо".
+  //12. Розгадати "мемо" - відкривається ніша з підказкою і останньою частиною круга магічного
+  //13. Виставити магічний круг - таймер зупиняється, включається movie6.mp4 "Фінальне", грає фінальна музика 0005_Фінальна.mp3, двері відкриваються
+
+
 }
+
+void quest_start()
+{
+  if(digitalRead(MCS_quest_start_but_A5) == LOW && dio == false){
+    delay(50);
+    Serial3.print(tmr_strt);
+    mp3_set_serial(Serial1);
+    mp3_play(1);
+    dio = true;
+  }
+  else if(digitalRead(MCS_quest_start_but_A5) == HIGH && dio == true){delay(50);dio = false;}
+
+  if(digitalRead(MCS_quest_res_but_A6) == LOW && dio == false){
+    delay(50);
+    Serial3.print(tmr_rst);
+    mp3_set_serial(Serial1);
+    mp3_stop();
+    dio = true;
+  }
+  else if(digitalRead(MCS_quest_res_but_A6) == HIGH && dio == true){delay(50);dio = false;}
+
+  if(digitalRead(MCS_quest_pls_5m_but_A4) == LOW && dio == false){
+    delay(50);
+    Serial3.print(tmr_pls_5m);
+    dio = true;
+  }
+  else if(digitalRead(MCS_quest_pls_5m_but_A4) == HIGH && dio == true){delay(50);dio = false;}
+}
+
+void pic()
+{
+  int p1 = digitalRead(MCS_pict1_A0);
+  int p2 = digitalRead(MCS_pict2_A1);
+  int p3 = digitalRead(MCS_pict3_A2);
+  int p4 = digitalRead(MCS_pict4_A3);
+  if(p1==1 && p2==1 && p3==1 && p4==1)
+  {
+    digitalWrite(MOSF3_potolok_korobka_D49, LOW);
+  }
+
+  else if(p1==0 || p2==0 || p3==0 || p4==0)
+  {
+    digitalWrite(MOSF3_potolok_korobka_D49, HIGH);
+  }
+  /*Serial3.print(p1);
+  Serial3.print(" ");
+  Serial3.print(p2);
+  Serial3.print(" ");
+  Serial3.print(p3);
+  Serial3.print(" ");
+  Serial3.println(p4);
+  delay(500);*/
+}
+
+void karp()
+{
+  if(karp_done)
+  {
+    digitalWrite(MOSF7_table_D41, HIGH);
+    karp_done=!karp_done;
+  }
+}
+
+void pukhlya()
+{
+  if(digitalRead(MCS_pukhlya_NO_40) == LOW){
+    delay(50); 
+    digitalWrite(MOSF1_puchlya_door_D53, LOW);
+    delay(500); 
+    Serial3.println("pu_op");
+  }
+  else if(digitalRead(MCS_pukhlya_NO_40) == HIGH){delay(50); digitalWrite(MOSF1_puchlya_door_D53, HIGH);}
+}
+
+void telephone()
+{
+  if(telephone_done)
+  {
+    digitalWrite(MCS_D30, LOW); //5v TV led on pin
+    telephone_done=!telephone_done;
+  }
+}
+
+void snack()
+{
+  if(snack_automate_done)
+  {
+    mp3_set_serial(Serial1);
+    mp3_play(3);
+    snack_automate_done=!snack_automate_done;
+  }
+}
+
+void code_panel()
+{
+  if(digitalRead(MCS_code_panel_NO_A7) == LOW)
+  {
+    delay(50); 
+    digitalWrite(MOSF4_rubilnik_EML_D47, LOW);
+  }
+
+  else if(digitalRead(MCS_code_panel_NO_A7) == HIGH){delay(50); digitalWrite(MOSF4_rubilnik_EML_D47, HIGH);}
+}
+
+void rubilnik()
+{
+  if(digitalRead(MCS_rubilnik_A8) == LOW){
+    delay(50); 
+    digitalWrite(REL_UV_D44, LOW);
+  }
+  else if(digitalRead(MCS_rubilnik_A8) == HIGH){delay(50); digitalWrite(REL_UV_D44, HIGH);}
+}
+
+
 
 void HC12_loop()
 {              //recieve something from hc-12 inerface
@@ -247,61 +409,29 @@ void HC12_loop()
 
       if (temp_string == tmr_strt)  //compare string with a known commands
       {
-        Serial3.println("message");
+        Serial3.print(tmr_strt);
+        mp3_set_serial(Serial1);
+        mp3_play(1);
       }
+
+      if (temp_string == MCS_karp_cnfrm)  //compare string with a known commands
+      {
+        karp_done = true;
+      }
+
+      if (temp_string == cnfrm_TV)  //compare string with a known commands
+      {
+        telephone_done = true;
+      }
+
+      if (temp_string == snack_done)  //compare string with a known commands
+      {
+        snack_automate_done = true;
+      }
+
+      
 
       temp_string = "";     //then clear the string
     }
   }
-}
-
-void test_pic()
-{
-  int p1 = digitalRead(MCS_pict1_A0);
-  int p2 = digitalRead(MCS_pict2_A1);
-  int p3 = digitalRead(MCS_pict3_A2);
-  int p4 = digitalRead(MCS_pict4_A3);
-  Serial3.print(p1);
-  Serial3.print(" ");
-  Serial3.print(p2);
-  Serial3.print(" ");
-  Serial3.print(p3);
-  Serial3.print(" ");
-  Serial3.println(p4);
-  delay(500);
-}
-
-void test_rubilnik()
-{
-  int m1 = digitalRead(MCS_code_panel_NO_A7);
-  int m2 = digitalRead(MCS_rubilnik_A8);
-  Serial.print(m1);
-  Serial.print(" ");
-  Serial.println(m2);
-  delay(500);
-
-}
-
-void test_quest_start()
-{
-  if(digitalRead(MCS_quest_start_but_A5) == LOW && dio == false){delay(50);Serial3.print(tmr_strt);mp3_set_serial(Serial1);mp3_play(1);dio = true;}
-  else if(digitalRead(MCS_quest_start_but_A5) == HIGH && dio == true){delay(50);dio = false;}
-
-  if(digitalRead(MCS_quest_res_but_A6) == LOW && dio == false){delay(50);Serial3.print(tmr_rst);mp3_set_serial(Serial1);mp3_stop();dio = true;}
-  else if(digitalRead(MCS_quest_res_but_A6) == HIGH && dio == true){delay(50);dio = false;}
-
-  if(digitalRead(MCS_quest_pls_5m_but_A4) == LOW && dio == false){delay(50);Serial3.print(tmr_pls_5m);dio = true;}
-  else if(digitalRead(MCS_quest_pls_5m_but_A4) == HIGH && dio == true){delay(50);dio = false;}
-}
-
-void test_quest_base()
-{
-  if(digitalRead(MCS_code_panel_NO_A7) == LOW){delay(50); digitalWrite(MOSF4_rubilnik_EML_D47, LOW);}
-  else if(digitalRead(MCS_code_panel_NO_A7) == HIGH){delay(50); digitalWrite(MOSF4_rubilnik_EML_D47, HIGH);}
-
-  if(digitalRead(MCS_rubilnik_A8) == LOW){delay(50); digitalWrite(REL_UV_D44, LOW);}
-  else if(digitalRead(MCS_rubilnik_A8) == HIGH){delay(50); digitalWrite(REL_UV_D44, HIGH);}
-
-  if(digitalRead(MCS_pukhlya_NO_40) == LOW){delay(50); digitalWrite(MOSF1_puchlya_door_D53, LOW); delay(500); Serial3.println("pu_op");}
-  else if(digitalRead(MCS_pukhlya_NO_40) == HIGH){delay(50); digitalWrite(MOSF1_puchlya_door_D53, HIGH);}
 }
