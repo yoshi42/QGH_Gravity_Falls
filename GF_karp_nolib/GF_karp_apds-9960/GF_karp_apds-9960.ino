@@ -27,9 +27,8 @@ SoftwareSerial DF_player(4, 2); // (Rx_pin, Tx_pin) //using a softwareSerial ins
 String temp_string = ""; //variable to store information recieved form serial and compare it
 
 //Command strings
-String MCS_karp_play = "MCS_karp_play#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-String cnfrm = "#SL_karp_done#"; //send command string should be "#xx...x#" format - for sure to correctly recieve a command. 1st "#" byte clears all junk before comparing, may work without it
-
+String MCS_karp_play = "krp_pl#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
+String cnfrm = "#krp_d#"; //send command string should be "#xx...x#" format - for sure to correctly recieve a command. 1st "#" byte clears all junk before comparing, may work without it
 
 //actuator definitions
 #define tail 5 //fish tail
@@ -57,7 +56,7 @@ void setup() {
   HC12.begin(9600); //initiating software serial
 
   mp3_set_serial (DF_player);  //set Serial for DFPlayer-mini mp3 module 
-  mp3_set_volume (25);
+  mp3_set_volume (30);
 
   //pinmode for actuators
   pinMode(tail, OUTPUT);

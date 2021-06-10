@@ -120,7 +120,7 @@ void setup()
   }
 
 	Serial.println("Started");
-  delay(5000);
+  delay(10000);
   irblink_TV_only();
   Serial.println("Ready");
 }
@@ -345,8 +345,8 @@ void HC_12_loop()
     Serial.print(inChar); //Send each recieved byte back
     if (inChar == '#')       //if stop byte recieved
     {
-      Serial.print(temp_string);
-      Serial.println(" - copy that");
+      //Serial.print(temp_string);
+      //Serial.println(" - copy that");
       if (temp_string == play_vid_1)  //compare string with a known commands
       {
         is_passcode_win = 1;
@@ -470,6 +470,12 @@ right 0x5FA28D7
 play 0x5FAB24D
 pause 0x5FAB24D
 */
+    irsend.sendNEC(0x5FAFA05, 32); //on
+    delay(50);
+    irsend.sendNEC(0x5FAFA05, 32); //on
+    delay(50);
+    irsend.sendNEC(0x5FAFA05, 32); //on
+    delay(50);
     irsend.sendNEC(0x5FAFA05, 32); //on
     delay(15000);
     irsend.sendNEC(0x5FA28D7, 32); // ->

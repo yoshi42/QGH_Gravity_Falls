@@ -57,8 +57,6 @@ void setup()
   digitalWrite(mov6, LOW);
 
   irblink_startup();
-  
-  digitalWrite(mov1, HIGH); //play video 1 at start
 }
 
 void loop()
@@ -183,7 +181,8 @@ void HC_12_loop()
 }
 
 void irblink_startup() //TV and media pleer on
-{
+{ 
+    delay(10000);
     irsend.sendNEC(0x4FB4AB5, 32); //on TV
     delay(1000);
 }

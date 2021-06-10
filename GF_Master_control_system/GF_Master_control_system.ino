@@ -92,7 +92,7 @@ const int MCS_pukhlya_NO_40 = 40;
 const int MCS_pukhlya_open_door_42 = 42;
 
 const int REL_UV_D44 = 44;
-const int MCS_D46 = 46;
+const int REL_LIGHT_D46 = 46;
 const int MCS_D48 = 48;
 const int MCS_D50 = 50;
 
@@ -109,8 +109,8 @@ String pleer_on = "pleer_on#"; //compare string should be "xx...x#" format. Last
 String pleer_off = "pleer_off#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 
 //GF_karp_nolib
-String MCS_karp_play = "MCS_karp_play#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-String MCS_karp_cnfrm = "#SL_karp_done#"; //send command string should be "#xx...x#" format - for sure to correctly recieve a command. 1st "#" byte clears all junk before comparing, may work without it
+String MCS_karp_play = "krp_pl#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
+String MCS_karp_cnfrm = "krp_d#"; //send command string should be "#xx...x#" format - for sure to correctly recieve a command. 1st "#" byte clears all junk before comparing, may work without it
 
 //GF_lab_panel
 //Slave-Master strings
@@ -135,16 +135,16 @@ String snack_done = "sn_done#"; //compare string should be "xx...x#" format. Las
 
 //GF_Telephone_display
 String MCS_TV_play = "MCS_TV_play#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-String cnfrm_TV = "#SL_TV_done#"; //send command string should be "#xx...x#" format - for sure to correctly recieve a command. 1st "#" byte clears all junk before comparing, may work without it
+String cnfrm_TV = "SL_TV_done#"; //send command string should be "#xx...x#" format - for sure to correctly recieve a command. 1st "#" byte clears all junk before comparing, may work without it
 
 //GF_Teleport strings
-String Tele_mov1 = "Tele_mov1#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-String Tele_mov2 = "Tele_mov2#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-String Tele_mov3 = "Tele_mov3#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-String Tele_mov4 = "Tele_mov4#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-String Tele_mov5 = "Tele_mov5#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-String Tele_mov6 = "Tele_mov6#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-String Tele_on = "Tele_on#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
+String Tele_mov1 = "#Tele_mov1#"; //portal endless galactic
+String Tele_mov2 = "#Tele_mov2#"; //Я - Білл сайфер
+String Tele_mov3 = "#Tele_mov3#"; //Скільки можна чекати
+String Tele_mov4 = "#Tele_mov4#"; //Ні - не робіть цього
+String Tele_mov5 = "#Tele_mov5#"; //Білла випустили
+String Tele_mov6 = "#Tele_mov6#"; //Фінальне
+String Tele_on = "#Tele_on#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 
 //GF_timer_max7219
 //Slave-Master strings
@@ -156,6 +156,8 @@ String tmr_rst = "tmr_rst#"; //compared string should be "xx...x#" format. Last 
 String tmr_stp = "tmr_stp#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
 String temp_string = ""; //variable to store information recieved form serial and compare it
+
+String test = "test#";
 
 //GF_remote_XY
 const int num_cmnds = 4;
@@ -180,9 +182,19 @@ String remotexy[num_cmnds2] =
 };
 
 bool dio = false;
-bool karp_done = false;
-bool telephone_done = false;
-bool snack_automate_done = false; 
+
+bool flag_is_started = false;
+bool flag_karp_done = false;
+bool flag_telephone_done = false;
+bool flag_snack_automate_done = false; 
+bool flag_circle_done = false;
+bool flag_but21_done = false;
+bool flag_open_port = false;
+bool flag_close_port = false;
+bool flag_but9_done = false;
+bool is_pukhlya = false;
+bool is_code_panel = false;
+bool is_rubilnik = false;
 
 
 unsigned long time_quest_start_but = 0;
@@ -195,11 +207,12 @@ void setup() {
     HC12.begin(9600); //
 
     mp3_set_serial(Serial1);
-    delay(10);
-    mp3_set_volume (20);
+    delay(30);
+    mp3_set_volume (28);
+    delay(30);
     mp3_set_serial(Serial2);
-    delay(10);
-    mp3_set_volume (20);
+    delay(30);
+    mp3_set_volume (28);
 
     pinMode(MCS_pict1_A0, INPUT_PULLUP);
     pinMode(MCS_pict2_A1, INPUT_PULLUP);
@@ -222,15 +235,16 @@ void setup() {
     pinMode(MOSF7_table_D41, OUTPUT);
     pinMode(MOSF8_window_D39, OUTPUT);
     pinMode(REL_UV_D44, OUTPUT);
+    pinMode(REL_LIGHT_D46, OUTPUT); //NORMAL CLOSED CONTACT
 
-    digitalWrite(MOSF1_puchlya_door_D53, LOW);
+    digitalWrite(MOSF1_puchlya_door_D53, HIGH);
     digitalWrite(MOSF2_exit_door_D51, HIGH);
     digitalWrite(MOSF3_potolok_korobka_D49, HIGH);
     digitalWrite(MOSF4_rubilnik_EML_D47, HIGH);
     digitalWrite(MOSF7_table_D41, HIGH);
 
     digitalWrite(REL_UV_D44, HIGH); //LOW = ON - UV light on
-
+    digitalWrite(REL_LIGHT_D46, HIGH); //LOW = ON - main light on //NORMAL CLOSED CONTACT
     
 
   Serial.println("OSU_loaded");
@@ -250,6 +264,7 @@ int freeRam () { //функция, показываюзая количество
 void loop() 
 {
   HC12_loop();
+  posledovatelnost();
 }
 
 void posledovatelnost()
@@ -272,31 +287,39 @@ void posledovatelnost()
   //9. Потягнути за рубильник - перемикається УФ, доступ до коду в щоденнику
   rubilnik();
   //10. Ввести код в лаб. пульт - запускається movie2.mp4 "Я - Білл сайфер", відкривається ніша з кнопками. Якщо кнопку не натиснули - грає movie3.mp4 "Скільки можна чекати"
-  
+  but21_lab_panel();
+
   //11. Натиснути кнопку "Відкрити" - Запускається  movie5.mp4 "Білла випустили", (перемикається музика 0004_Апокаліпсис.mp3), в автоматі теж грає відео, активується загадка "мемо".
   //12. Розгадати "мемо" - відкривається ніша з підказкою і останньою частиною круга магічного
   //13. Виставити магічний круг - таймер зупиняється, включається movie6.mp4 "Фінальне", грає фінальна музика 0005_Фінальна.mp3, двері відкриваються
-
 
 }
 
 void quest_start()
 {
-  if(digitalRead(MCS_quest_start_but_A5) == LOW && dio == false){
+  if(digitalRead(MCS_quest_start_but_A5) == LOW && flag_is_started == false){
     delay(50);
     Serial3.print(tmr_strt);
+    delay(50);
     mp3_set_serial(Serial1);
+    delay(50);
     mp3_play(1);
-    dio = true;
+    flag_is_started = true;
+
+    song();
   }
-  else if(digitalRead(MCS_quest_start_but_A5) == HIGH && dio == true){delay(50);dio = false;}
+  //else if(digitalRead(MCS_quest_start_but_A5) == HIGH && flag_is_started == true){delay(50);dio = flag_is_started;}
 
   if(digitalRead(MCS_quest_res_but_A6) == LOW && dio == false){
     delay(50);
     Serial3.print(tmr_rst);
     mp3_set_serial(Serial1);
-    mp3_stop();
+    delay(50);
+    mp3_pause();
     dio = true;
+    flag_is_started = false;
+
+    song();
   }
   else if(digitalRead(MCS_quest_res_but_A6) == HIGH && dio == true){delay(50);dio = false;}
 
@@ -304,6 +327,8 @@ void quest_start()
     delay(50);
     Serial3.print(tmr_pls_5m);
     dio = true;
+
+    song();
   }
   else if(digitalRead(MCS_quest_pls_5m_but_A4) == HIGH && dio == true){delay(50);dio = false;}
 }
@@ -314,12 +339,12 @@ void pic()
   int p2 = digitalRead(MCS_pict2_A1);
   int p3 = digitalRead(MCS_pict3_A2);
   int p4 = digitalRead(MCS_pict4_A3);
-  if(p1==1 && p2==1 && p3==1 && p4==1)
+  if(p1==0 && p2==0 && p3==0 && p4==0)
   {
     digitalWrite(MOSF3_potolok_korobka_D49, LOW);
   }
 
-  else if(p1==0 || p2==0 || p3==0 || p4==0)
+  else if(p1==1 || p2==1 || p3==1 || p4==1)
   {
     digitalWrite(MOSF3_potolok_korobka_D49, HIGH);
   }
@@ -335,64 +360,87 @@ void pic()
 
 void karp()
 {
-  if(karp_done)
+  if(flag_karp_done)
   {
-    digitalWrite(MOSF7_table_D41, HIGH);
-    karp_done=!karp_done;
+    digitalWrite(MOSF7_table_D41, LOW);
+    flag_karp_done=false;
   }
 }
 
 void pukhlya()
 {
-  if(digitalRead(MCS_pukhlya_NO_40) == LOW){
+  if(digitalRead(MCS_pukhlya_NO_40) == LOW && is_pukhlya == false){
     delay(50); 
     digitalWrite(MOSF1_puchlya_door_D53, LOW);
     delay(500); 
-    Serial3.println("pu_op");
+    song();
+    is_pukhlya = true;
+
   }
-  else if(digitalRead(MCS_pukhlya_NO_40) == HIGH){delay(50); digitalWrite(MOSF1_puchlya_door_D53, HIGH);}
+  else if(digitalRead(MCS_pukhlya_NO_40) == HIGH){delay(50); digitalWrite(MOSF1_puchlya_door_D53, HIGH);is_pukhlya = false;}
 }
 
 void telephone()
 {
-  if(telephone_done)
+  if(flag_telephone_done)
   {
     digitalWrite(MCS_D30, LOW); //5v TV led on pin
-    telephone_done=!telephone_done;
+    Serial3.println(activate_snack);
+    flag_telephone_done=!flag_telephone_done;
   }
 }
 
 void snack()
 {
-  if(snack_automate_done)
+  if(flag_snack_automate_done)
   {
     mp3_set_serial(Serial1);
+    delay(50);
     mp3_play(3);
-    snack_automate_done=!snack_automate_done;
+
+    Serial3.println(Tele_mov1); //play video 1 - "Endless Galactic" at portal
+    flag_snack_automate_done=!flag_snack_automate_done;
   }
 }
 
 void code_panel()
 {
-  if(digitalRead(MCS_code_panel_NO_A7) == LOW)
+  if(digitalRead(MCS_code_panel_NO_A7) == LOW && is_code_panel == false)
   {
     delay(50); 
     digitalWrite(MOSF4_rubilnik_EML_D47, LOW);
+
+    song();
+    is_code_panel = true;
   }
 
-  else if(digitalRead(MCS_code_panel_NO_A7) == HIGH){delay(50); digitalWrite(MOSF4_rubilnik_EML_D47, HIGH);}
+  else if(digitalRead(MCS_code_panel_NO_A7) == HIGH){delay(50); digitalWrite(MOSF4_rubilnik_EML_D47, HIGH);is_code_panel = false;}
 }
 
 void rubilnik()
 {
-  if(digitalRead(MCS_rubilnik_A8) == LOW){
+  if(digitalRead(MCS_rubilnik_A8) == LOW && is_rubilnik == false){
     delay(50); 
     digitalWrite(REL_UV_D44, LOW);
+    digitalWrite(REL_LIGHT_D46, LOW);
+    song();
+    is_rubilnik = true;
   }
-  else if(digitalRead(MCS_rubilnik_A8) == HIGH){delay(50); digitalWrite(REL_UV_D44, HIGH);}
+  else if(digitalRead(MCS_rubilnik_A8) == HIGH){delay(50); digitalWrite(REL_UV_D44, HIGH);digitalWrite(REL_LIGHT_D46, HIGH);is_rubilnik = false;}
 }
 
-
+void but21_lab_panel()
+{
+  if(flag_but21_done)
+  {
+    mp3_set_serial(Serial1);
+    delay(50);
+    mp3_play(3);
+    Serial3.println(Tele_mov2); //play video 2 - "О, привіт" at portal
+  
+    flag_but21_done=!flag_but21_done;
+  }
+}
 
 void HC12_loop()
 {              //recieve something from hc-12 inerface
@@ -404,34 +452,80 @@ void HC12_loop()
     
   if (inChar == '#')       //if stop byte recieved
     {
-      Serial.print(temp_string);
-      Serial.println(" - copy that");
+      //Serial.print(temp_string);`
+      //Serial3.println("MCS recieved#");
 
-      if (temp_string == tmr_strt)  //compare string with a known commands
+     /* if (temp_string == tmr_strt)  //compare string with a known commands
       {
         Serial3.print(tmr_strt);
         mp3_set_serial(Serial1);
         mp3_play(1);
-      }
+      }*/
 
       if (temp_string == MCS_karp_cnfrm)  //compare string with a known commands
       {
-        karp_done = true;
+        flag_karp_done = true;
+        song();
       }
 
       if (temp_string == cnfrm_TV)  //compare string with a known commands
       {
-        telephone_done = true;
+        flag_telephone_done = true;
+        song();
       }
 
       if (temp_string == snack_done)  //compare string with a known commands
       {
-        snack_automate_done = true;
+        flag_snack_automate_done = true;
+        song();
       }
 
-      
+      if (temp_string == but21_done)  //compare string with a known commands
+      {
+        song();
+        flag_but21_done = true;
+      }
+
+      if (temp_string == open_port)  //compare string with a known commands
+      {
+        flag_open_port = true;
+        song();
+      }
+
+      if (temp_string == close_port)  //compare string with a known commands
+      {
+        flag_close_port = true;
+        song();
+      }
+
+      if (temp_string == but9_done)  //compare string with a known commands
+      {
+        flag_but9_done = true;
+        song();
+      }
+
+
+      if (temp_string == mgc_crcl_done)  //compare string with a known commands
+      {
+        flag_circle_done = true;
+        song();
+      }
+
+    
+
+      if (temp_string == test)  //compare string with a known commands
+      {
+        song();
+      }
 
       temp_string = "";     //then clear the string
     }
   }
+}
+
+void song()
+{
+  mp3_set_serial(Serial2);
+  delay(10);
+  mp3_play(9);
 }

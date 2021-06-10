@@ -69,7 +69,7 @@ String temp_string = ""; //variable to store information recieved form serial an
 String activate_snack = "act_sn#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 String open_snack = "open_sn#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 String reset_snack = "res_sn#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
-String snack_done = "sn_done#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
+String snack_done = "#sn_done#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 
 bool is_passcode_win = 0;
 
@@ -80,7 +80,7 @@ unsigned long time1 = 0;
 void setup()
 {
   Serial.begin(9600); //initiating serial
-    Serial_DF.begin(9600); //initiating software serial
+  Serial_DF.begin(9600); //initiating software serial
   mp3_set_serial(Serial_DF);  //set Serial for DFPlayer-mini mp3 module 
   mp3_set_volume (25);
   mp3_play(1);

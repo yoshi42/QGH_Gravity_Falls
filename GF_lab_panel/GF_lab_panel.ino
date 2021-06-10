@@ -134,6 +134,13 @@ unsigned long t_but_21_prev = 0;
 unsigned long t_but_LH = 0;
 unsigned long t_but_LH_prev = 0;
 
+int mov1_delay = 50000;
+int mov2_delay = 50000;
+int mov3_delay = 50000;
+int mov4_delay = 50000;
+int mov5_delay = 50000;
+int mov6_delay = 50000;
+
 void setup()
 {
 	Serial.begin(9600); //initiating serial
@@ -155,7 +162,7 @@ void setup()
 	pinMode(butt_LASTHOPE_LED, OUTPUT);
 
 	digitalWrite(EML_doors_diary_sheet, LOW);
-	digitalWrite(EML_doors_open_close, LOW);
+	digitalWrite(EML_doors_open_close, HIGH);
 	digitalWrite(butt_OPEN_LED, LOW);
 	digitalWrite(butt_CLOSE_LED, LOW);
 	digitalWrite(butt_LASTHOPE_LED, LOW);
@@ -179,8 +186,6 @@ void loop()
 	if(quest_pipeline == 1)
 	{
 		Serial.println("kp21 done, activate buttons");
-		digitalWrite(EML_doors_open_close, HIGH); //open chest
-		delay(500);
 		digitalWrite(EML_doors_open_close, LOW);
 
 		digitalWrite(butt_OPEN_LED, HIGH);
@@ -293,6 +298,7 @@ void keypad_password_21_but()
     {
 		Serial_HC.println(but21_done);
   		quest_pipeline = 1; //next quest step
+  		delay(mov1_delay);
     }
 
     else
