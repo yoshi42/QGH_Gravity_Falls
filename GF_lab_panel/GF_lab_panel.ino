@@ -134,12 +134,12 @@ unsigned long t_but_21_prev = 0;
 unsigned long t_but_LH = 0;
 unsigned long t_but_LH_prev = 0;
 
-int mov1_delay = 50000;
-int mov2_delay = 50000;
-int mov3_delay = 50000;
-int mov4_delay = 50000;
-int mov5_delay = 50000;
-int mov6_delay = 50000;
+int mov1_delay = 3600000; //portal_galactic - 1hour
+int mov2_delay = 20000; //О, привіт - 20sec - active, 90sec - all video
+int mov3_delay = 15000; //Скільки можна чекати - 15 sec active
+int mov4_delay = 15000; //Ні, ні - не робіть цього - 15 sec active
+int mov5_delay = 85000; //Апокаліпсис - 85 sec active
+int mov6_delay = 80000; //Фіналочка - 80 sec active
 
 void setup()
 {
@@ -298,7 +298,7 @@ void keypad_password_21_but()
     {
 		Serial_HC.println(but21_done);
   		quest_pipeline = 1; //next quest step
-  		delay(mov1_delay);
+  		delay(mov2_delay);
     }
 
     else
