@@ -2,7 +2,7 @@
 Description:
 Project for quest room - 
 
-Рішаємо загадку 21кн, відкривається ніша з Червоною/Зеленою кнопкою (куплю)
+Рішаємо загадку 21кн, відкривається ніша з Червоною/Зеленою кнопкою
 //відкриваємо портал - активується кнопка Last Hopе, натиснули - активується загадка 9кн. 
 Розгадали - відкривається ничка з підказкою, як перемогти Білла
 
@@ -110,7 +110,10 @@ String temp_string = ""; //variable to store information recieved form serial an
 //Slave-Master strings
 String but21_done = "but21_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String open_port = "open_port#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+
+String try_close_port = "try_close_port#";
 String close_port = "close_port#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+String nt_op_port = "nt_op_port#";
 String but9_done = "but9_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
 //Master-Slave strings
@@ -134,12 +137,15 @@ unsigned long t_but_21_prev = 0;
 unsigned long t_but_LH = 0;
 unsigned long t_but_LH_prev = 0;
 
-int mov1_delay = 3600000; //portal_galactic - 1hour
-int mov2_delay = 20000; //О, привіт - 20sec - active, 90sec - all video
-int mov3_delay = 15000; //Скільки можна чекати - 15 sec active
-int mov4_delay = 15000; //Ні, ні - не робіть цього - 15 sec active
-int mov5_delay = 85000; //Апокаліпсис - 85 sec active
-int mov6_delay = 80000; //Фіналочка - 80 sec active
+unsigned long t_port_OP_CL = 0;
+unsigned long t_port_OP_CL_prev = 0;
+
+unsigned long mov1_delay = 3600000; //portal_galactic - 1hour
+unsigned long mov2_delay = 29000; //О, привіт - 29sec - active, 90sec - all video
+unsigned long mov3_delay = 15000; //Скільки можна чекати - 15 sec active
+unsigned long mov4_delay = 15000; //Ні, ні - не робіть цього - 15 sec active
+unsigned long mov5_delay = 86000; //Які ж ви довірливі - 85 sec active
+unsigned long mov6_delay = 80000; //Фіналочка - 80 sec active
 
 void setup()
 {
@@ -171,13 +177,16 @@ void setup()
 	pinMode(butt_CLOSE, INPUT_PULLUP);
 	pinMode(butt_LASTHOPE, INPUT_PULLUP);
 
+	for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
+	delay(500);
+	FastLED.show(); //refresh
 	Serial.println("Started");
 }
 
-
 void loop()
-{	
+{
 	HC_12_loop();
+
 	if(quest_pipeline == 0)
 	{
 		keypad_password_21_but();
@@ -186,8 +195,10 @@ void loop()
 	if(quest_pipeline == 1)
 	{
 		Serial.println("kp21 done, activate buttons");
-		digitalWrite(EML_doors_open_close, LOW);
+		Serial_HC.print(but21_done);//о, привіт
 
+		delay(mov2_delay);
+		digitalWrite(EML_doors_open_close, LOW);
 		digitalWrite(butt_OPEN_LED, HIGH);
 		digitalWrite(butt_CLOSE_LED, HIGH);
 		quest_pipeline = 11;
@@ -195,36 +206,82 @@ void loop()
 
 	if(quest_pipeline == 11)
 	{
+		t_port_OP_CL = millis();
+	 	if(t_port_OP_CL - t_port_OP_CL_prev > 60000) 
+	 	{
+			t_port_OP_CL_prev = t_port_OP_CL;
+		  Serial_HC.print(nt_op_port); //скільки можна чекати
+	  }
+	  	
 		if(digitalRead(butt_CLOSE) == LOW)
 		{
-			delay(50);
+			delay(20);
 			digitalWrite(butt_OPEN_LED, LOW);
 			digitalWrite(butt_CLOSE_LED, LOW);
-			quest_pipeline = 0;
-			Serial_HC.println(close_port);
-			Serial.println("prt clsd");
-
-			for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
-			delay(500);
-			FastLED.show(); //refresh
-			delay(10000);
+			Serial_HC.print(try_close_port); //ні, ні = не робіть цього
+			delay(100);
+			Serial.println("try cls prt");
+			delay(mov4_delay);
+			quest_pipeline = 112;
 		}
 
 		if(digitalRead(butt_OPEN) == LOW)
 		{	
-			delay(50);
+			delay(20);
 			digitalWrite(butt_OPEN_LED, LOW);
 			digitalWrite(butt_CLOSE_LED, LOW);
-			quest_pipeline = 2;
-			Serial_HC.println(open_port);
+			Serial_HC.print(open_port); //Які ж ви довірливі!
+			delay(100);
+			Serial.println("prt opnd");
+
+			for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
+			delay(100);
+			FastLED.show(); //refresh
+
+			delay(mov5_delay);
+			Serial.println("act 91but");
+			quest_pipeline = 3;
+		}
+	}
+
+	if(quest_pipeline == 112)
+	{
+		digitalWrite(butt_OPEN_LED, HIGH);
+		digitalWrite(butt_CLOSE_LED, HIGH);
+
+		if(digitalRead(butt_CLOSE) == LOW)
+		{
+			delay(20);
+			digitalWrite(butt_OPEN_LED, LOW);
+			digitalWrite(butt_CLOSE_LED, LOW);
+			Serial_HC.print(close_port); //Фіналочка
+			delay(100);
+			Serial.println("prt clsd");
+
+			for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
+			FastLED.show(); //refresh
+			delay(mov6_delay);
+			quest_pipeline = 0;
+		}
+
+		if(digitalRead(butt_OPEN) == LOW)
+		{	
+			delay(20);
+			digitalWrite(butt_OPEN_LED, LOW);
+			digitalWrite(butt_CLOSE_LED, LOW);
+			Serial_HC.print(open_port); //Які ж ви довірливі!
+			delay(100);
 			Serial.println("prt opnd");
 
 			for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
 			FastLED.show(); //refresh
-			delay(5000);
+			delay(mov5_delay);
+			quest_pipeline = 3;
+			Serial.println("act 91but");
 		}
 	}
 
+	//not used
 	if(quest_pipeline == 2)
 	{
 		t_but_LH = millis();
@@ -240,12 +297,11 @@ void loop()
 	  	if(digitalRead(butt_LASTHOPE) == LOW)
 	  	{	
 	  		delay(50);
-	  		quest_pipeline = 3;
 	  		digitalWrite(butt_LASTHOPE_LED, LOW);
 	  		Serial.println("lst hp prssd");
+	  		quest_pipeline = 3;
 	  	}
 	}
-
 	if(quest_pipeline == 3)
 	{
 		kp_91_but();
@@ -258,7 +314,7 @@ void loop()
 		digitalWrite(EML_doors_diary_sheet, LOW);
 		Serial.println("all done");
 
-		delay(10000);
+		delay(mov6_delay);
 		for (int i = 0; i < 9; i++){
 		 	digitalWrite(LED_arr[i], LOW);}
 		quest_pipeline = 0;
@@ -296,9 +352,7 @@ void keypad_password_21_but()
     //check if right
     if(temp_passcode_21 == passcode_21)
     {
-		Serial_HC.println(but21_done);
   		quest_pipeline = 1; //next quest step
-  		delay(mov2_delay);
     }
 
     else
@@ -372,7 +426,8 @@ void kp_91_but()
     //check if right
     if(temp_passcode_9 == passcode_9)
     {
-      Serial_HC.println(but9_done);
+      Serial_HC.print(but9_done);
+      delay(100);
       quest_pipeline = 4;
     }
     else
@@ -410,15 +465,12 @@ void HC_12_loop()
       if (temp_string == reset_lab_panel)  //compare string with a known commands
       {
       	quest_pipeline = 0;
-
-      	digitalWrite(butt_OPEN_LED, LOW);
-		digitalWrite(butt_CLOSE_LED, LOW);
-		digitalWrite(butt_LASTHOPE_LED, LOW);
-
-		for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
-		FastLED.show(); //refresh
-
-		for (int i = 0; i < 9; i++) {digitalWrite(LED_arr[i], LOW);}  //turn off all 9 leds
+		    digitalWrite(butt_OPEN_LED, LOW);
+				digitalWrite(butt_CLOSE_LED, LOW);
+				digitalWrite(butt_LASTHOPE_LED, LOW);
+				for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
+				FastLED.show(); //refresh
+				for (int i = 0; i < 9; i++) {digitalWrite(LED_arr[i], LOW);}  //turn off all 9 leds
       }
 
       if (temp_string == but9_open)  //compare string with a known commands

@@ -5,8 +5,8 @@
 SoftwareSerial Serial_HC(D1, D2); // (Rx_pin, Tx_pin) //using a softwareSerial instead of serial, because of debugging through console and uploading a sketch
 
 /* Установите здесь свои SSID и пароль */
-const char* ssid = "avocado";  // SSID
-const char* password = "greengreen37"; // пароль
+const char* ssid = "gravityfalls";  // SSID
+const char* password = "gravityfalls"; // пароль
 
 ESP8266WebServer server(80);
 

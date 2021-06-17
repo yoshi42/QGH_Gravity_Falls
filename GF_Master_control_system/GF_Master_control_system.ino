@@ -93,7 +93,7 @@ const int MCS_pukhlya_open_door_42 = 42;
 
 const int REL_UV_D44 = 44;
 const int REL_LIGHT_D46 = 46;
-const int MCS_D48 = 48;
+const int REL_RPI_5V = 48;
 const int MCS_D50 = 50;
 
 const int MCS_D52 = 52;
@@ -116,12 +116,16 @@ String MCS_karp_cnfrm = "krp_d#"; //send command string should be "#xx...x#" for
 //Slave-Master strings
 String but21_done = "but21_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String open_port = "open_port#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+String try_close_port = "try_close_port#";
 String close_port = "close_port#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+String nt_op_port = "nt_op_port#";
 String but9_done = "but9_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+
 //Master-Slave strings
 String but21_open = "but21_op#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String but9_open = "but9_op#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String reset_lab_panel = "reset_lab_panel#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+
 
 //GF_magic_circle
 //Slave-Master strings
@@ -186,16 +190,17 @@ bool dio = false;
 bool flag_is_started = false;
 bool flag_karp_done = false;
 bool flag_telephone_done = false;
-bool flag_snack_automate_done = false; 
-bool flag_circle_done = false;
+bool is_pukhlya = false;
+bool flag_snack_automate_done = false;
+bool is_code_panel = false;
+bool is_rubilnik = false;
 bool flag_but21_done = false;
 bool flag_open_port = false;
 bool flag_close_port = false;
 bool flag_but9_done = false;
-bool is_pukhlya = false;
-bool is_code_panel = false;
-bool is_rubilnik = false;
-
+bool flag_try_close_port = false;
+bool flag_nt_op_port = false;
+bool flag_circle_done = false;
 
 unsigned long time_quest_start_but = 0;
 
@@ -236,6 +241,7 @@ void setup() {
     pinMode(MOSF8_window_D39, OUTPUT);
     pinMode(REL_UV_D44, OUTPUT);
     pinMode(REL_LIGHT_D46, OUTPUT); //NORMAL CLOSED CONTACT
+    pinMode(REL_RPI_5V, OUTPUT); //
 
     digitalWrite(MOSF1_puchlya_door_D53, HIGH);
     digitalWrite(MOSF2_exit_door_D51, HIGH);
@@ -245,6 +251,10 @@ void setup() {
 
     digitalWrite(REL_UV_D44, HIGH); //LOW = ON - UV light on
     digitalWrite(REL_LIGHT_D46, HIGH); //LOW = ON - main light on //NORMAL CLOSED CONTACT
+    digitalWrite(REL_RPI_5V, HIGH); //LOW = ON - main light on //NORMAL CLOSED CONTACT
+
+    delay(15000);
+    digitalWrite(REL_RPI_5V, LOW); //LOW = ON
     
 
   Serial.println("OSU_loaded");
@@ -287,7 +297,7 @@ void posledovatelnost()
   //9. Потягнути за рубильник - перемикається УФ, доступ до коду в щоденнику
   rubilnik();
   //10. Ввести код в лаб. пульт - запускається movie2.mp4 "Я - Білл сайфер", відкривається ніша з кнопками. Якщо кнопку не натиснули - грає movie3.mp4 "Скільки можна чекати"
-  but21_lab_panel();
+  lab_panel();
 
   //11. Натиснути кнопку "Відкрити" - Запускається  movie5.mp4 "Білла випустили", (перемикається музика 0004_Апокаліпсис.mp3), в автоматі теж грає відео, активується загадка "мемо".
   //12. Розгадати "мемо" - відкривається ніша з підказкою і останньою частиною круга магічного
@@ -429,7 +439,7 @@ void rubilnik()
   else if(digitalRead(MCS_rubilnik_A8) == HIGH){delay(50); digitalWrite(REL_UV_D44, HIGH);digitalWrite(REL_LIGHT_D46, HIGH);is_rubilnik = false;}
 }
 
-void but21_lab_panel()
+void lab_panel()
 {
   if(flag_but21_done)
   {
@@ -437,10 +447,47 @@ void but21_lab_panel()
     delay(50);
     mp3_play(3);
     Serial3.println(Tele_mov2); //play video 2 - "О, привіт" at portal
-  
-    flag_but21_done=!flag_but21_done;
+    flag_but21_done=false;
+  }
+
+  if(flag_nt_op_port)
+  {
+    mp3_set_serial(Serial1);
+    delay(50);
+    mp3_play(3);
+    Serial3.println(Tele_mov3); //play video 3 - "Скільки можна чекати" at portal
+    flag_nt_op_port=false;
+  }
+
+  if(flag_try_close_port)
+  {
+    mp3_set_serial(Serial1);
+    delay(50);
+    mp3_play(3);
+    Serial3.println(Tele_mov4); //play video 4 - "Не робіть цього" at portal
+    flag_try_close_port=false;
+  }
+
+  if(flag_open_port)
+  {
+    mp3_set_serial(Serial1);
+    delay(50);
+    mp3_play(3);
+    Serial3.println(Tele_mov5); //play video 5 - "Які ж ви довірливі" at portal
+    flag_open_port=false;
+  }
+
+  if(flag_close_port)
+  {
+    mp3_set_serial(Serial1);
+    delay(50);
+    mp3_play(3);
+    Serial3.println(Tele_mov6); //play video 6 - "Фіналочка" at portal
+    flag_close_port=false;
   }
 }
+
+
 
 void HC12_loop()
 {              //recieve something from hc-12 inerface
@@ -452,7 +499,7 @@ void HC12_loop()
     
   if (inChar == '#')       //if stop byte recieved
     {
-      //Serial.print(temp_string);`
+      //Serial.print(temp_string);
       //Serial3.println("MCS recieved#");
 
      /* if (temp_string == tmr_strt)  //compare string with a known commands
@@ -486,6 +533,18 @@ void HC12_loop()
         flag_but21_done = true;
       }
 
+      if (temp_string == nt_op_port)  //compare string with a known commands
+      {
+        flag_nt_op_port = true;
+        song();
+      }
+
+      if (temp_string == try_close_port)  //compare string with a known commands
+      {
+        flag_try_close_port = true;
+        song();
+      }
+
       if (temp_string == open_port)  //compare string with a known commands
       {
         flag_open_port = true;
@@ -504,14 +563,11 @@ void HC12_loop()
         song();
       }
 
-
       if (temp_string == mgc_crcl_done)  //compare string with a known commands
       {
         flag_circle_done = true;
         song();
       }
-
-    
 
       if (temp_string == test)  //compare string with a known commands
       {
