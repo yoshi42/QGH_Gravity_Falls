@@ -20,6 +20,8 @@ uint8_t LED7pin = D8;
 uint8_t LED8pin = D8;
 uint8_t LED9pin = D8;
 uint8_t LED10pin = D8;
+uint8_t LED11pin = D8;
+uint8_t LED12pin = D8;
 
 bool LED1status = false;
 bool LED2status = false;
@@ -31,8 +33,10 @@ bool LED7status = false;
 bool LED8status = false;
 bool LED9status = false;
 bool LED10status = false;
+bool LED11status = false;
+bool LED12status = false;
 
-const byte num_load = 10;
+const byte num_load = 12;
 String load[num_load] = 
 { "load1#", 
   "load2#", 
@@ -44,6 +48,8 @@ String load[num_load] =
   "load8#", 
   "load9#",
   "load10#",
+  "load11#",
+  "load12#",
 };
 
 String load_all = "load_all#";
@@ -59,6 +65,8 @@ String done[num_load] =
   "done8#",
   "done9#",
   "done10#",
+  "done11#",
+  "done12#",
 };
 
 String temp_string = "";
@@ -99,6 +107,8 @@ void setup()
   server.on("/led8on", handle_led8on);
   server.on("/led9on", handle_led9on);
   server.on("/led10on", handle_led10on);
+  server.on("/led11on", handle_led9on);
+  server.on("/led12on", handle_led10on);
   server.onNotFound(handle_NotFound);
 
   server.begin();
@@ -126,21 +136,23 @@ void handle_NotFound(){  server.send(404, "text/plain", "Not found");
 
 void handle_OnConnect() 
 {
-  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status));
+  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status,LED11status,LED12status));
 }
-void handle_refresh(){ Serial.println("refreshed");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status));}
-void handle_led1on(){   LED1status = true;  Serial_HC.print("b1#");  server.send(200, "text/html", SendHTML(true,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status));}
-void handle_led2on(){   LED2status = true;  Serial_HC.print("b2#");  server.send(200, "text/html", SendHTML(LED1status,true,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status)); }
-void handle_led3on(){   LED3status = true;  Serial_HC.print("b3#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,true,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status)); }
-void handle_led4on(){   LED4status = true;  Serial_HC.print("b4#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,true,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status)); }
-void handle_led5on(){   LED5status = true;  Serial_HC.print("b5#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,true,LED6status,LED7status,LED8status,LED9status,LED10status)); }
-void handle_led6on(){   LED6status = true;  Serial_HC.print("b6#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,true,LED7status,LED8status,LED9status,LED10status)); }
-void handle_led7on(){   LED7status = true;  Serial_HC.print("b7#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,true,LED8status,LED9status,LED10status)); }
-void handle_led8on(){   LED8status = true;  Serial_HC.print("b8#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,true,LED9status,LED10status)); }
-void handle_led9on(){   LED9status = true;  Serial_HC.print("b9#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,true,LED10status)); }
-void handle_led10on(){  LED10status = true;  Serial_HC.print("b10#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,true)); }
+void handle_refresh(){ Serial.println("refreshed");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status,LED11status,LED12status));}
+void handle_led1on(){   LED1status = true;  Serial_HC.print("WEB1#");  server.send(200, "text/html", SendHTML(true,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status,LED11status,LED12status));}
+void handle_led2on(){   LED2status = true;  Serial_HC.print("WEB2#");  server.send(200, "text/html", SendHTML(LED1status,true,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status,LED11status,LED12status)); }
+void handle_led3on(){   LED3status = true;  Serial_HC.print("WEB3#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,true,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status,LED11status,LED12status)); }
+void handle_led4on(){   LED4status = true;  Serial_HC.print("WEB4#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,true,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status,LED11status,LED12status)); }
+void handle_led5on(){   LED5status = true;  Serial_HC.print("WEB5#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,true,LED6status,LED7status,LED8status,LED9status,LED10status,LED11status,LED12status)); }
+void handle_led6on(){   LED6status = true;  Serial_HC.print("WEB6#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,true,LED7status,LED8status,LED9status,LED10status,LED11status,LED12status)); }
+void handle_led7on(){   LED7status = true;  Serial_HC.print("WEB7#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,true,LED8status,LED9status,LED10status,LED11status,LED12status)); }
+void handle_led8on(){   LED8status = true;  Serial_HC.print("WEB8#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,true,LED9status,LED10status,LED11status,LED12status)); }
+void handle_led9on(){   LED9status = true;  Serial_HC.print("WEB9#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,true,LED10status,LED11status,LED12status)); }
+void handle_led10on(){  LED10status = true;  Serial_HC.print("WEB10#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,true,LED11status,LED12status)); }
+void handle_led11on(){  LED11status = true;  Serial_HC.print("WEB11#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status,true,LED12status)); }
+void handle_led12on(){  LED12status = true;  Serial_HC.print("WEB12#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status,LED11status,true)); }
 
-String SendHTML(uint8_t led1stat,uint8_t led2stat,uint8_t led3stat,uint8_t led4stat,uint8_t led5stat,uint8_t led6stat,uint8_t led7stat,uint8_t led8stat,uint8_t led9stat,uint8_t led10stat)
+String SendHTML(uint8_t led1stat,uint8_t led2stat,uint8_t led3stat,uint8_t led4stat,uint8_t led5stat,uint8_t led6stat,uint8_t led7stat,uint8_t led8stat,uint8_t led9stat,uint8_t led10stat,uint8_t led11stat,uint8_t led12stat)
 {
   String ptr = "<!DOCTYPE html> <html>\n";
   ptr +="<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
@@ -208,6 +220,14 @@ String SendHTML(uint8_t led1stat,uint8_t led2stat,uint8_t led3stat,uint8_t led4s
     ptr +="<p>quest 10: loaded</p><a class=\"button button-light\" href=\"/led10on\">quest 10</a>\n";
   else
     ptr +="<p>quest 10: done</p><a class=\"button button-dark\" href=\"/led10on\">quest 10</a>\n";
+  if(!led11stat)
+    ptr +="<p>quest 11: loaded</p><a class=\"button button-light\" href=\"/led11on\">quest 11</a>\n";
+  else
+    ptr +="<p>quest 11: done</p><a class=\"button button-dark\" href=\"/led11on\">quest 11</a>\n";
+  if(!led12stat)
+    ptr +="<p>quest 12: loaded</p><a class=\"button button-light\" href=\"/led12on\">quest 12</a>\n";
+  else
+    ptr +="<p>quest 12: done</p><a class=\"button button-dark\" href=\"/led12on\">quest 12</a>\n";
 
   ptr +="</body>\n";
   ptr +="</html>\n";
@@ -235,6 +255,8 @@ void HC12_loop()
       if (temp_string == load[7]) {Serial.println(load[7]); LED8status=false;}
       if (temp_string == load[8]) {Serial.println(load[8]); LED9status=false;}
       if (temp_string == load[9]) {Serial.println(load[9]); LED10status=false;}
+      if (temp_string == load[10]) {Serial.println(load[10]); LED11status=false;}
+      if (temp_string == load[11]) {Serial.println(load[11]); LED12status=false;}
       
       if (temp_string == load_all) 
       {
@@ -249,6 +271,8 @@ void HC12_loop()
         LED8status=false;
         LED9status=false;
         LED10status=false;
+        LED11status=false;
+        LED12status=false;
       }
 
       if (temp_string == done[0]) {Serial.println(done[0]); LED1status=true;}
@@ -261,6 +285,8 @@ void HC12_loop()
       if (temp_string == done[7]) {Serial.println(done[7]); LED8status=true;}
       if (temp_string == done[8]) {Serial.println(done[8]); LED9status=true;}
       if (temp_string == done[9]) {Serial.println(done[9]); LED10status=true;}
+      if (temp_string == done[10]) {Serial.println(done[10]); LED11status=true;}
+      if (temp_string == done[11]) {Serial.println(done[11]); LED12status=true;}
 
       temp_string = "";     //then clear the string
     }

@@ -51,7 +51,6 @@ String passcode = "LLPPRLDKkPPPK";
 String secret_passcode = "LLLRRRUUUDDDK";
 int passcode_length = passcode.length();
 
-;
 
 String temp_passcode = "";
 char temp_char = '0';

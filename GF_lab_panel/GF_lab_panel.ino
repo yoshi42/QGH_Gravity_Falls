@@ -118,11 +118,14 @@ String but9_done = "but9_done#"; //compared string should be "xx...x#" format. L
 
 //Master-Slave strings
 String but21_open = "but21_op#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+String but_op_portal = "but_op_portal#"; // emulating opening portal
 String but9_open = "but9_op#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String reset_lab_panel = "reset_lab_panel#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
 bool is_passcode_win = 0;
 bool a = 0;
+
+bool is_butt_OPEN = false;
 
 int quest_pipeline = 0; ////quest logic pipeline 0->1->2->3...etc
 int ppl = 0;
@@ -167,7 +170,7 @@ void setup()
 	pinMode(butt_CLOSE_LED, OUTPUT);
 	pinMode(butt_LASTHOPE_LED, OUTPUT);
 
-	digitalWrite(EML_doors_diary_sheet, LOW);
+	digitalWrite(EML_doors_diary_sheet, HIGH);
 	digitalWrite(EML_doors_open_close, HIGH);
 	digitalWrite(butt_OPEN_LED, LOW);
 	digitalWrite(butt_CLOSE_LED, LOW);
@@ -207,7 +210,7 @@ void loop()
 	if(quest_pipeline == 11)
 	{
 		t_port_OP_CL = millis();
-	 	if(t_port_OP_CL - t_port_OP_CL_prev > 60000) 
+	 	if(t_port_OP_CL - t_port_OP_CL_prev > 180000)
 	 	{
 			t_port_OP_CL_prev = t_port_OP_CL;
 		  Serial_HC.print(nt_op_port); //скільки можна чекати
@@ -225,7 +228,7 @@ void loop()
 			quest_pipeline = 112;
 		}
 
-		if(digitalRead(butt_OPEN) == LOW)
+		if(digitalRead(butt_OPEN) == LOW || is_butt_OPEN == true)
 		{	
 			delay(20);
 			digitalWrite(butt_OPEN_LED, LOW);
@@ -249,6 +252,22 @@ void loop()
 		digitalWrite(butt_OPEN_LED, HIGH);
 		digitalWrite(butt_CLOSE_LED, HIGH);
 
+		if(digitalRead(butt_OPEN) == LOW) //not working
+		{	
+			delay(20);
+			digitalWrite(butt_OPEN_LED, LOW);
+			digitalWrite(butt_CLOSE_LED, LOW);
+			Serial_HC.print(open_port); //Які ж ви довірливі!
+			delay(100);
+			Serial.println("prt opnd");
+
+			for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
+			FastLED.show(); //refresh
+			delay(mov5_delay);
+			quest_pipeline = 3;
+			Serial.println("act 91but");
+		}
+
 		if(digitalRead(butt_CLOSE) == LOW)
 		{
 			delay(20);
@@ -264,21 +283,6 @@ void loop()
 			quest_pipeline = 0;
 		}
 
-		if(digitalRead(butt_OPEN) == LOW)
-		{	
-			delay(20);
-			digitalWrite(butt_OPEN_LED, LOW);
-			digitalWrite(butt_CLOSE_LED, LOW);
-			Serial_HC.print(open_port); //Які ж ви довірливі!
-			delay(100);
-			Serial.println("prt opnd");
-
-			for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
-			FastLED.show(); //refresh
-			delay(mov5_delay);
-			quest_pipeline = 3;
-			Serial.println("act 91but");
-		}
 	}
 
 	//not used
@@ -309,9 +313,7 @@ void loop()
 
 	if(quest_pipeline == 4)
 	{
-		digitalWrite(EML_doors_diary_sheet, HIGH); //open chest
-		delay(500);
-		digitalWrite(EML_doors_diary_sheet, LOW);
+		digitalWrite(EML_doors_diary_sheet, LOW); //open chest
 		Serial.println("all done");
 
 		delay(mov6_delay);
@@ -476,6 +478,13 @@ void HC_12_loop()
       if (temp_string == but9_open)  //compare string with a known commands
       {
         quest_pipeline = 4;
+      }
+
+      if (temp_string == but_op_portal)
+      {
+      	quest_pipeline = 11;
+      	is_butt_OPEN = true;
+
       }
     temp_string = "";     //then clear the string
     }

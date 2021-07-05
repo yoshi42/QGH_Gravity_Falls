@@ -12,7 +12,7 @@ Reset command resiting all to it`s start state.
 
 d0-d1 - rxtx hc-12
 d2, 3, 4, 5, 6, 7 - 8 buttons in keypad mode
-d8 - EML mosfet
+d8 - MOSFET mosfet
 d9 - LED PWM mosfet
 d10,A7 - dfplayer rx-tx
 d11,12,13,A0,1,2,3,4 - LED-outputs
@@ -50,7 +50,7 @@ Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS
 #define led_2 12 //A3
 #define led_1 11 //A4
 
-#define EML 8  //Electromechanical Lock
+#define MOSFET 8  //Electromechanical Lock
 #define LED_PWM 9  //lights
 #define coin_reciever A6
 
@@ -102,10 +102,10 @@ void setup()
   digitalWrite(led_7, LOW);
   digitalWrite(led_8, LOW);
 
-  pinMode(EML, OUTPUT);
-  digitalWrite(EML, HIGH); //HIGH means - "ON" - MOSFET OPENED
+  pinMode(MOSFET, OUTPUT);
+  digitalWrite(MOSFET, LOW); //HIGH means - "ON" - MOSFET OPENED - connected to GND
   pinMode(LED_PWM, OUTPUT);
-  digitalWrite(LED_PWM, LOW);
+  digitalWrite(LED_PWM, HIGH);
   pinMode(coin_reciever, INPUT_PULLUP);
 
   //Serial.println("Started");
@@ -155,11 +155,13 @@ void check_passcode()
       is_passcode_win = 1;
       mp3_play(2);
       blinkRight();
-      digitalWrite(EML, LOW);
+      digitalWrite(MOSFET, HIGH);
+      delay(300);
+      digitalWrite(MOSFET, LOW);
       digitalWrite(LED_PWM, HIGH);
       delay(30000);
       digitalWrite(LED_PWM, LOW);
-      //digitalWrite(EML, HIGH);
+      //digitalWrite(MOSFET, HIGH);
       //is_passcode_win = 0;
     }
     else if (temp_passcode == secret_passcode)
@@ -213,18 +215,20 @@ void HC_12_loop()
         is_passcode_win = 1;
         mp3_play(2);
         blinkRight();
-        digitalWrite(EML, LOW);
+        digitalWrite(MOSFET, HIGH);
+        delay(300);
+        digitalWrite(MOSFET, LOW);
         digitalWrite(LED_PWM, HIGH);
         delay(30000);
         digitalWrite(LED_PWM, LOW);
-        //digitalWrite(EML, HIGH);
+        //digitalWrite(MOSFET, HIGH);
         //is_passcode_win = 0;
       }
 
       if (temp_string == reset_snack)  //compare string with a known commands
       {
         digitalWrite(LED_PWM, LOW);
-        digitalWrite(EML, HIGH);
+        digitalWrite(MOSFET, LOW);
         is_passcode_win = 0;
       }
     temp_string = "";     //then clear the string

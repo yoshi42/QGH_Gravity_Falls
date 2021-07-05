@@ -21,8 +21,10 @@ SoftwareSerial Serial_HC(A4, A5); // (Rx_pin, Tx_pin) //using a softwareSerial i
 #define SS_7_PIN        6
 #define SS_8_PIN        A2
 #define SS_9_PIN        5
-#define SS_10_PIN       A3
-#define SS_11_PIN       4
+#define SS_10_PIN       A3 //not used
+#define SS_11_PIN       A6 //changed fron pin(4) not used
+
+#define all_done        4 //pin for connection with MCS
 
 #define readers_rst 11 //LOW for a sec is reset
 #define bipolarpnp 13
@@ -50,8 +52,8 @@ unsigned long masCard [12] = {
   0x648F2AD , //7
   0xE6F54AAF, //8
   0x2610FDAC, //9
-  0xC68D01AE, //10
-  0xF676FAAD //11
+  0xC68D01AE, //10 //not used
+  0xF676FAAD //11 //not used
 };
 
 int num_of_ok = 0;
@@ -76,6 +78,8 @@ void setup()
   for (int reader = 0; reader < NR_OF_READERS; reader++) {
     pinMode(ssPins[reader], INPUT_PULLUP);
   }
+  pinMode(all_done, OUTPUT);
+  digitalWrite(all_done, HIGH);
 
   pinMode(readers_rst, OUTPUT);
   digitalWrite(readers_rst, HIGH);
@@ -118,6 +122,9 @@ void loop ()
     delay(200);
     Serial.println("all readers are ok");
     Serial_HC.println(mgc_crcl_done);
+    digitalWrite(all_done, LOW);
+    delay(200);
+    digitalWrite(all_done, HIGH);
 
     trigger_logic_state = true;
     trigger_logic_state2 = true;
