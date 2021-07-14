@@ -1,0 +1,6 @@
+{
+    "configuration": "cpu=atmega2560",
+    "board": "arduino:avr:mega",
+    "programmer": "arduino:avrisp",
+    "sketch": "GF_lab_panel\\GF_lab_panel.ino"
+}

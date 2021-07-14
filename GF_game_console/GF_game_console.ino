@@ -164,7 +164,7 @@ void read_buttons()
     delay(30);
     digitalWrite(but_left_led, HIGH);
     temp_char = 'L'; 
-    Serial.println("Left");
+    //Serial.println("Left");
     is_pressed1 = 1;
     mp3_play(1);
     delay(100);
@@ -179,7 +179,7 @@ void read_buttons()
     delay(30);
     digitalWrite(but_up_led, HIGH);
     temp_char = 'U';
-    Serial.println("Up");
+    //Serial.println("Up");
     is_pressed2 = 1;
     mp3_play(1);
     delay(100);
@@ -194,7 +194,7 @@ void read_buttons()
     delay(30);
     digitalWrite(but_right_led, HIGH);
     temp_char = 'R';
-    Serial.println("Right");
+    //Serial.println("Right");
     is_pressed3 = 1;
     mp3_play(1);
     delay(100);
@@ -209,7 +209,7 @@ void read_buttons()
     delay(30);
     digitalWrite(but_down_led, HIGH);
     temp_char = 'D';
-    Serial.println("Down");
+    //Serial.println("Down");
     is_pressed4 = 1;
     mp3_play(1);
     delay(100);
@@ -227,7 +227,7 @@ void read_buttons()
     digitalWrite(but_kick_led, HIGH);
     temp_char = 'K';
     //Serial.println(analogRead(but_kick));
-    Serial.println("Kick");
+    //Serial.println("Kick");
     is_pressed5 = 1;
     mp3_play(2);
     delay(100);
@@ -243,7 +243,7 @@ void read_buttons()
     digitalWrite(but_punch_led, HIGH);
     temp_char = 'P'; 
     //Serial.println(analogRead(but_punch));
-    Serial.println("Punch");
+    //Serial.println("Punch");
     is_pressed6 = 1;
     mp3_play(3);
     delay(100);
@@ -260,7 +260,7 @@ void read_buttons()
     digitalWrite(but_kick_2_led, HIGH);
     temp_char = 'k';
     //Serial.println(analogRead(but_kick_2));
-    Serial.println("kick_2");
+    //Serial.println("kick_2");
     is_pressed7 = 1;
     mp3_play(2);
     delay(100);
@@ -276,7 +276,7 @@ void read_buttons()
     digitalWrite(but_punch_2_led, HIGH);
     temp_char = 'p'; 
     //Serial.println(analogRead(but_punch_2));
-    Serial.println("punch_2");
+    //Serial.println("punch_2");
     is_pressed8 = 1;
     mp3_play(3);
     delay(100);
@@ -301,7 +301,7 @@ void check_passcode()
     if(temp_char != '0')
     {
       temp_passcode += temp_char;     //add to string
-      Serial.println(temp_passcode);
+      //Serial.println(temp_passcode);
     }
     last_char=temp_char;
   }
@@ -310,7 +310,7 @@ void check_passcode()
     //check
     if(temp_passcode == passcode)
     {
-      Serial.println("CORRECT");
+      //Serial.println("CORRECT");
       //is_console_done = 1;
       mp3_play(4);
       blinkLed();
@@ -318,7 +318,7 @@ void check_passcode()
     }
     else if (temp_passcode == secret_passcode)
     {
-      Serial.println("SECRET");
+      //Serial.println("SECRET");
       mp3_play(6);
       delay(2000);
       digitalWrite(EML, HIGH);
@@ -328,7 +328,7 @@ void check_passcode()
     else
     {
       mp3_play(5);
-      Serial.println("WRONG"); //wrong
+      //Serial.println("WRONG"); //wrong
       blinkLed_wrong();
     }
     temp_passcode = "";     //then clear the string

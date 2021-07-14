@@ -172,62 +172,62 @@ String SendHTML(uint8_t led1stat,uint8_t led2stat,uint8_t led3stat,uint8_t led4s
   ptr +="<h3>The House</h3>\n";
   
   if(!led1stat)
-    ptr +="<p>quest 1: loaded</p><a class=\"button button-light\" href=\"/led1on\">quest 1</a>\n";
+    ptr +="<p>Console: loaded</p><a class=\"button button-light\" href=\"/led1on\">Console</a>\n";
   else
-    ptr +="<p>quest 1: done</p><a class=\"button button-dark\" href=\"/led1on\">quest 1</a>\n";
+    ptr +="<p>Console: done</p><a class=\"button button-dark\" href=\"/led1on\">Console</a>\n";
 
   if(!led2stat)
-    ptr +="<p>quest 2: loaded</p><a class=\"button button-light\" href=\"/led2on\">quest 2</a>\n";
+    ptr +="<p>Karp: loaded</p><a class=\"button button-light\" href=\"/led2on\">Karp</a>\n";
   else
-    ptr +="<p>quest 2: done</p><a class=\"button button-dark\" href=\"/led2on\">quest 2</a>\n";
+    ptr +="<p>Karp: done</p><a class=\"button button-dark\" href=\"/led2on\">Karp</a>\n";
 
   if(!led3stat)
-    ptr +="<p>quest 3: loaded</p><a class=\"button button-light\" href=\"/led3on\">quest 3</a>\n";
+    ptr +="<p>Pictures: loaded</p><a class=\"button button-light\" href=\"/led3on\">Pictures</a>\n";
   else
-    ptr +="<p>quest 3: done</p><a class=\"button button-dark\" href=\"/led3on\">quest 3</a>\n";
+    ptr +="<p>Pictures: done</p><a class=\"button button-dark\" href=\"/led3on\">Pictures</a>\n";
 
   if(!led4stat)
-    ptr +="<p>quest 4: loaded</p><a class=\"button button-light\" href=\"/led4on\">quest 4</a>\n";
+    ptr +="<p>Pukhlya: loaded</p><a class=\"button button-light\" href=\"/led4on\">Pukhlya</a>\n";
   else
-    ptr +="<p>quest 4: done</p><a class=\"button button-dark\" href=\"/led4on\">quest 4</a>\n";
+    ptr +="<p>Pukhlya: done</p><a class=\"button button-dark\" href=\"/led4on\">Pukhlya</a>\n";
 
   if(!led5stat)
-    ptr +="<p>quest 5: loaded</p><a class=\"button button-light\" href=\"/led5on\">quest 5</a>\n";
+    ptr +="<p>Telephone: loaded</p><a class=\"button button-light\" href=\"/led5on\">Telephone</a>\n";
   else
-    ptr +="<p>quest 5: done</p><a class=\"button button-dark\" href=\"/led5on\">quest 5</a>\n";
+    ptr +="<p>Telephone: done</p><a class=\"button button-dark\" href=\"/led5on\">Telephone</a>\n";
 
   if(!led6stat)
-    ptr +="<p>quest 6: loaded</p><a class=\"button button-light\" href=\"/led6on\">quest 6</a>\n";
+    ptr +="<p>Snack automate: loaded</p><a class=\"button button-light\" href=\"/led6on\">Snack automate</a>\n";
   else
-    ptr +="<p>quest 6: done</p><a class=\"button button-dark\" href=\"/led6on\">quest 6</a>\n";
+    ptr +="<p>Snack automate: done</p><a class=\"button button-dark\" href=\"/led6on\">Snack automate</a>\n";
 
   if(!led7stat)
-    ptr +="<p>quest 7: loaded</p><a class=\"button button-light\" href=\"/led7on\">quest 7</a>\n";
+    ptr +="<p>Code panel: loaded</p><a class=\"button button-light\" href=\"/led7on\">Code panel</a>\n";
   else
-    ptr +="<p>quest 7: done</p><a class=\"button button-dark\" href=\"/led7on\">quest 7</a>\n";
+    ptr +="<p>Code panel: done</p><a class=\"button button-dark\" href=\"/led7on\">Code panel</a>\n";
 
   if(!led8stat)
-    ptr +="<p>quest 8: loaded</p><a class=\"button button-light\" href=\"/led8on\">quest 8</a>\n";
+    ptr +="<p>21 buttons: loaded</p><a class=\"button button-light\" href=\"/led8on\">21 buttons</a>\n";
   else
-    ptr +="<p>quest 8: done</p><a class=\"button button-dark\" href=\"/led8on\">quest 8</a>\n";
+    ptr +="<p>21 buttons: done</p><a class=\"button button-dark\" href=\"/led8on\">21 buttons</a>\n";
 
   if(!led9stat)
-    ptr +="<p>quest 9: loaded</p><a class=\"button button-light\" href=\"/led9on\">quest 9</a>\n";
+    ptr +="<p>Open portal: loaded</p><a class=\"button button-light\" href=\"/led9on\">Open portal</a>\n";
   else
-    ptr +="<p>quest 9: done</p><a class=\"button button-dark\" href=\"/led9on\">quest 9</a>\n";
+    ptr +="<p>Open portal: done</p><a class=\"button button-dark\" href=\"/led9on\">Open portal</a>\n";
 
   if(!led10stat)
-    ptr +="<p>quest 10: loaded</p><a class=\"button button-light\" href=\"/led10on\">quest 10</a>\n";
+    ptr +="<p>Memo: loaded</p><a class=\"button button-light\" href=\"/led10on\">Memo</a>\n";
   else
-    ptr +="<p>quest 10: done</p><a class=\"button button-dark\" href=\"/led10on\">quest 10</a>\n";
+    ptr +="<p>Memo: done</p><a class=\"button button-dark\" href=\"/led10on\">Memo</a>\n";
   if(!led11stat)
-    ptr +="<p>quest 11: loaded</p><a class=\"button button-light\" href=\"/led11on\">quest 11</a>\n";
+    ptr +="<p>Magic circle: loaded</p><a class=\"button button-light\" href=\"/led11on\">Magic circle</a>\n";
   else
-    ptr +="<p>quest 11: done</p><a class=\"button button-dark\" href=\"/led11on\">quest 11</a>\n";
+    ptr +="<p>Magic circle: done</p><a class=\"button button-dark\" href=\"/led11on\">Magic circle</a>\n";
   if(!led12stat)
-    ptr +="<p>quest 12: loaded</p><a class=\"button button-light\" href=\"/led12on\">quest 12</a>\n";
+    ptr +="<p>test: loaded</p><a class=\"button button-light\" href=\"/led12on\">test</a>\n";
   else
-    ptr +="<p>quest 12: done</p><a class=\"button button-dark\" href=\"/led12on\">quest 12</a>\n";
+    ptr +="<p>test: done</p><a class=\"button button-dark\" href=\"/led12on\">test</a>\n";
 
   ptr +="</body>\n";
   ptr +="</html>\n";

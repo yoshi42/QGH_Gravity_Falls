@@ -90,7 +90,7 @@ byte LED_arr[] = {led_1, led_2, led_3, led_4, led_5, led_6, led_7, led_8, led_9}
 CRGB leds[NUM_LEDS]; // This is an array of leds.  One item for each led in your strip.
 
 String passcode_21 = "MRDI";
-String passcode_9 = "142368759";
+String passcode_9 = "142368759"; //142368759
 int passcode_21_length = passcode_21.length();
 int passcode_9_length = passcode_9.length();
 
@@ -115,6 +115,7 @@ String try_close_port = "try_close_port#";
 String close_port = "close_port#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String nt_op_port = "nt_op_port#";
 String but9_done = "but9_done#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
+String por_tim_ov = "por_tim_ov#";
 
 //Master-Slave strings
 String but21_open = "but21_op#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
@@ -143,8 +144,11 @@ unsigned long t_but_LH_prev = 0;
 unsigned long t_port_OP_CL = 0;
 unsigned long t_port_OP_CL_prev = 0;
 
+unsigned long t_por_tim_ov = 0;
+unsigned long t_por_tim_ov_prev = 0;
+
 unsigned long mov1_delay = 3600000; //portal_galactic - 1hour
-unsigned long mov2_delay = 29000; //О, привіт - 29sec - active, 90sec - all video
+unsigned long mov2_delay = 31000; //О, привіт - 29sec - active, 90sec - all video
 unsigned long mov3_delay = 15000; //Скільки можна чекати - 15 sec active
 unsigned long mov4_delay = 15000; //Ні, ні - не робіть цього - 15 sec active
 unsigned long mov5_delay = 86000; //Які ж ви довірливі - 85 sec active
@@ -209,12 +213,12 @@ void loop()
 
 	if(quest_pipeline == 11)
 	{
-		t_port_OP_CL = millis();
+		/*t_port_OP_CL = millis();
 	 	if(t_port_OP_CL - t_port_OP_CL_prev > 180000)
 	 	{
 			t_port_OP_CL_prev = t_port_OP_CL;
 		  Serial_HC.print(nt_op_port); //скільки можна чекати
-	  }
+	  }*/
 	  	
 		if(digitalRead(butt_CLOSE) == LOW)
 		{
@@ -222,9 +226,11 @@ void loop()
 			digitalWrite(butt_OPEN_LED, LOW);
 			digitalWrite(butt_CLOSE_LED, LOW);
 			Serial_HC.print(try_close_port); //ні, ні = не робіть цього
-			delay(100);
+			delay(500);
+			digitalWrite(butt_OPEN_LED, HIGH);
+			digitalWrite(butt_CLOSE_LED, HIGH);
 			Serial.println("try cls prt");
-			delay(mov4_delay);
+			//delay(mov4_delay);
 			quest_pipeline = 112;
 		}
 
@@ -249,8 +255,22 @@ void loop()
 
 	if(quest_pipeline == 112)
 	{
-		digitalWrite(butt_OPEN_LED, HIGH);
-		digitalWrite(butt_CLOSE_LED, HIGH);
+		t_por_tim_ov = millis();
+		if(t_por_tim_ov_prev==0){t_por_tim_ov_prev=millis();}
+
+		//Serial.println(t_por_tim_ov);
+	 	if(t_por_tim_ov - t_por_tim_ov_prev > 30000)
+	 	{
+			t_por_tim_ov_prev = t_por_tim_ov;
+		  Serial_HC.print(por_tim_ov); //the end
+		  digitalWrite(butt_OPEN_LED, LOW);
+			digitalWrite(butt_CLOSE_LED, LOW);
+			Serial.println("Time is over");
+			quest_pipeline = 5;
+		}
+
+		//digitalWrite(butt_OPEN_LED, HIGH);
+		//digitalWrite(butt_CLOSE_LED, HIGH);
 
 		if(digitalRead(butt_OPEN) == LOW) //not working
 		{	
@@ -273,7 +293,7 @@ void loop()
 			delay(20);
 			digitalWrite(butt_OPEN_LED, LOW);
 			digitalWrite(butt_CLOSE_LED, LOW);
-			Serial_HC.print(close_port); //Фіналочка
+			//Serial_HC.print(close_port); //Фіналочка
 			delay(100);
 			Serial.println("prt clsd");
 
@@ -318,7 +338,15 @@ void loop()
 
 		delay(mov6_delay);
 		for (int i = 0; i < 9; i++){
-		 	digitalWrite(LED_arr[i], LOW);}
+		digitalWrite(LED_arr[i], LOW);}
+		delay(600000);
+		quest_pipeline = 0;
+	}
+
+	if(quest_pipeline == 5)
+	{
+		Serial.println("the end");
+		delay(600000);
 		quest_pipeline = 0;
 	}
 }
@@ -400,6 +428,9 @@ void kp_91_but()
 		{
 		  temp_passcode_9 += temp_char_9;     //add to string
 		  digitalWrite(LED_arr[ascii_code_9-49], HIGH); //turn on pushed button # led (get a ascii-code of button and turn it into but number in array)
+		  
+		  Serial.print("ascii_code: ");
+		  Serial.println(ascii_code_9-49);
 		  Serial.println(temp_passcode_9);
 		  //Serial.println(temp_passcode_9.length()-1);
 

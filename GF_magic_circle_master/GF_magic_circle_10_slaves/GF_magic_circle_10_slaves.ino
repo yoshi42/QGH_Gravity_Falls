@@ -43,16 +43,16 @@ unsigned long masCard [12] = {
 };
 
 unsigned long BigCard [10] = {
-  0xA2F0E30E, //0 0xA2F0E30E ok glasses       //was 0xA2F0E30E
-  0xD252A90E, //1 0xD252A90E    ask           //was 0xD252A90E
-  0x22B2530E, //2 0x22B2530E    ice           //was 0xD25EA40E
-  0xD25EA40E, //3 0xD25EA40E    fish          //was 0x22B2530E
-  0xB2E60C0D, //4 0xB2E60C0D ok yolka         //was 0xB2E60C0D
-  0xE2BFEA0D, //5 0xE2BFEA0D    star          //was 0x529A660E
-  0x529A660E, //6 0x529A660E    hand          //was 0xB292BA0E
-  0xB292BA0E, //7 0xB292BA0E    lama          //was 0x329F620E
-  0x329F620E, //8 0x329F620E    star falling  //was 0xE2BFEA0D
-  0x3273C50E, //9 0x3273C50E ok heart         //was 0x3273C50E
+  0xA2F0E30E, //0 0xA2F0E30E glasses
+  0xD25EA40E, //1 0xD25EA40E fish
+  0xD252A90E, //2 0xD252A90E ask
+  0x22B2530E, //3 0x22B2530E ice
+  0xB2E60C0D, //4 0xB2E60C0D yolka
+  0x529A660E, //5 0x529A660E hand
+  0xB292BA0E, //6 0xB292BA0E lama
+  0x329F620E, //7 0x329F620E star falling
+  0xE2BFEA0D, //8 0xE2BFEA0D star
+  0x3273C50E, //9 0x3273C50E heart
 };
 
 byte nCard = 0;
