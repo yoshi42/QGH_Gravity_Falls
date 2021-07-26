@@ -72,6 +72,10 @@ String play_vid_2 = "play_vid_2#"; //compare string should be "xx...x#" format. 
 String play_vid_3 = "play_vid_3#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 String pleer_on = "pleer_on#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 String pleer_off = "pleer_off#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
+String reset_cons = "reset_cons#";
+
+String music_low = "music_low#";
+String music_high = "music_high#";
 
 bool is_console_done = false;
 bool is_passcode_win = 0;
@@ -118,10 +122,10 @@ void setup()
     digitalWrite(i, LOW);
   }
 
-	Serial.println("Started");
+	//Serial.println("Started");
   delay(10000);
   irblink_TV_only();
-  Serial.println("Ready");
+  //Serial.println("Ready");
 }
 
 void loop()
@@ -132,18 +136,22 @@ void loop()
 
   if(is_passcode_win == 1 && counter == 0)
   {
+    Serial.print(music_low);
     irsend.sendNEC(0x5FAB24D, 32); // play
     delay(62000);
     irsend.sendNEC(0x5FAB24D, 32); // pause
+    Serial.print(music_high);
     is_passcode_win = 0;
     counter = 1;
   }
 
   if(is_passcode_win == 1 && counter >= 1)
   {
+    Serial.print(music_low);
     irsend.sendNEC(0x5FAB24D, 32); // play
     delay(65000);
     irsend.sendNEC(0x5FAB24D, 32); // pause
+    Serial.print(music_high);
     is_passcode_win = 0;
   }
 }
@@ -367,6 +375,13 @@ void HC_12_loop()
       {
         irblink_startup();
         delay(1000);
+      }
+
+      if(temp_string == reset_cons)
+      {
+        irsend.sendNEC(0x5FAFA05, 32); //on
+        delay(5000);
+        irblink_TV_only();
       }
 
       if (temp_string == pleer_off)  //compare string with a known commands

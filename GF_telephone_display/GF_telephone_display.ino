@@ -26,6 +26,7 @@ char inChar;
 //Command strings
 String MCS_TV_play = "MCS_TV_play#"; //compare string should be "xx...x#" format. Last "#" sign is a stop byte
 String cnfrm = "#SL_TV_done#"; //send command string should be "#xx...x#" format - for sure to correctly recieve a command. 1st "#" byte clears all junk before comparing, may work without it
+String Tel_res = "Tel_res#";
 
 /////////////keypad+phone/////////
 int flag_numbers = 0;
@@ -68,13 +69,16 @@ const int irled = 3; //ir led transmitting commands to TV
 #define screen_LED A3 //screen led light enable pin
 bool is_TV_playing = false;
 
+unsigned long t_video = 0;
+unsigned long t_video_prev = 0;
+
 void setup() 
 {
   Serial.begin(9600); //initiating serial
   HC12.begin(9600); //initiating software serial
 
   mp3_set_serial (Serial);  //set Serial for DFPlayer-mini mp3 module 
-  mp3_set_volume (15);
+  mp3_set_volume (25);
   
   pinMode(activate_phone, INPUT_PULLUP); //to check phone handset state - picked up/down
   pinMode(screen_LED, OUTPUT); //screen led light enable pin
@@ -141,11 +145,34 @@ void HC_12_loop()
         irsend.sendNEC(0x807F08F7, 32); //play video
         is_TV_playing = true;
         //*/delay for video length, screen light off pause again, and change is_TV_playing to false
-        delay(622000); //delay 5 minutes
+
+        /*t_video = millis();
+        if(t_video_prev==0){t_video_prev=millis();}
+
+        if(t_video - t_video_prev > 60000)
+        {
+          t_video_prev = t_video;
+          digitalWrite(screen_LED, LOW); //Screen light off
+          irsend.sendNEC(0x807F08F7, 32); //pause video
+          is_TV_playing = false;
+        }*/
+
+        delay(600000); //delay 10 minutes
         digitalWrite(screen_LED, LOW); //Screen light off
         irsend.sendNEC(0x807F08F7, 32); //pause video
         is_TV_playing = false;//*/
       }
+
+      if (temp_string == Tel_res)
+      {
+        digitalWrite(screen_on, HIGH); //push turn on button
+        delay(500);
+        digitalWrite(screen_on, LOW); //release turn on button
+        irsend.sendNEC(0x807F807F, 32); //on
+        delay(5000);
+        irblink_startup();
+      }
+
  	temp_string = "";			//then clear the string
     }
   }
@@ -187,7 +214,7 @@ void keypad_password(){
       flag_true = 0;
       is_TV_playing = true;
       //*/delay for video length, screen light off pause again, and change is_TV_playing to false
-      delay(622000); //delay 5 minutes
+      delay(300000); //delay
       irsend.sendNEC(0x807F08F7, 32); //pause video
       digitalWrite(screen_LED, LOW); //Screen light off
       is_TV_playing = false;//*/

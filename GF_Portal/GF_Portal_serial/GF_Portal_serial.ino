@@ -43,6 +43,9 @@ String b6 = "b6#"; //Фіналочка
 String b7 = "b7#"; //Закрити відео
 String re = "re#"; //Reboot RPi
 
+//Slave-Master - command tells that video is playing
+String Vid_play = "Vid_play#";
+
 /////////////////irled+TV/////////////
 IRsend irsend;
 const int irled = 3; //ir led transmitting commands to TV
@@ -72,22 +75,22 @@ void HC_12_loop()
       //Serial.print(temp_string);
       //Serial.println(" - copy that");
 
-      if(temp_string == Tele_mov1){Serial.print(b1);delay(500);}
-      if(temp_string == Tele_mov2){Serial.print(b2);delay(500);}
-      if(temp_string == Tele_mov3){Serial.print(b3);delay(500);}
-      if(temp_string == Tele_mov4){Serial.print(b4);delay(500);}
-      if(temp_string == Tele_mov5){Serial.print(b5);delay(500);}
-      if(temp_string == Tele_mov6){Serial.print(b6);delay(500);}
+      if(temp_string == Tele_mov1){Serial.print(b1);delay(200);HC12.print(Vid_play)}
+      if(temp_string == Tele_mov2){Serial.print(b2);delay(200);HC12.print(Vid_play)}
+      if(temp_string == Tele_mov3){Serial.print(b3);delay(200);HC12.print(Vid_play)}
+      if(temp_string == Tele_mov4){Serial.print(b4);delay(200);HC12.print(Vid_play)}
+      if(temp_string == Tele_mov5){Serial.print(b5);delay(200);HC12.print(Vid_play)}
+      if(temp_string == Tele_mov6){Serial.print(b6);delay(200);HC12.print(Vid_play)}
 
-      if(temp_string == b1){Serial.print(b1);delay(500);}
-      if(temp_string == b2){Serial.print(b2);delay(500);}
-      if(temp_string == b3){Serial.print(b3);delay(500);}
-      if(temp_string == b4){Serial.print(b4);delay(500);}
-      if(temp_string == b5){Serial.print(b5);delay(500);}
-      if(temp_string == b6){Serial.print(b6);delay(500);}
-      if(temp_string == b6){Serial.print(b7);delay(500);}
+      if(temp_string == b1){Serial.print(b1);delay(200);HC12.print(Vid_play)}
+      if(temp_string == b2){Serial.print(b2);delay(200);HC12.print(Vid_play)}
+      if(temp_string == b3){Serial.print(b3);delay(200);HC12.print(Vid_play)}
+      if(temp_string == b4){Serial.print(b4);delay(200);HC12.print(Vid_play)}
+      if(temp_string == b5){Serial.print(b5);delay(200);HC12.print(Vid_play)}
+      if(temp_string == b6){Serial.print(b6);delay(200);HC12.print(Vid_play)}
+      if(temp_string == b7){Serial.print(b7);delay(200);}
 
-      if(temp_string == re){Serial.print(re);delay(500);}
+      if(temp_string == re){Serial.print(re);delay(200);}
       if(temp_string == Tele_on){irblink_startup();}
 
  	    temp_string = "";			//then clear the string

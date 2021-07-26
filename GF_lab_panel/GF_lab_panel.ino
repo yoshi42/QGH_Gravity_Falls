@@ -89,6 +89,38 @@ byte LED_arr[] = {led_1, led_2, led_3, led_4, led_5, led_6, led_7, led_8, led_9}
 #define DATA_PIN 35 //D0 out to pin
 CRGB leds[NUM_LEDS]; // This is an array of leds.  One item for each led in your strip.
 
+const int combinations_num_passcode_21_arr = 24;
+String passcode_21_arr [combinations_num_passcode_21_arr] = 
+{
+	"MRDI",
+	"MRID",
+	"MDRI",
+	"MDIR",
+	"MIDR",
+	"MIRD",
+
+	"RMID",
+	"RMDI",
+	"RDMI",
+	"RDIM",
+	"RIDM",
+	"RIMD",
+
+	"DMIR",
+	"DMRI",
+	"DRIM",
+	"DRMI",
+	"DIRM",
+	"DIMR",
+
+	"IMRD",
+	"IMDR",
+	"IRDM",
+	"IRMD",
+	"IDRM",
+	"IDMR"
+};
+
 String passcode_21 = "MRDI";
 String passcode_9 = "142368759"; //142368759
 int passcode_21_length = passcode_21.length();
@@ -272,7 +304,7 @@ void loop()
 		//digitalWrite(butt_OPEN_LED, HIGH);
 		//digitalWrite(butt_CLOSE_LED, HIGH);
 
-		if(digitalRead(butt_OPEN) == LOW) //not working
+		if(digitalRead(butt_OPEN) == LOW)
 		{	
 			delay(20);
 			digitalWrite(butt_OPEN_LED, LOW);
@@ -299,10 +331,9 @@ void loop()
 
 			for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
 			FastLED.show(); //refresh
-			delay(mov6_delay);
-			quest_pipeline = 0;
+			//delay(mov6_delay);
+			//quest_pipeline = 0;
 		}
-
 	}
 
 	//not used
@@ -339,14 +370,16 @@ void loop()
 		delay(mov6_delay);
 		for (int i = 0; i < 9; i++){
 		digitalWrite(LED_arr[i], LOW);}
-		delay(600000);
+		delay(60000);
+		reset();
 		quest_pipeline = 0;
 	}
 
 	if(quest_pipeline == 5)
 	{
 		Serial.println("the end");
-		delay(600000);
+		delay(60000);
+		reset();
 		quest_pipeline = 0;
 	}
 }
@@ -380,15 +413,22 @@ void keypad_password_21_but()
   if(temp_passcode_21.length() == passcode_21_length)
   {
     //check if right
-    if(temp_passcode_21 == passcode_21)
+    for(int i=0; i<combinations_num_passcode_21_arr; i++) //for every combination of letters in passcode
     {
-  		quest_pipeline = 1; //next quest step
+    	if(temp_passcode_21 == passcode_21_arr[i])
+    	{
+    		quest_pipeline = 1;
+    		Serial.println("RIGHT 21 but");
+    	}
     }
 
+    if(temp_passcode_21 == passcode_21) //for exact combination of letters in passcode
+    {
+  		quest_pipeline = 1; //next quest step
+  		Serial.println("RIGHT 21 but");
+    }
     else
     {
-      Serial.println("WRONG"); //wrong
-
       for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all leds
       delay(500);
       FastLED.show(); //refresh
@@ -428,7 +468,6 @@ void kp_91_but()
 		{
 		  temp_passcode_9 += temp_char_9;     //add to string
 		  digitalWrite(LED_arr[ascii_code_9-49], HIGH); //turn on pushed button # led (get a ascii-code of button and turn it into but number in array)
-		  
 		  Serial.print("ascii_code: ");
 		  Serial.println(ascii_code_9-49);
 		  Serial.println(temp_passcode_9);
@@ -498,12 +537,7 @@ void HC_12_loop()
       if (temp_string == reset_lab_panel)  //compare string with a known commands
       {
       	quest_pipeline = 0;
-		    digitalWrite(butt_OPEN_LED, LOW);
-				digitalWrite(butt_CLOSE_LED, LOW);
-				digitalWrite(butt_LASTHOPE_LED, LOW);
-				for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
-				FastLED.show(); //refresh
-				for (int i = 0; i < 9; i++) {digitalWrite(LED_arr[i], LOW);}  //turn off all 9 leds
+		    reset();
       }
 
       if (temp_string == but9_open)  //compare string with a known commands
@@ -520,6 +554,19 @@ void HC_12_loop()
     temp_string = "";     //then clear the string
     }
   }
+}
+
+void reset()
+{
+	digitalWrite(butt_OPEN_LED, LOW);
+	digitalWrite(butt_CLOSE_LED, LOW);
+	digitalWrite(butt_LASTHOPE_LED, LOW);
+	digitalWrite(EML_doors_diary_sheet, HIGH);
+	digitalWrite(EML_doors_open_close, HIGH);
+	for(int led = 0; led < NUM_LEDS; led++) {leds[led] = CRGB::Black;} //turn off all 21 leds
+	FastLED.show(); //refresh
+	for (int i = 0; i < 9; i++) {digitalWrite(LED_arr[i], LOW);}  //turn off all 9 leds
+	quest_pipeline = 0;
 }
 
 void test_ws2811()
