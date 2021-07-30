@@ -157,7 +157,7 @@ void HC_12_loop()
           is_TV_playing = false;
         }*/
 
-        delay(600000); //delay 10 minutes
+        delay(1800000); //delay 30 minutes
         digitalWrite(screen_LED, LOW); //Screen light off
         irsend.sendNEC(0x807F08F7, 32); //pause video
         is_TV_playing = false;//*/

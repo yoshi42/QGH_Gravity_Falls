@@ -107,8 +107,8 @@ void setup()
   server.on("/led8on", handle_led8on);
   server.on("/led9on", handle_led9on);
   server.on("/led10on", handle_led10on);
-  server.on("/led11on", handle_led9on);
-  server.on("/led12on", handle_led10on);
+  server.on("/led11on", handle_led11on);
+  server.on("/led12on", handle_led12on);
   server.onNotFound(handle_NotFound);
 
   server.begin();
@@ -236,7 +236,7 @@ String SendHTML(uint8_t led1stat,uint8_t led2stat,uint8_t led3stat,uint8_t led4s
 
 void HC12_loop()
 {              //recieve something from hc-12 inerface
-  while (Serial.available())
+  while (Serial_HC.available())
   {
     char inChar = Serial.read(); //store each bite in var
     temp_string += inChar;     //add to string

@@ -490,7 +490,7 @@ void telephone()
   if(flag_telephone_done)
   {
     digitalWrite(MCS_TV_survelliance_5v_en_D33, HIGH); //5v TV led on pin
-    Serial3.println(activate_snack);
+    Serial3.print(activate_snack);
     flag_telephone_done=!flag_telephone_done;
   }
 }
@@ -511,7 +511,7 @@ void snack()
 
     digitalWrite(MOSF5_lab_door_EML_D45, LOW); //open lab door
 
-    Serial3.println(Tele_mov1); //play video 1 - "Endless Galactic" at portal
+    Serial3.print(Tele_mov1); //play video 1 - "Endless Galactic" at portal
     flag_snack_automate_done=!flag_snack_automate_done;
   }
 }
@@ -545,7 +545,7 @@ void lab_panel()
 {
   if(flag_but21_done)
   {
-    Serial3.println(Tele_mov2); //play video 2 - "О, привіт" at portal
+    Serial3.print(Tele_mov2); //play video 2 - "О, привіт" at portal
     delay(50);
     mp3_set_serial(Serial1);
     mp3_set_volume(20);
@@ -556,19 +556,19 @@ void lab_panel()
   {
     mp3_set_serial(Serial1);
     delay(10);    mp3_set_volume(15);
-    Serial3.println(Tele_mov3); //play video 3 - "Скільки можна чекати" at portal
+    Serial3.print(Tele_mov3); //play video 3 - "Скільки можна чекати" at portal
     flag_nt_op_port=false;
   }
 
   if(flag_try_close_port)
   {
-    Serial3.println(Tele_mov4); //play video 4 - "Не робіть цього" at portal
+    Serial3.print(Tele_mov4); //play video 4 - "Не робіть цього" at portal
     flag_try_close_port=false;
   }
 
   if(flag_open_port) //apocalypse
   {
-    Serial3.println(Tele_mov5); //play video 5 - "Які ж ви довірливі" at portal
+    Serial3.print(Tele_mov5); //play video 5 - "Які ж ви довірливі" at portal
     delay(90000);
     mp3_set_serial(Serial1);
     delay(10);    mp3_set_volume(3);
@@ -587,7 +587,7 @@ void lab_panel()
     mp3_set_serial(Serial1);
     delay(10);    mp3_set_volume(5);
 
-    Serial3.println(Tele_mov6); //play video 6 - "Фіналочка" at portal
+    Serial3.print(Tele_mov6); //play video 6 - "Фіналочка" at portal
     delay(50); 
     Serial3.print(tmr_stp);
     flag_close_port=false;
