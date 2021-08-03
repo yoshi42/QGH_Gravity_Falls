@@ -22,18 +22,8 @@
 
 
 /*what to do:
-+ Перезагрузка
-  + Телефон підстроїти під перезагрузку + гучність
-  + Ігрова консоль - підстроїти під перезагрузку
-+ Фінал - підлаштувати
-  Надо будет заполнить такую логику:
-  - собрали круг
-  - ТАЙМЕР СТОП
-  - одновременно из колонок громко голос младенца времени с призывом подойти к порталу
-  - только после этого (т.е. секунд через 7-10 как сложили круг) запуск финального видео. При этом, фоновой музыки быть не должно, пока не появится статичная картинка.
-  - как только в видео пошла статичная картинка, запускается фоновая музыка - ремикс на заглавную тему и открывается входная дверь
++
 
-- Музика - підлаштувати по таймеру
 */
 #include <DFPlayer_Mini_Mp3.h>
 #include <SoftwareSerial.h>
@@ -45,10 +35,10 @@ SoftwareSerial esp_wifi(44, 46); // (Rx_pin, Tx_pin) //using a softwareSerial in
 //========================MCS-left_OUTs
 const int MOSF1_puchlya_door_D53 = 53; //MOSFET 1
 const int MOSF2_exit_door_D51 = 51; //MOSFET 2
-const int MOSF3_potolok_korobka_D49 = 49; //MOSFET 3
+const int MOSF3_fonarik_D49 = 49; //MOSFET 3
 const int MOSF4_rubilnik_EML_D47 = 47; //MOSFET 4
 const int MOSF5_lab_door_EML_D45 = 45; //MOSFET 5
-const int MCS_D43 = 43; //MOSFET 6
+const int MOSF6_konfety_D43 = 43; //MOSFET 6
 const int MOSF7_table_D41 = 41; //MOSFET 7
 const int MOSF8_window_D39 = 39; //MOSFET 8
 const int MCS_snack_done_D37 = 37; //
@@ -107,7 +97,7 @@ const int MCS_pukhlya_open_door_42 = 42;
 const int REL_UV_D44 = 44;
 const int REL_LIGHT_D46 = 46;
 const int REL_RPI_5V = 48;
-const int REL_RESET_D50 = 50;
+const int REL_STROBO_D50 = 50;
 
 const int MCS_D52 = 52;
 
@@ -179,6 +169,22 @@ String tmr_pls_5m = "tmr_pls_5m#"; //compared string should be "xx...x#" format.
 String tmr_rst = "tmr_rst#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 String tmr_stp = "tmr_stp#"; //compared string should be "xx...x#" format. Last "#" sign is a stop byte
 
+const byte num_load = 12;
+String done[num_load] = 
+{ "done1#",
+  "done2#",
+  "done3#",
+  "done4#",
+  "done5#",
+  "done6#",
+  "done7#",
+  "done8#",
+  "done9#",
+  "done10#",
+  "done11#",
+  "done12#",
+};
+
 String load_all = "load_all#"; // reload EPS_8266_WEB buttons
 
 String temp_string = ""; //variable to store information recieved form serial and compare it
@@ -223,22 +229,32 @@ String WEB12 = "WEB12#";
 
 
 bool dio = false;
+bool flag_quest_start_but = false;
+bool flag_quest_reset_but = false;
+bool flag_quest_pls5m_but = false;
 
 bool flag_is_started = false;
 bool flag_karp_done = false;
+bool flag_pic_done = false; bool flag_pic_done_sent = false;
 bool flag_telephone_done = false;
 bool is_pukhlya = false;
 bool flag_snack_automate_done = false;
 bool is_code_panel = false;
 bool is_rubilnik = false;
 bool flag_but21_done = false;
+bool flag_is_vid2_played = false;
+
 bool flag_open_port = false;
+bool flag_is_vid5_played = false;
+
 bool flag_close_port = false;
 bool flag_but9_done = false;
 bool flag_try_close_port = false;
 bool flag_por_tim_ov = false;
 bool flag_nt_op_port = false;
 bool flag_circle_done = false;
+bool flag_is_vid6_played = false;
+
 bool flag_game_over = false;
 bool is_portal_playing = false;
 
@@ -250,6 +266,24 @@ bool flag3_song = false;
 bool flag4_song = false;
 
 unsigned long time_quest_start_but = 0;
+unsigned long time_vid1 = 0;
+unsigned long time_vid1_prev = 0;
+bool flag_time_vid1 = false;
+unsigned long time_vid2 = 0;
+unsigned long time_vid2_prev = 0;
+bool flag_time_vid2 = false;
+unsigned long time_vid3 = 0;
+unsigned long time_vid3_prev = 0;
+bool flag_time_vid3 = false;
+unsigned long time_vid4 = 0;
+unsigned long time_vid4_prev = 0;
+bool flag_time_vid4 = false;
+unsigned long time_vid5 = 0;
+unsigned long time_vid5_prev = 0;
+bool flag_time_vid5 = false;
+unsigned long time_vid6 = 0;
+unsigned long time_vid6_prev = 0;
+bool flag_time_vid6 = false;
 
 void setup() {
     Serial.begin(9600);             //UART
@@ -281,10 +315,10 @@ void setup() {
     
     pinMode(MOSF1_puchlya_door_D53, OUTPUT);
     pinMode(MOSF2_exit_door_D51, OUTPUT);
-    pinMode(MOSF3_potolok_korobka_D49, OUTPUT);
+    pinMode(MOSF3_fonarik_D49, OUTPUT);
     pinMode(MOSF4_rubilnik_EML_D47, OUTPUT); 
     pinMode(MOSF5_lab_door_EML_D45, OUTPUT);
-
+    pinMode(MOSF6_konfety_D43, OUTPUT);
     pinMode(MOSF7_table_D41, OUTPUT);
     pinMode(MOSF8_window_D39, OUTPUT);
     pinMode(MCS_snack_done_D37, INPUT_PULLUP); //біл
@@ -294,22 +328,22 @@ void setup() {
     pinMode(REL_UV_D44, OUTPUT);
     pinMode(REL_LIGHT_D46, OUTPUT); //NORMAL CLOSED CONTACT
     pinMode(REL_RPI_5V, OUTPUT); //
-    pinMode(REL_RESET_D50, OUTPUT);//
+    pinMode(REL_STROBO_D50, OUTPUT);//
 
     digitalWrite(MOSF1_puchlya_door_D53, HIGH);
     digitalWrite(MOSF2_exit_door_D51, HIGH);
-    digitalWrite(MOSF3_potolok_korobka_D49, HIGH);
+    digitalWrite(MOSF3_fonarik_D49, HIGH);
     digitalWrite(MOSF4_rubilnik_EML_D47, HIGH); 
-    digitalWrite(MOSF5_lab_door_EML_D45, HIGH);
-
+    digitalWrite(MOSF5_lab_door_EML_D45, HIGH); 
+    digitalWrite(MOSF6_konfety_D43, HIGH);
     digitalWrite(MOSF7_table_D41, HIGH);
     digitalWrite(MOSF8_window_D39, HIGH);
     digitalWrite(MCS_TV_survelliance_5v_en_D33, HIGH);
 
     digitalWrite(REL_UV_D44, HIGH); //LOW = ON - UV light on
     digitalWrite(REL_LIGHT_D46, HIGH); //LOW = ON - main light on //NORMAL CLOSED CONTACT
-    digitalWrite(REL_RPI_5V, HIGH); //LOW = ON - main light on //NORMAL CLOSED CONTACT
-    digitalWrite(REL_UV_D44, LOW); //LOW = ON
+    digitalWrite(REL_RPI_5V, HIGH);
+    digitalWrite(REL_STROBO_D50, HIGH);
 
     delay(15000);
     digitalWrite(REL_RPI_5V, LOW); //LOW = ON
@@ -383,26 +417,27 @@ void quest_start()
   //else if(digitalRead(MCS_quest_start_but_A5) == HIGH && flag_is_started == true){delay(50);dio = flag_is_started;}
 
   //reset button
-  if(digitalRead(MCS_quest_res_but_A6) == LOW && dio == false){
+  if(digitalRead(MCS_quest_res_but_A6) == LOW && flag_quest_reset_but == false){
     delay(50);
     
-    dio = true;
+    flag_quest_reset_but = true;
     flag_is_started = false;
     flag_is_reset = true;
 
     song();
+    delay(500);
   }
-  else if(digitalRead(MCS_quest_res_but_A6) == HIGH && dio == true){delay(50);dio = false;}
+  else if(digitalRead(MCS_quest_res_but_A6) == HIGH && flag_quest_reset_but == true){delay(200);flag_quest_reset_but = false;}
 
   //pls 5m button
-  if(digitalRead(MCS_quest_pls_5m_but_A4) == LOW && dio == false){
-    delay(200);
+  if(digitalRead(MCS_quest_pls_5m_but_A4) == LOW && flag_quest_pls5m_but == false){
+    delay(50);
     Serial3.print(tmr_pls_5m);
-    dio = true;
-
+    flag_quest_pls5m_but = true;
     song();
+    delay(500);
   }
-  else if(digitalRead(MCS_quest_pls_5m_but_A4) == HIGH && dio == true){delay(50);dio = false;}
+  else if(digitalRead(MCS_quest_pls_5m_but_A4) == HIGH && flag_quest_pls5m_but == true){delay(200);flag_quest_pls5m_but = false;}
 }
 
 void pic()
@@ -413,14 +448,22 @@ void pic()
   int p4 = digitalRead(MCS_pict4_A3);
   if(p1==0 && p2==0 && p3==0 && p4==0)
   {
-    digitalWrite(MOSF3_potolok_korobka_D49, LOW);
-    delay(500);
+    flag_pic_done = true;
   }
 
-  else if(p1==1 || p2==1 || p3==1 || p4==1)
+  if(flag_pic_done == true && flag_pic_done_sent == false)
   {
-    digitalWrite(MOSF3_potolok_korobka_D49, HIGH);
+    digitalWrite(MOSF3_fonarik_D49, LOW);
+    delay(50); 
+    Serial3.print(done[2]);
+    flag_pic_done = false;
+    flag_pic_done_sent = true;
   }
+
+  /*else if(p1==1 || p2==1 || p3==1 || p4==1)
+  {
+    digitalWrite(MOSF3_fonarik_D49, HIGH);
+  }*/
 
   //code to check pictures
   /*if(p1==0)
@@ -479,10 +522,11 @@ void pukhlya()
     delay(500); 
     song();
     is_pukhlya = true;
-
+    delay(50);
+    Serial3.print(done[3]);
   }
-  else if(is_pukhlya == false){}//to not close doors while WEB4_pukh
-  else if(digitalRead(MCS_pukhlya_NO_40) == HIGH){delay(50); digitalWrite(MOSF1_puchlya_door_D53, HIGH);is_pukhlya = false;}
+  //else if(is_pukhlya == false){}//to not close doors while WEB4_pukh
+  //else if(digitalRead(MCS_pukhlya_NO_40) == HIGH){delay(50); digitalWrite(MOSF1_puchlya_door_D53, HIGH);is_pukhlya = false;}
 }
 
 void telephone()
@@ -510,6 +554,8 @@ void snack()
     delay(50);    mp3_play(2); //laboratory music
 
     digitalWrite(MOSF5_lab_door_EML_D45, LOW); //open lab door
+    delay(50);
+    Serial3.print(done[5]);
 
     Serial3.print(Tele_mov1); //play video 1 - "Endless Galactic" at portal
     flag_snack_automate_done=!flag_snack_automate_done;
@@ -524,9 +570,11 @@ void code_panel()
     digitalWrite(MOSF4_rubilnik_EML_D47, LOW);
     song();
     is_code_panel = true;
+    delay(50); 
+    Serial3.print(done[6]);
   }
   else if(is_code_panel==false){}
-  else if(digitalRead(MCS_code_panel_NO_A7) == HIGH){delay(50); digitalWrite(MOSF4_rubilnik_EML_D47, HIGH);is_code_panel = false;}
+  //else if(digitalRead(MCS_code_panel_NO_A7) == HIGH){delay(50); digitalWrite(MOSF4_rubilnik_EML_D47, HIGH);is_code_panel = false;}
 }
 
 void rubilnik()
@@ -543,8 +591,10 @@ void rubilnik()
 
 void lab_panel()
 {
-  if(flag_but21_done)
+  if(flag_but21_done && flag_is_vid2_played == false)
   {
+    flag_is_vid2_played == true;
+    delay(50);
     Serial3.print(Tele_mov2); //play video 2 - "О, привіт" at portal
     delay(50);
     mp3_set_serial(Serial1);
@@ -566,30 +616,71 @@ void lab_panel()
     flag_try_close_port=false;
   }
 
-  if(flag_open_port) //apocalypse
+  //*/
+  if(flag_open_port && flag_is_vid5_played == false) //apocalypse
   {
+    flag_is_vid5_played = true;
+    delay(50);
     Serial3.print(Tele_mov5); //play video 5 - "Які ж ви довірливі" at portal
-    delay(90000);
+    delay(50);
+    //digitalWrite(REL_UV_D44, LOW); //LOW = ON - UV light on
+    digitalWrite(REL_LIGHT_D46, LOW); //LOW = ON - main light on //NORMAL CLOSED CONTACT
+    delay(62000);
     mp3_set_serial(Serial1);
     delay(10);    mp3_set_volume(3);
     mp3_set_serial(Serial2);
-    delay(10);    mp3_set_volume(25);
+    delay(10);    mp3_set_volume(30);
     delay(10);    mp3_play(51); //що ж ви накоїли
     delay(20000);
     mp3_set_serial(Serial1);
-    delay(10);    mp3_set_volume(25);
+    delay(10);    mp3_set_volume(30);
     delay(10);    mp3_play(3); //apocalypse music
     flag_open_port=false;
+  }//*/
+
+  /*//!!!!!!!!!!!!!!!!!!!!!!////
+  if(flag_open_port) //apocalypse
+  {
+    Serial3.print(Tele_mov5); //play video 5 - "Які ж ви довірливі" at portal
+    flag_open_port=false;
+    flag_time_vid1 = true;
   }
 
-  if(flag_close_port)
+  if(flag_time_vid1)
+  { 
+    time_vid1 = millis();
+    if(t_por_tim_ov_prev==0){time_vid1_prev=millis();}
+    if(time_vid1 - time_vid1_prev >= 90000)
+    {
+      time_vid1_prev = time_vid1;
+      mp3_set_serial(Serial1);
+      delay(10);    mp3_set_volume(3);
+      mp3_set_serial(Serial2);
+      delay(10);    mp3_set_volume(25);
+      delay(10);    mp3_play(51); //що ж ви накоїли
+    }
+
+    if(time_vid1 - time_vid1_prev > 110000)
+    {
+      mp3_set_serial(Serial1);
+      delay(10);    mp3_set_volume(30);
+      delay(10);    mp3_play(3); //apocalypse music
+      flag_time_vid1 = false;
+    }      
+  }
+  //*/
+
+  if(flag_close_port && flag_is_vid6_played == false)
   {
+    flag_is_vid6_played = true;
     mp3_set_serial(Serial1);
     delay(10);    mp3_set_volume(5);
-
+    delay(50);
     Serial3.print(Tele_mov6); //play video 6 - "Фіналочка" at portal
     delay(50); 
-    Serial3.print(tmr_stp);
+    Serial3.print(tmr_stp);delay(50);
+    Serial3.print(tmr_stp);delay(50);
+    Serial3.print(tmr_stp);delay(50);
     flag_close_port=false;
 
     digitalWrite(MOSF2_exit_door_D51, LOW); //open doors
@@ -601,13 +692,14 @@ void lab_panel()
     delay(10);    mp3_play(4); //win music
   }
 
+
   if(flag_por_tim_ov)
   {
     flag_close_port=false;
 
     mp3_set_serial(Serial1);
     delay(10);    mp3_set_volume(5);
-
+    delay(50);
     Serial3.print(tmr_stp);
     digitalWrite(MOSF2_exit_door_D51, LOW); //open doors
     digitalWrite(REL_UV_D44, HIGH); //LOW = ON - UV light on
@@ -632,9 +724,15 @@ void magic_circle()
   if(flag_circle_done)
   {
     Serial.println("circle_done");
-
+    delay(50);
+    Serial3.print(done[10]);
+    delay(50);
     Serial3.print(tmr_stp);
-
+    delay(50);
+    Serial3.print(tmr_stp);
+    delay(50);
+    Serial3.print(tmr_stp);
+    delay(50);
     mp3_set_serial(Serial1);
     delay(10);     mp3_set_volume(5);
     mp3_set_serial(Serial2);
@@ -643,19 +741,24 @@ void magic_circle()
     delay(7000);
 
     Serial3.print(Tele_mov6); //play video 6 - "Фіналочка" at portal
-    delay(50); 
+    delay(50);
 
     flag_close_port=false;
-
-    digitalWrite(MOSF2_exit_door_D51, LOW); //open doors
-    digitalWrite(REL_UV_D44, HIGH); //LOW = ON - UV light on
-    digitalWrite(REL_LIGHT_D46, HIGH); //LOW = ON - main light on //NORMAL CLOSED CONTACT
    
     delay(92000);
     mp3_set_serial(Serial1);
     delay(10);    mp3_set_volume(30);
     delay(50);    mp3_play(4); //win music
+    digitalWrite(REL_STROBO_D50, LOW);
+    delay(40000);
+    digitalWrite(REL_STROBO_D50, HIGH);
+    digitalWrite(MOSF2_exit_door_D51, LOW); //open doors
+    digitalWrite(REL_UV_D44, HIGH); //LOW = ON - UV light on
+    digitalWrite(REL_LIGHT_D46, HIGH); //LOW = ON - main light on //NORMAL CLOSED CONTACT
+    digitalWrite(MOSF6_konfety_D43, LOW); //open_confety
     flag_circle_done=false;
+    delay(180000);
+    Serial3.println("re#");
   }
 }
 
@@ -683,7 +786,7 @@ void reset_state()
   {
     digitalWrite(MOSF1_puchlya_door_D53, HIGH);
     digitalWrite(MOSF2_exit_door_D51, HIGH);
-    digitalWrite(MOSF3_potolok_korobka_D49, HIGH);
+    digitalWrite(MOSF3_fonarik_D49, HIGH);
     digitalWrite(MOSF4_rubilnik_EML_D47, HIGH);
     digitalWrite(MOSF5_lab_door_EML_D45, HIGH);
     digitalWrite(MOSF7_table_D41, HIGH);
@@ -693,7 +796,7 @@ void reset_state()
     digitalWrite(REL_UV_D44, HIGH); //LOW = ON - UV light on
     digitalWrite(REL_LIGHT_D46, HIGH); //LOW = ON - main light on //NORMAL CLOSED CONTACT
     digitalWrite(REL_RPI_5V, LOW); //LOW = ON - main light on //NORMAL CLOSED CONTACT
-    digitalWrite(REL_RESET_D50, HIGH);
+    digitalWrite(REL_STROBO_D50, HIGH);
 
     Serial3.print(tmr_rst);
     delay(10);  
@@ -729,20 +832,20 @@ void HC12_loop()
       //Serial.print(temp_string);
       //Serial3.println("MCS recieved#");
 
-      if (temp_string == MCS_karp_cnfrm){flag_karp_done = true; song();}
-      if (temp_string == cnfrm_TV){flag_telephone_done = true; song();}
+      if (temp_string == MCS_karp_cnfrm){delay(50); Serial3.print(done[1]); flag_karp_done = true; song();}
+      if (temp_string == cnfrm_TV){delay(50); Serial3.print(done[4]); flag_telephone_done = true; song();}
       if (temp_string == snack_done){flag_snack_automate_done = true; song();}
-      if (temp_string == but21_done){flag_but21_done = true; song();}
+      if (temp_string == but21_done){delay(50); Serial3.print(done[7]); flag_but21_done = true; song();}
       if (temp_string == nt_op_port){flag_nt_op_port = true; song();}
       if (temp_string == try_close_port){flag_try_close_port = true; song();}
       if (temp_string == por_tim_ov){flag_por_tim_ov = true; song();}
-      if (temp_string == open_port){flag_open_port = true; song();}
+      if (temp_string == open_port){delay(50); Serial3.print(done[8]); flag_open_port = true; song();}
       if (temp_string == close_port){flag_close_port = true; song();}
-      if (temp_string == but9_done){flag_but9_done = true; song();}
+      if (temp_string == but9_done){delay(50); Serial3.print(done[9]); flag_but9_done = true; song();}
       if (temp_string == mgc_crcl_done){flag_circle_done = true; song();}
       if (temp_string == time_is_over){flag_game_over = true;}
 
-      if (temp_string == music_low){mp3_set_serial(Serial1);mp3_set_volume(15);}
+      if (temp_string == music_low){delay(50); Serial3.print(done[0]); mp3_set_serial(Serial1);mp3_set_volume(15);}
       if (temp_string == music_high){mp3_set_serial(Serial1);mp3_set_volume(28);}
       if (temp_string == test){song();}
       if (temp_string == Vid_play) {is_portal_playing=true;}
@@ -750,15 +853,15 @@ void HC12_loop()
       //WEB_interface_commands
       if (temp_string == WEB1_cons){delay(100); Serial3.print(play_vid_1);song();}
       if (temp_string == WEB2_karp){delay(100); flag_karp_done=true;Serial3.print(MCS_karp_play); song();}
-      if (temp_string == WEB3_pict){delay(100); digitalWrite(MOSF3_potolok_korobka_D49, LOW); delay(500);song();}
+      if (temp_string == WEB3_pict){delay(100); digitalWrite(MOSF3_fonarik_D49, LOW); delay(500);song();}
       if (temp_string == WEB4_pukh){delay(100); digitalWrite(MOSF1_puchlya_door_D53, LOW);delay(500);song();} //need to check
       if (temp_string == WEB5_phon){delay(100); flag_telephone_done=true; Serial3.print(MCS_TV_play); song();}
       if (temp_string == WEB6_snac){delay(100); flag_snack_automate_done = true; song();}
       if (temp_string == WEB7_code){delay(100); digitalWrite(MOSF4_rubilnik_EML_D47, LOW); delay(500); song();}
       if (temp_string == WEB8_21bu){delay(100); flag_but21_done=true; Serial3.print(but21_open); song();}
-      if (temp_string == WEB9_open){delay(100); flag_open_port=true; Serial3.print(but_op_portal); song();} //not working
+      if (temp_string == WEB9_open){delay(100); flag_open_port=true;flag_is_vid5_played=false; Serial3.print(but_op_portal); song();} //not working
       if (temp_string == WEB10_9but){delay(100); Serial3.print(but9_open); song();} //not working
-      if (temp_string == WEB11_magi){delay(100); flag_circle_done=true; song();} //not working
+      if (temp_string == WEB11_magi){delay(100); flag_circle_done=true;flag_is_vid6_played=false; song();} //not working
       if (temp_string == WEB12){song();}
       temp_string = "";     //then clear the string
     }

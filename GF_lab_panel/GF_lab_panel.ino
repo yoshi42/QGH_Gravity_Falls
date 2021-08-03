@@ -183,7 +183,7 @@ unsigned long mov1_delay = 3600000; //portal_galactic - 1hour
 unsigned long mov2_delay = 31000; //О, привіт - 29sec - active, 90sec - all video
 unsigned long mov3_delay = 15000; //Скільки можна чекати - 15 sec active
 unsigned long mov4_delay = 15000; //Ні, ні - не робіть цього - 15 sec active
-unsigned long mov5_delay = 86000; //Які ж ви довірливі - 85 sec active
+unsigned long mov5_delay = 76000; //Які ж ви довірливі - 85 sec active
 unsigned long mov6_delay = 80000; //Фіналочка - 80 sec active
 
 void setup()
@@ -252,7 +252,7 @@ void loop()
 		  Serial_HC.print(nt_op_port); //скільки можна чекати
 	  }*/
 	  	
-		if(digitalRead(butt_CLOSE) == LOW)
+		/*if(digitalRead(butt_CLOSE) == LOW)
 		{
 			delay(20);
 			digitalWrite(butt_OPEN_LED, LOW);
@@ -264,9 +264,9 @@ void loop()
 			Serial.println("try cls prt");
 			//delay(mov4_delay);
 			quest_pipeline = 112;
-		}
+		}*/
 
-		if(digitalRead(butt_OPEN) == LOW || is_butt_OPEN == true)
+		if(digitalRead(butt_OPEN) == LOW || digitalRead(butt_CLOSE) == LOW || is_butt_OPEN == true)
 		{	
 			delay(20);
 			digitalWrite(butt_OPEN_LED, LOW);
@@ -336,7 +336,7 @@ void loop()
 		}
 	}
 
-	//not used
+	/*//not used
 	if(quest_pipeline == 2)
 	{
 		t_but_LH = millis();
@@ -356,7 +356,8 @@ void loop()
 	  		Serial.println("lst hp prssd");
 	  		quest_pipeline = 3;
 	  	}
-	}
+	}//*/
+
 	if(quest_pipeline == 3)
 	{
 		kp_91_but();

@@ -238,10 +238,9 @@ void HC12_loop()
 {              //recieve something from hc-12 inerface
   while (Serial_HC.available())
   {
-    char inChar = Serial.read(); //store each bite in var
+    char inChar = Serial_HC.read(); //store each bite in var
     temp_string += inChar;     //add to string
-    Serial_HC.print(inChar); //Send each recieved byte back
-    
+    //Serial_HC.print(inChar); //Send each recieved byte back
   if (inChar == '#')       //if stop byte recieved
     {
       //Serial.print(temp_string);
