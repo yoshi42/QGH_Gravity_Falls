@@ -150,7 +150,7 @@ void handle_led8on(){   LED8status = true;  Serial_HC.print("WEB8#");  server.se
 void handle_led9on(){   LED9status = true;  Serial_HC.print("WEB9#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,true,LED10status,LED11status,LED12status)); }
 void handle_led10on(){  LED10status = true;  Serial_HC.print("WEB10#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,true,LED11status,LED12status)); }
 void handle_led11on(){  LED11status = true;  Serial_HC.print("WEB11#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status,true,LED12status)); }
-void handle_led12on(){  LED12status = true;  Serial_HC.print("WEB12#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status,LED11status,true)); }
+void handle_led12on(){  LED12status = true;  Serial_HC.print("tmr_pls_5m#");  server.send(200, "text/html", SendHTML(LED1status,LED2status,LED3status,LED4status,LED5status,LED6status,LED7status,LED8status,LED9status,LED10status,LED11status,true)); }
 
 String SendHTML(uint8_t led1stat,uint8_t led2stat,uint8_t led3stat,uint8_t led4stat,uint8_t led5stat,uint8_t led6stat,uint8_t led7stat,uint8_t led8stat,uint8_t led9stat,uint8_t led10stat,uint8_t led11stat,uint8_t led12stat)
 {
@@ -225,9 +225,9 @@ String SendHTML(uint8_t led1stat,uint8_t led2stat,uint8_t led3stat,uint8_t led4s
   else
     ptr +="<p>Magic circle: done</p><a class=\"button button-dark\" href=\"/led11on\">Magic circle</a>\n";
   if(!led12stat)
-    ptr +="<p>test: loaded</p><a class=\"button button-light\" href=\"/led12on\">test</a>\n";
+    ptr +="<p>test: loaded</p><a class=\"button button-light\" href=\"/led12on\">+10 min</a>\n";
   else
-    ptr +="<p>test: done</p><a class=\"button button-dark\" href=\"/led12on\">test</a>\n";
+    ptr +="<p>test: done</p><a class=\"button button-dark\" href=\"/led12on\">+10 min</a>\n";
 
   ptr +="</body>\n";
   ptr +="</html>\n";

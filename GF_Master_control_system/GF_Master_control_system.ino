@@ -453,8 +453,10 @@ void pic()
 
   if(flag_pic_done == true && flag_pic_done_sent == false)
   {
+    delay(50);
     digitalWrite(MOSF3_fonarik_D49, LOW);
     delay(50); 
+    Serial.println("pic done");
     Serial3.print(done[2]);
     flag_pic_done = false;
     flag_pic_done_sent = true;
@@ -623,7 +625,7 @@ void lab_panel()
     delay(50);
     Serial3.print(Tele_mov5); //play video 5 - "Які ж ви довірливі" at portal
     delay(50);
-    //digitalWrite(REL_UV_D44, LOW); //LOW = ON - UV light on
+    digitalWrite(REL_UV_D44, LOW); //LOW = ON - UV light on
     digitalWrite(REL_LIGHT_D46, LOW); //LOW = ON - main light on //NORMAL CLOSED CONTACT
     delay(62000);
     mp3_set_serial(Serial1);
@@ -750,6 +752,8 @@ void magic_circle()
     delay(10);    mp3_set_volume(30);
     delay(50);    mp3_play(4); //win music
     digitalWrite(REL_STROBO_D50, LOW);
+    digitalWrite(REL_UV_D44, LOW); //LOW = ON - UV light on
+    digitalWrite(REL_LIGHT_D46, LOW); //LOW = ON - main light on //NORMAL CLOSED CONTACT
     delay(40000);
     digitalWrite(REL_STROBO_D50, HIGH);
     digitalWrite(MOSF2_exit_door_D51, LOW); //open doors
